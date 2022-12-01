@@ -1,0 +1,147 @@
+%%% ACTA-frontmatter.tex
+%%% Version 2021 (April)
+%%% 
+%%% COLOPHON
+\newpage
+\restoregeometry
+%%% The following command redefines chapters to look like sections in the frontmatter.
+\frontmatterchapters
+
+%%% Failsafe
+\fontsize{13}{18}\selectfont
+
+\vspace*{\fill}
+
+\begin{flushleft}
+Thesis submitted for the Degree of Doctor of Philosophy in XX\\
+Department of Philosophy, Linguistics and Theory of Science\\
+University of Gothenburg
+\end{flushleft}
+
+
+\begin{flushleft}
+\textcopyright\ 
+\makeatletter{\MakeUppercase{\@author}}\makeatother, 20XX
+\end{flushleft}
+
+\begin{flushleft}
+\makeatletter ISBN \@isbnp { (printed)}\makeatother\ (Contact ACTA via \url{acta@ub.gu.se})\\
+\makeatletter ISBN \@isbnd { (pdf)}\makeatother\\
+ISSN 0283-2380
+\end{flushleft}
+
+\begin{flushleft}
+The publication is also available in fulltext at:
+
+\url{http://XX}
+\end{flushleft}
+
+\begin{flushleft}
+Subscriptions to the series and orders for individual copies sent to:\\
+Acta Universitatis Gothoburgensis\\
+PO Box 222, SE-405 30 G\"oteborg, Sweden \\
+or to\\
+\url{acta@ub.gu.se}
+\end{flushleft}
+
+\begin{flushleft}
+Typeset in Adobe Garamond Pro, Arial, Garamond-Math, and\\
+Linux Libertine Mono O using {\latexfont \XeLaTeX} and KOMA-Script
+\end{flushleft}
+
+\begin{flushleft}
+Cover: 
+
+XX (Write an explanatory note on the (possible) cover art, with page references to detailed information in the book.)
+\end{flushleft}
+
+\begin{flushleft}
+Print:
+XX, XX, 20XX
+\end{flushleft}
+% Failsafe
+\fontsize{14}{18}\selectfont
+ 
+ 
+%%% ABSTRACT
+
+\chapter*{Abstract}
+\fontsize{14}{18}\selectfont
+\vspace{.5\baselineskip}
+
+\setlength{\tabcolsep}{0pt} % to be restored later
+\noindent\begin{tabular}{p{2.58cm}@{}ll}
+\normalfont\fontsize{14}{18}\selectfont
+%%% If your title is very long, and you have a subtitle, then use the eight lines below:
+Title: & \makeatletter{\@title\ }\makeatother
+\makeatletter
+\ifx\@subtitle\@empty
+\makeatother
+\tabularnewline
+\else
+ -- \tabularnewline & \makeatletter{\@subtitle}\makeatother\tabularnewline
+\fi
+
+%%% If your title and subtitle are both very short, replace the eight lines above with the eight lines below.
+%  Title: & \makeatletter\@title\ \makeatother
+% \makeatletter
+% \ifx\@subtitle\@empty
+% \makeatother
+% \tabularnewline
+% \else
+%  -- \makeatletter{\@subtitle}\makeatother\tabularnewline
+% \fi
+
+Author: & \makeatletter{\@author}\makeatother \\
+    
+Language: & English (with a summary in Swedish) \\
+
+Department: & Philosophy, Linguistics and Theory of Science\\
+ 
+Series: & \makeatletter{\@titlehead}\makeatother\\
+ 
+ISBN: & \makeatletter{\@isbnp}\makeatother { (print)}\\
+ 
+ISBN: & \makeatletter{\@isbnd}\makeatother { (digital)}\\
+ 
+ISSN: & 0283-2380\\
+
+Keywords: & XX \\
+\end{tabular}
+%%% Restoring tabcolsep to default.
+\setlength{\tabcolsep}{6pt} 
+\vspace{\baselineskip}
+
+%%% Type your abstract below:
+ 
+ \noindent XX.
+ 
+ 
+
+ 
+
+%%% This is a reasonable place to add, e.g., a page for dedications, and such.
+%%% For example using \chapter*{...}
+
+\chapter*{Acknowledgements} 
+
+XX
+
+%%% Table of contents, with chapters, sections and subsections.
+\setcounter{tocdepth}{2}
+
+\addtocontents{toc}{\protect\thispagestyle{empty}} 
+\tableofcontents
+
+%%% If you dont have figures or tables, remove the following three lines of code.
+%%% If you use both lists and they do not fit on the same page, replace the last line by
+% \listoftables
+\cleardoublepage 
+\listoffigures
+\bgroup\let\clearpage\relax\listoftables\egroup % This one!
+
+
+%%% Set chapters to be formatted as chapters again.
+%%% RB: Should not be placed elsewhere.
+\mainmatterchapters
+\endinput

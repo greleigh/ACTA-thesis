@@ -1,0 +1,61 @@
+%%% ACTA-titlepages.tex
+%%% Version 2021 (April)
+
+%%% Failsafe
+\fontsize{14}{18}\selectfont
+%%% Half-title page/smutstitelsida
+% 
+%%% Title is supposed to start 120pt (= 42mm) below start of type area. 
+%%% In reality, the Word template puts it 44mm below start of the type area. Baseline at 49mm.
+%%% A vspace of 31.5mm accomplishes this... (almost equal to 42mm minus a baselineskip of 28pt)
+\vspace*{31.5mm}
+\begin{center}
+\fontsize{22}{28}\selectfont %calculated line spacing
+ \makeatletter{\@title\par}\makeatother
+\end{center}
+
+\cleardoublepage
+
+%%% Title page
+\newgeometry{top=13mm,bottom=18.5mm,left=30mm,right=30mm} %all positions depend on these top and bottom margins!
+
+\begin{center}
+\usekomafont{titlehead}\selectfont
+\makeatletter{\MakeLowercase{acta universitatis gothoburgensis\\\@titlehead}\par}\makeatother
+\end{center}
+\vspace*{38.7mm} % tweaked after optical inspection
+\begin{addmargin}{0.63cm}
+\begin{flushleft}
+
+\makeatletter\ifx\@subtitle\@empty\makeatother
+\usekomafont{title}\selectfont
+\makeatletter{\@title\par}\makeatother 
+\par \vspace{\baselineskip}
+\usekomafont{author}\selectfont
+\makeatletter{\@author\par}\makeatother
+
+\else
+\usekomafont{title}\selectfont
+\makeatletter{\@title\par}\makeatother % \par \vspace{\baselineskip}
+
+\vspace{12pt}
+\usekomafont{subtitle}\selectfont
+\makeatletter{\@subtitle\par}\makeatother
+\usekomafont{title}\selectfont
+\par \vspace{\dimexpr\baselineskip+2.2mm} %measured spacing
+\usekomafont{author}\selectfont
+\makeatletter{\@author\par}\makeatother
+
+\fi
+\end{flushleft}
+\end{addmargin}
+%%% Failsafe for colophon
+\fontsize{13}{18}\selectfont
+
+\vfill
+% GU logo. Placements depends (only) on bottom margin.
+\begin{center}
+\includegraphics
+{LO_GUeng_cenSV.eps} 
+\end{center}
+\endinput

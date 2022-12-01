@@ -1,0 +1,263 @@
+%%% ACTA.sty
+%%% Version 2021 (April).
+%%% This is the style file for the ACTA LaTeX template.
+\ProvidesPackage{ACTA}
+
+
+% Draft options
+\ifdraft
+\KOMAoptions{draft=true}
+\usepackage{draftwatermark}
+\SetWatermarkScale{11.5}
+\SetWatermarkLightness{0.95}
+\usepackage{fgruler}
+\fi
+
+%%% To issue warnings if some characters are missing from the fonts.
+\tracinglostchars=2
+
+%%% Load packages in some reasonable order.
+\RequirePackage[top=30mm,bottom=30mm,left=30mm,right=30mm,headsep=10mm,% 
+\ifdraft
+showframe=true
+\fi
+]{geometry}
+
+\RequirePackage[swedish,UKenglish,USenglish]{babel}
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{amsthm}
+
+\RequirePackage[no-math]{fontspec}
+\RequirePackage[math-style=TeX, bold-style=TeX]{unicode-math}
+\RequirePackage{enumitem}
+\RequirePackage{tocbasic}
+\RequirePackage{anyfontsize}
+\RequirePackage{url}
+\RequirePackage{metalogo}
+\RequirePackage[protrusion=true, factor=1000]{microtype}
+\RequirePackage[draft=false]{scrlayer-scrpage}
+
+%%% Misc internal working commands
+%
+\newcommand\isbnp[1]{\newcommand\@isbnp{#1}}
+\newcommand\isbnd[1]{\newcommand\@isbnd{#1}}
+\newcommand\runningheader[1]{\renewcommand\@runhead{#1}}
+\newcommand\@runhead{\MakeLowercase{\@title}}
+
+%%% Global parindent
+\setlength{\parindent}{0.63cm}
+
+%%% Some small spaces
+\def\hairspace{\kern0.08333em}
+\def\neghairspace{\kern-0.08333em}
+
+
+%%%
+%%% The template uses Adobe Garamond Pro for text, and Garamond-Math (designed to match EB Garamond)
+%%% for math. The greatest upshot is that it actually works, using XeLaTeX.
+%%% Small caps are slightly tracked (ca 4pt).
+%%% Fontspec options:
+\defaultfontfeatures{Ligatures=TeX,Mapping=tex-text}
+\setmainfont{Adobe Garamond Pro}[SmallCapsFeatures={LetterSpace=2.86, Numbers=Lining}, Kerning=Uppercase]
+                                 
+%%% If Adobe Garamond Pro is not properly installed on your system, you could place the 
+%%% relevant font files in your local directory and replace the previous line with the following line.
+% \setmainfont{AGaramondPro-Regular.otf}[BoldFont=AGaramondPro-Bold.otf, ItalicFont=AGaramondPro-Italic.otf, BoldItalicFont=AGaramondPro-BoldItalic.otf,SmallCapsFeatures={LetterSpace=2.86},Kerning=Uppercase]
+
+%%% Typewrite font
+\setmonofont[Scale=MatchLowercase]{Linux Libertine Mono O}
+
+%%% Arial for tables and captions.
+\setsansfont{Arial}
+
+%%% This font is only used for the typsetting of the XeLaTeX and BibTeX logos. They looks horrible in Garamond.
+\newfontfamily\latexfont{Latin Modern Roman}
+\def\BibTeX{{\textrm{B}\kern-.05em{\textsc{i}\kern-.025em \textsc{b}}\kern-.08em\latexfont\TeX}}
+
+%%% Garamond-Math for mathematics.
+%%% You might have to place a copy of Garamond-math.otf in your working directory, 
+%%% and change Garamond-Math to Garamond-math.otf below.
+%%%
+%%% Make Greek letters 'upright' by uncommenting the four lines below. The Garamond-Math 'upright' Greek is still a little italic.
+% \ExplSyntaxOn
+% \bool_gset_true:N  \g__um_upGreek_bool % make upper case Greek 'upright'
+% \bool_gset_true:N   \g__um_upgreek_bool % make lower case greek 'upright'
+% \ExplSyntaxOff
+
+%%% unicode-math options:
+\setmathfont{Garamond-Math}[Scale=MatchUppercase,StylisticSet={8,9},RawFeature=+lnum]
+
+%%% Add mathscr distinct from mathcal
+\setmathfont{Garamond-Math}[range={scr,bfscr}]
+
+%%% For consecutive Figure/Table/footnote numbering
+%%% chngcntr options:
+%%% Can apparently be set without chngcntr!?
+\counterwithout{figure}{chapter}
+\counterwithout{table}{chapter}
+\counterwithout{footnote}{chapter}
+
+%%% This is not 100% according to the template, but looks better.
+%%% package enumitem options
+\setlist{topsep={2pt plus 1 pt minus 1pt},labelindent=0.63cm,itemsep={0pt plus 1 pt},parsep={2pt plus 1 pt minus 1pt}}
+\setlist[enumerate,2]{label=\alph*.}
+
+%%% Quote/quotation formatting tweaks
+\renewenvironment{quote}
+  {\par\fontsize{12}{15}\selectfont\list{}{\topsep = 6pt \rightmargin=1.26cm \leftmargin=1.26cm\parsep \z@ \@plus\p@}\item\relax}
+  {\endlist}
+
+\renewenvironment{quotation}
+  {\par\fontsize{12}{15}\selectfont \list{}{\topsep = 6pt \listparindent=\parindent \rightmargin=1.26cm \leftmargin=1.26cm%
+                     \parsep \z@ \@plus\p@}\item\relax}
+  {\endlist}
+
+%%% The following lines specify the different font sizes and shapes used throughout.
+% koma (scrbook) font options:
+\setkomafont{pageheadfoot}{\fontsize{14}{14}\scshape}
+\setkomafont{title}{\fontsize{28}{35}\normalfont} % calculated line spacing
+\setkomafont{titlehead}{\fontsize{14}{18}\addfontfeature{SmallCapsFeatures={Numbers=OldStyle}}\scshape}
+\setkomafont{subtitle}{\fontsize{18}{23}\normalfont} %calculated line spacing. was 18/18
+\setkomafont{author}{\fontsize{18}{23}\normalfont} %calculated line spacing. was 18/18
+\setkomafont{disposition}{\normalfont}
+%%% If the chapter or section styles are changed, never forget to update 
+%%% the commands \mainmatterchapters and \frontmatterchapters used
+%%% at the beginning and end of ACTA-frontmatter.tex! See below.
+\setkomafont{chapter}{\fontsize{22}{25}\normalfont\addfontfeature{LetterSpace=1.14}} % tracked approx. 0.25pt
+\setkomafont{section}{\fontsize{18}{20}\normalfont} 
+\setkomafont{subsection}{\fontsize{14}{20}\normalfont\bfseries}
+\setkomafont{subsubsection}{\fontsize{14}{20}\normalfont\itshape} 
+\setkomafont{footnote}{\fontsize{12}{13}\normalfont}
+\setkomafont{caption}{\fontsize{11}{16}\sffamily}
+\setkomafont{captionlabel}{\fontsize{11}{16}\sffamily}
+\setkomafont{pagenumber}{\fontsize{14}{14}\scshape\addfontfeature{SmallCapsFeatures={Numbers=OldStyle}}}
+\setkomafont{descriptionlabel}{\bfseries} % what is this used for?
+\setkomafont{footnotelabel}{\fontsize{12}{12}}
+\setkomafont{footnotereference}{\fontsize{12}{12}}
+
+
+%%% Sectioning redeclarations.
+%%% If these are changed, never forget to update the two commands below!!
+\RedeclareSectionCommand[beforeskip=50pt,afterskip=24pt,afterindent=false]{chapter}
+\RedeclareSectionCommand[beforeskip=20pt,afterskip=6pt,afterindent=false]{section}
+\RedeclareSectionCommand[beforeskip=16pt,afterskip=6pt,afterindent=false]{subsection}
+\RedeclareSectionCommand[beforeskip=12pt,afterskip=6pt,afterindent=false]{subsubsection}
+
+%%% Command for switching between section-like chapters in frontmatter, and proper
+%%% chapters in mainmatter.
+\newcommand\frontmatterchapters{\setkomafont{chapter}{\fontsize{18}{20}\normalfont}\RedeclareSectionCommand[beforeskip=20pt,afterskip=6pt,afterindent=false]{chapter}}
+
+\newcommand\mainmatterchapters{\setkomafont{chapter}{\fontsize{22}{25}\normalfont\addfontfeature{LetterSpace=1.14}}\RedeclareSectionCommand[beforeskip=50pt,afterskip=24pt,afterindent=false]{chapter}} 
+
+%%% Footnotes. Hanging 0.6 cm, footnotemark left adjusted. The -0.6cm paragraph indentation
+%%% is exactly what the Word template produces, but "footnotes should never have paragraphs" anyway.
+\deffootnote[0.6cm]{0.6cm}{-0.6cm}{%
+\textsuperscript{\makebox[0.6cm][l]{\thefootnotemark}}%
+}
+\KOMAoption{footnotes}{multiple} % comma-separated if consecutive
+
+
+%%% Table of contents tweaks
+%%% For leading dotted line in ToC
+\newcommand\tocdotfill{\leavevmode \cleaders \hb@xt@ .25em{\hss .\hss }\hfill \kern \z@}
+
+
+%%% Add 'Chapter X' before all chapter titles in ToC
+\newcommand\chapterentrynumberformat[1]{\chapapp\ #1}
+
+%%% Remove (sub)section numbers from ToC
+\newcommand\stripentrynumber[1]{}
+
+
+
+%%% Table of Contents style declarations
+\DeclareTOCStyleEntry[
+    pagenumberbox    = \relax, %for leaders all the way
+    pagenumberformat = \normalfont,
+    entryformat      = \scshape,
+    entrynumberformat= \chapterentrynumberformat,
+    beforeskip       = 12pt,
+    linefill         = \tocdotfill,
+    numwidth         = 5em,
+    dynnumwidth,
+]{tocline}{chapter}
+\setkomafont{chapterentrypagenumber}{\normalfont}
+
+%%% Remove superfluous space in ToClines
+\TOCEntryStyleInitCode{tocline}{%
+    \expandafter\renewcommand%
+        \csname scr@tso@#1@numwidth\endcsname{0pt}%
+%     \expandafter\renewcommand%
+%         \csname scr@tso@#1@numsep\endcsname{0pt}%
+%   \expandafter\renewcommand%
+%       \csname scr@tso@#1@pagenumberbox\endcsname[1]{\makebox{##1}}%
+}
+
+
+\DeclareTOCStyleEntry[
+    indent           = 0.63cm,
+    pagenumberbox    = \relax,
+    pagenumberformat = \normalfont,
+    entryformat      = \normalfont,
+    entrynumberformat= \stripentrynumber,
+    beforeskip       = 2pt,
+    linefill         = \tocdotfill,
+]{tocline}{section}
+
+\DeclareTOCStyleEntry[
+    indent           = 1.26cm,
+    pagenumberbox    = \relax,
+    pagenumberformat = \normalfont,
+    entryformat      = \normalfont,
+    entrynumberformat= \stripentrynumber,
+    beforeskip       = 2pt,
+    linefill         = \tocdotfill,
+]{tocline}{subsection}
+
+%%% Prefix tables with Table # and figures with Figure #.  No additional chapter-induced space between entries.
+\KOMAoption{listof}{entryprefix,nochaptergap}
+
+%%% List of Figure/Tables style declarations
+\DeclareTOCStyleEntries[
+    pagenumberbox=\relax,
+    pagenumberformat = \normalfont,
+    entryformat      = \normalfont,
+    beforeskip       = 2pt,
+    linefill         = \tocdotfill
+]{tocline}{figure,table}
+
+
+%%% Make sure the list of figures and tables actually list figures and tables.
+%%% May be removed if no lists are used.
+ \addtocontents{lof}{\protect\setcounter{tocdepth}{1}}
+ \addtocontents{lot}{\protect\setcounter{tocdepth}{1}}
+
+%%% babel options
+\renewcaptionname{UKenglish}{\listfigurename}{List of figures}
+\renewcaptionname{UKenglish}{\listtablename}{List of tables}
+\renewcaptionname{USenglish}{\listfigurename}{List of figures}
+\renewcaptionname{USenglish}{\listtablename}{List of tables}
+ 
+
+%%% Add bibliography to toc.
+\KOMAoption{bibliography}{toc}
+
+%%% Figure tweaks
+\setlength{\belowcaptionskip}{6pt}
+\setcapwidth[l]{\textwidth}
+
+%%% New captioning commands.
+\newcommand{\byline}[1]{\bgroup\raggedright\normalfont\itshape\fontsize{11}{13}\selectfont #1\par\egroup}
+\newcommand{\captionx}[1]{\bgroup\raggedright\normalfont\fontsize{12}{16}\selectfont #1\par\egroup}
+
+
+%%% For running headers
+\clearpairofpagestyles
+\renewcommand*{\chaptermarkformat}{}
+\renewcommand*{\sectionmarkformat}{}
+\lehead{\llap{\pagemark\quad}\raisebox{-1pt}{\scalebox{0.9}{\bullet}}~~\@runhead}
+\rohead{\MakeLowercase{\rightmark}~~\raisebox{-1pt}{\scalebox{0.9}{\bullet}}\rlap{\quad\pagemark}}
+\automark[chapter]{chapter}
+
+\endinput

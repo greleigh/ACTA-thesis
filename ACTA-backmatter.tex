@@ -1,0 +1,158 @@
+%%% List of published volumes Acta Philosophica Gothoburgensia
+%%% Version 2021 (April)
+%
+% To add your own volume at the end of the list, please use the following format:
+% \item Name Surname.\enspace\textit{Title: Subtitle}. \mbox{G\"oteborg} Year
+% 
+% If an entry is ever split across columns, add the following line before that entry.
+% \columnbreak
+%
+% If an entry is ever split across pages, add the following line before that entry.
+% \pagebreak
+%
+% If either of these leads to bad spacing of a column, try prepending the line
+% \vfill\null
+
+\documentclass[fontsize=14pt,
+               paper=297mm:210mm,
+               twoside,
+               pagesize=pdftex,
+               DIV=calc
+]{scrbook}
+
+\newif\ifdraft
+\usepackage{ACTA}
+\usepackage{multicol}
+ 
+
+\usepackage[protrusion=true, factor=1000]{microtype}
+
+\raggedcolumns
+\begin{document}
+\newgeometry{left=25mm,right=25mm,top=30mm,bottom=30mm}
+\fontsize{12}{15}\selectfont
+\thispagestyle{empty}
+\selectlanguage{UKenglish}
+
+
+\pagestyle{empty}
+
+
+\begin{center}
+\addfontfeature{SmallCapsFeatures={Numbers=OldStyle}} % Old style number look better in the small caps headline
+\textsc{acta philosophica gothoburgensia}
+
+\textsc{issn 0283-2380}
+
+\vspace{\baselineskip}
+ Editors: Bengt Br\"ulde, Graham Leigh, Anna-Sofia Maurin and Christian Munthe
+\vspace{\baselineskip}
+
+Subscriptions to the series and orders for individual copies are sent to:
+
+\textsc{acta universitatis gothoburgensis}
+
+Box 222, 405 30 G\"oteborg, Sweden
+
+\url{acta@ub.gu.se}
+\end{center}
+\raggedcolumns
+
+\setlength\columnsep{20pt}
+\begin{multicols*}{2}
+\newcounter{volumes}
+\newenvironment{Volumes}
+{\begin{list}{\arabic{volumes}. }{\usecounter{volumes}%
+\setlength{\labelsep}{0pt}%
+\setlength{\leftmargin}{0pt}%
+\setlength{\labelwidth}{0pt}%
+\setlength{\listparindent}{0pt}%
+\setlength{\itemsep}{6pt}%
+\setlength{\topsep}{0pt}%
+\setlength{\parsep}{0pt}}}%
+{\end{list}}
+\noindent Previous publications:
+
+\begin{Volumes}
+\item Mats Furberg, Thomas Wetterstr\"om \& Claes \AA{}berg (eds.).\enspace\textit{Logic and abstraction: Essays dedicated to Per Lindstr\"om on his fiftieth birthday.} \mbox{G\"oteborg} 1986
+
+\item Staffan Carlshamre.\enspace\textit{Language and time: An attempt to arrest the thought of Jacques Derrida}. \mbox{G\"oteborg} 1986
+
+\item Claes \AA{}berg (ed.).\enspace\textit{Cum grano salis: Essays dedicated to Dick A.~R.~Haglund}. \mbox{G\"oteborg} 1989
+
+\item Anders Tolland.\enspace\textit{Epistemological relativism and relativistic epistemology}. \mbox{G\"oteborg} 1991
+
+\item Claes Stranneg\aa{}rd.\enspace\textit{Arithmetical realizations of modal formulas}. \mbox{G\"oteborg} 1997
+
+\item Bengt Br\"ulde.\enspace\textit{The Human Good}. \mbox{G\"oteborg} 1998
+
+\item Eva Mark.\enspace\textit{Sj\"alvbilder och jagkonstitution}. \mbox{G\"oteborg} 1998
+
+\item May Torseth.\enspace\textit{Legitimate and Illegitimate Paternalism in Polyethnic Conflicts}. \mbox{G\"oteborg} 1999
+
+\item Christian Munthe.\enspace\textit{Pure Selection: The Ethics of Preimplantation Genetic Diagnosis and Choosing Children without Abortion}. \mbox{G\"oteborg} 1999
+
+\item Johan M\aa{}rtensson.\enspace\textit{Subjunctive Conditionals and Time: A Defense of a Weak Classical Approach}. \mbox{G\"oteborg} 1999
+
+\item Claudio M.~Tamburrini.\enspace\textit{The ``Hand of God''? Essays in the Philosophy of Sports}. \mbox{G\"oteborg} 2000
+
+\columnbreak
+
+\item Lars Sandman.\enspace\textit{A Good Death: On the Value of Death and Dying}. \mbox{G\"oteborg} 2001
+
+\item Kent Gustavsson.\enspace\textit{Emergent Consciousness: Themes in C.~D.~Broad's Philosophy of Mind}. \mbox{G\"oteborg} 2002
+
+\item Frank Lorentzon.\enspace\negthinspace\negthinspace\textit{Fri Vilja?} \mbox{G\"oteborg} 2002
+
+\item Jan Lif.\enspace\textit{Can a Consequentialist be a real friend? (Who cares?)} \mbox{G\"oteborg} 2003
+
+\item Fredrik Sundqvist.\enspace\textit{Perceptual Dynamics: Theoretical foundations and philosophical implications of gestalt psychology}. \mbox{G\"oteborg} 2003
+
+\item Jonas Gren.\enspace\textit{Applying utilitarianism: The problem of practical action-guidance}. \mbox{G\"oteborg} 2004
+
+\item Niklas Juth.\enspace\textit{Genetic Information Values and Rights: The Morality of Presymptomatic Genetic Testing}. \mbox{G\"oteborg} 2005
+
+\item Susanna Radovic.\enspace\textit{Introspecting Representations}. \mbox{G\"oteborg} 2005
+
+\item Petra Andersson.\enspace\textit{Humanity and nature:\\ Towards a consistent holistic environmental ethics}. \mbox{G\"oteborg} 2007
+
+\item Jan Alm\"ang.\enspace\textit{Intentionality and intersubjectivity}. \mbox{G\"oteborg} 2007
+
+\item Alexander Alm\'{e}r.\enspace\textit{Naturalising intentionality: Inquiries into realism \& relativism}. \mbox{G\"oteborg} 2007
+
+\item Kristoffer Ahlstr\"om.\enspace\textit{Constructive Analysis: A Study in Epistemological Methodology}. \mbox{G\"oteborg} 2007
+
+\pagebreak
+
+\item Ragnar Franc\'{e}n.\enspace\textit{Metaethical Relativism: Against the Single Analysis Assumption}. \mbox{G\"oteborg} 2007
+
+\item Joakim Sandberg.\enspace\textit{The Ethics of Investing: Making Money or Making a Difference?} \mbox{G\"oteborg} 2008
+
+\item Christer Svennerlind.\enspace\textit{Moderate Nominalism and Moderate Realism}. \mbox{G\"oteborg} 2008
+
+\item J\"orgen Sj\"ogren.\enspace\textit{Concept Formation in Mathematics}. \mbox{G\"oteborg} 2011
+
+\item Peter Georgsson.\enspace\textit{Metaphor and Indirect Communication in Nietzsche}. \mbox{G\"oteborg} 2014
+
+\item Martin Kas\aa{}.\enspace\textit{Truth and Proof in the Long Run: Essays on Trial-and-Error Logics}. \mbox{G\"oteborg} 2017
+
+\item Rasmus Blanck.\enspace\textit{Contributions to the Meta-\\mathematics of Arithmetic:~Fixed Points, Independence, and Flexibility}. \mbox{G\"oteborg} 2017
+
+\item Martin Filin Karlsson.\enspace\textit{All There Is: On the Semantics of Quantification over Absolutely Everything}. \mbox{G\"oteborg} 2018
+
+\item Paul Kindvall Gorbow.\enspace\textit{Self-similarity in the foundations}. \mbox{G\"oteborg} 2018
+
+\item Marco Tiozzo.\enspace\textit{Moral Disagreement and the Significance of Higher-Order Evidence}. \mbox{G\"oteborg} 2018
+
+\item Ylwa Sj\"olin Wirling.\enspace\textit{Modal Empiricism Made Difficult}. \mbox{G\"oteborg} 2019
+
+\item Alva Str\aa{}ge.\enspace\textit{Minds, Brains and Desert: On the relevance of neuroscience for retributive punishment}. \mbox{G\"oteborg} 2019
+
+\item Stellan Petersson.\enspace\textit{Disarming Context Dependence: A Formal Inquiry into Indexicalism and Truth-Conditional Pragmatics}. \mbox{G\"oteborg} 2019
+
+\item Thomas Hartvigsson.\enspace\textit{Explorations of the Relationship Between the Right to Make Decisions and Moral Responsibility in Healthcare}. \mbox{G\"oteborg} 2020
+\end{Volumes}
+\end{multicols*}
+
+
+\end{document}

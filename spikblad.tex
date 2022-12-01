@@ -1,0 +1,141 @@
+%%% 'Spikblad' example
+%%% Version 2021 (April)
+
+\documentclass[paper=148mm:209mm,twoside,pagesize=pdftex]{scrartcl} 
+\usepackage[top=24mm,bottom=14mm,left=19mm,right=19mm]{geometry}
+\usepackage{graphicx}
+
+\usepackage[UKenglish]{babel}
+
+\def\hairspace{\kern .08333em }
+\def\neghairspace{\kern -.08333em }
+
+\newif\ifdraft
+
+\drafttrue
+
+
+% Draft options
+\ifdraft
+\usepackage[a4,frame,center]{crop} 
+\fi
+\usepackage[protrusion=true, factor=1000]{microtype}
+
+\usepackage[no-math]{fontspec}
+\usepackage[math-style=TeX, bold-style=TeX]{unicode-math}
+
+\usepackage[protrusion=true, factor=1000]{microtype}
+
+\defaultfontfeatures{Ligatures=TeX,Mapping=tex-text}
+\setmainfont{Adobe Garamond Pro}[SmallCapsFeatures={LetterSpace=2.86, Numbers=Lining}, Kerning=Uppercase]
+
+%%% unicode-math options:
+\setmathfont{Garamond-Math}[Scale=MatchUppercase,StylisticSet={8,9},RawFeature=+lnum]
+
+%%% Add mathscr distinct from mathcal
+\setmathfont{Garamond-Math}[range={scr,bfscr}]
+
+\usepackage{anyfontsize}
+
+%%% Set title, subtitle and author here
+\title{Contributions to the Metamathematics of Arithmetic}
+\subtitle{Fixed Points, Independence, and Flexibility}
+
+\author{Rasmus Blanck}
+
+
+
+\begin{document}
+\pagestyle{empty}
+\begin{center}
+\fontsize{17}{20}\selectfont
+\vspace*{\baselineskip}
+
+\begin{addmargin}{10mm}
+\begin{center}
+\bgroup
+\addfontfeature{LetterSpace=1.14}
+\makeatletter{\@title\par}\makeatother
+\egroup
+\end{center}
+ \end{addmargin}
+
+ 
+\fontsize{11}{14}\selectfont
+\vspace{.5\baselineskip}
+\bgroup\addfontfeature{LetterSpace=1.14} \makeatletter{\@subtitle\par}\makeatother\egroup
+ 
+
+\vspace{2\baselineskip}
+\fontsize{11}{14}\selectfont
+\makeatletter{\@author\par}\makeatother
+\vspace{.5\baselineskip}
+
+Department of Philosophy, Linguistics and Theory of Science
+
+\end{center}
+\fontsize{11}{14}\selectfont
+\vspace{2\baselineskip}
+
+\begin{addmargin}{8.6mm}
+Thesis submitted for the Degree of Doctor of Philosophy in Logic, to be publicly defended, by due permission of the dean of the Faculty of Arts at the University of Gothenburg, on June~2, 2017, at 9~a.m., in T302, Olof Wijksgatan 6, Gothenburg. 
+\end{addmargin}
+
+
+
+\vfill
+\begin{center}
+\includegraphics[scale=.8]{LO_GUeng_cenSV.eps} 
+\end{center}
+
+
+
+
+\newpage
+
+\newgeometry{top=20mm,bottom=30mm,left=19mm,right=19mm}
+\ifdraft
+\makeatletter\CROP@center\makeatother
+\fi
+\begin{flushleft}
+\bgroup
+\fontsize{17}{14}\selectfont
+\addfontfeature{LetterSpace=1.14}
+Abstract
+\egroup
+ 
+\vspace{\baselineskip}
+\fontsize{11}{14}\selectfont
+\setlength{\tabcolsep}{2.2pt} 
+\begin{tabular}{@{}ll}
+Title: & \makeatletter{\@title}\makeatother\ -- \\
+ & \makeatletter{\@subtitle}\makeatother \\
+ 
+Author: & \makeatletter{\@author}\makeatother \\
+  
+Language: & English (with a summary in Swedish)\\
+
+Department: & Philosophy, Linguistics and Theory of Science\\
+ 
+Series: & Acta Philosophica Gothoburgensia 30\\
+ 
+ISBN: & 978-91-7346-917-3 (print)\\
+ 
+ISBN: & 978-91-7346-918-0 (pdf)\\
+ 
+ISSN: & 0283-2380\\
+ 
+Keywords: & arithmetic, incompleteness, flexibility, independence,\\
+& non-standard models, partial conservativity, interpretability
+\end{tabular}
+\end{flushleft}
+\setlength{\tabcolsep}{6pt} 
+
+\noindent This thesis concerns the incompleteness phenomenon of first-order arithmetic: no consistent, r.e.\ theory $\mathrm{T}$ can prove every true arithmetical sentence. The first incompleteness result is due to Gödel; classic generalisations are due to Rosser, Feferman, Mostowski, and Kripke. All these results can be proved using self-referential statements in the form of provable fixed points.
+Chapter 3 studies sets of fixed points; the main result is that disjoint such sets are creative. Hierarchical generalisations are considered, as well as the algebraic properties of a certain collection of bounded sets of fixed points.
+Chapter 4 is a systematic study of independent and flexible formulae, and variations thereof, with a focus on gauging the amount of induction needed to prove their existence. Hierarchical generalisations of classic results are given by adapting a method of Kripke's.
+Chapter 5 deals with end-extensions of models of fragments of arithmetic, and their \mbox{relation} to flexible formulae.
+Chapter 6 gives Orey-H\'{a}jek-like characterisations of partial conservativity over different kinds of theories. Of particular note is a characterisation of partial conservativity over $\mathrm{I}\Sigma_1$.
+Chapter 7 investigates the possibility to generalise the notion of flexibility in the spirit of Feferman's theorem on the `interpretability of inconsistency'. Partial results are given by using Solovay functions to extend a recent theorem of Woodin.
+\end{document}
+
