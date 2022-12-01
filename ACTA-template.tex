@@ -1,6 +1,6 @@
 %%% A template for Acta Philosophica Gothoburgensia.
 %%% For use with XeLaTeX and KOMA-Script.
-%%% Version 2021 (April)
+%%% Version 2022 (November)
 \documentclass[fontsize=14pt,
                paper=297mm:210mm,
                twoside,
@@ -8,14 +8,10 @@
                DIV=calc
 ]{scrbook}
 
-\newif\ifdraft
-%%% The following line sets a number of draft-related options. Remove it once you're done writing.
-\drafttrue
+%%% Available options: draft/final. Switch to final at any point to see the final formatting.
+\usepackage[draft]{ACTA}
 
-%%% Must be placed after \ifdraft (and \drafttrue, if used)
-\usepackage{ACTA}
-
-%%% Only used for placeholder text.
+%%% Only used to generate placeholder text.
 \usepackage{lipsum}
 
 %%% MACROS

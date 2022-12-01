@@ -1,25 +1,36 @@
 %%% ACTA.sty
-%%% Version 2021 (April).
+%%% Version 2022 (November).
 %%% This is the style file for the ACTA LaTeX template.
 \ProvidesPackage{ACTA}
 
+%%% To issue warnings if some characters are missing from the fonts.
+\tracinglostchars=2
 
-% Draft options
+%%% Draft options
+\newif\ifdraft
+
+\DeclareOption{draft}{\drafttrue}
+\DeclareOption{final}{\draftfalse}
+\ExecuteOptions{final}
+\ProcessOptions\relax
+
 \ifdraft
 \KOMAoptions{draft=true}
 \usepackage{draftwatermark}
 \SetWatermarkScale{11.5}
 \SetWatermarkLightness{0.95}
 \usepackage{fgruler}
+\else
+\KOMAoptions{draft=false}
 \fi
-
-%%% To issue warnings if some characters are missing from the fonts.
-\tracinglostchars=2
 
 %%% Load packages in some reasonable order.
 \RequirePackage[top=30mm,bottom=30mm,left=30mm,right=30mm,headsep=10mm,% 
 \ifdraft
 showframe=true
+\else
+% Added this \else to fix the "Extra \fi"-error appearing since upgrading to TeXLive 2022.
+% No idea where it comes from.
 \fi
 ]{geometry}
 
