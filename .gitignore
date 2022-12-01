@@ -1,0 +1,11 @@
+*.aux
+*.bbl
+*.bib
+*.blg
+*.lof
+*.log
+*.lot
+*.synctex.gz
+*.toc
+Readme.tex
+Readme_old.tex
