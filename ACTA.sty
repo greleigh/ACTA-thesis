@@ -1,5 +1,5 @@
 %%% ACTA.sty
-%%% Version 2022 (November).
+%%% Version 2022 (13 December).
 %%% This is the style file for the ACTA LaTeX template.
 \ProvidesPackage{ACTA}
 
@@ -64,6 +64,7 @@ showframe=true
 \def\neghairspace{\kern-0.08333em}
 
 
+%%% FONTS
 %%%
 %%% The template uses Adobe Garamond Pro for text, and Garamond-Math (designed to match EB Garamond)
 %%% for math. The greatest upshot is that it actually works, using XeLaTeX.
@@ -76,11 +77,15 @@ showframe=true
 %%% relevant font files in your local directory and replace the previous line with the following line.
 % \setmainfont{AGaramondPro-Regular.otf}[BoldFont=AGaramondPro-Bold.otf, ItalicFont=AGaramondPro-Italic.otf, BoldItalicFont=AGaramondPro-BoldItalic.otf,SmallCapsFeatures={LetterSpace=2.86},Kerning=Uppercase]
 
-%%% Typewrite font
-\setmonofont[Scale=MatchLowercase]{Linux Libertine Mono O}
+%%% Typewriter font
+\setmonofont[Scale=MatchLowercase]{Libertinus Mono}
 
 %%% Arial for tables and captions.
-\setsansfont{Arial}
+\setsansfont[Scale=MatchLowercase]{Arial}
+
+%%% Math sans serif font
+\setmathsf[Scale=MatchLowercase]{Libertinus Sans}
+
 
 %%% This font is only used for the typsetting of the XeLaTeX and BibTeX logos. They looks horrible in Garamond.
 \newfontfamily\latexfont{Latin Modern Roman}
@@ -101,6 +106,7 @@ showframe=true
 
 %%% Add mathscr distinct from mathcal
 \setmathfont{Garamond-Math}[range={scr,bfscr}]
+%%% /FONTS
 
 %%% For consecutive Figure/Table/footnote numbering
 %%% chngcntr options:
