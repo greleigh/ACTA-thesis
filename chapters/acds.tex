@@ -1,0 +1,449 @@
+% Emacs, this is -*-latex-*-
+
+\chapter{Abstract Cyclic Proof Theory}
+\label{chap:acds}
+
+\section{Abstract Cyclic Proof Systems}
+\label{sec:abs-ps}
+
+% Proof systems
+It is easily observed that the global trace conditions of different cyclic proof
+systems share a structural similarity, only differing by the notions of `trace'
+and `progress'. The same is true for other soundness conditions. In this section, we present an abstract notion of `cyclic proof system'
+which relies on an abstract notion of `trace' and `progress'. These abstract
+cyclic proof systems are used in \papOne{} to give a generic method of deriving
+reset proof systems from cyclic proof systems with a global trace condition.
+
+We begin by making concrete our notion of (cyclic) tree: 
+\begin{definition}[Tree]
+  A \emph{tree} is a
+  non-empty set $T \subseteq \omega^*$ which is closed under taking prefixes. Each
+  $t \in T$ is called a \emph{node} and the nodes in $\Chld(t) \coloneq \{ti \in T
+  ~|~ i \in \omega\}$ are called its \emph{children}. A node $t$ is a \emph{leaf} of $T$ if
+  $\Chld(t) = \emptyset$ and an \emph{inner node} otherwise.
+\end{definition}
+
+\begin{definition}[Cyclic tree]
+  A \emph{cyclic tree} is a pair $(T, \beta)$ of a finite tree $T$ and
+  a partial function $\beta \colon \Leaf(T) \pto \Inner(T)$ mapping some leaves of $T$
+  onto inner nodes of $T$ such that $\beta(t) < t$ by the prefix ordering for
+  every $t \in \dom(\beta)$. 
+  If $t \in \dom(\beta)$ one calls it a \emph{bud} and $\beta(t)$ its \emph{companion}.
+
+  Fix a cyclic tree $C = (T, \beta)$. A sequence $\pi \in T^\omega$ is a
+  \emph{branch} through $C$ if $\pi_0 = \varepsilon$ and it satisfies the
+  following properties at every index $i \in \omega$: (a) if $\pi_i \not\in
+  \Leaf(T)$ then $\pi_{i + 1} \in \Chld(\pi_i)$ and (b) if $\pi_i \in \Leaf(T)$
+  then $\pi_i \in \dom(\beta)$ and $\pi_{i + 1} = \beta(\pi_i)$.
+\end{definition}
+% For two words $s, t \in \omega^*$ we say $s \lro t$ (``$s$ is
+% \emph{left of} $t$'') if there is an index $i$ such that $s_i < t_i$ and $s_j =
+% t_j$ for all $j < i$.
+
+\begin{definition}[Derivation system]
+  A \emph{derivation system} is a triple $(\Seq, \RR, \rho)$ consisting of a set of
+  sequents $\Seq$ and a set $\RR$ of derivation rules and a rule-interpretation
+  $\rho \colon \RR \to \Seq^*$ such that for each $R \in \RR$, $\rho(R) = 
+  (\Gamma, \Delta_1, \ldots, \Delta_{n - 1}) \in \Seq^n$ for $n > 0$. 
+  The sequent $\Gamma$ is \emph{conclusion} of $R$ and the $\Delta_i$ its
+  \emph{premises}. Henceforth, we refer to a derivation system $(\Seq, \RR,
+  \rho)$ simply by $\RR$.
+\end{definition}
+
+\begin{definition}[$\RR$-preproof]
+  An \emph{$\RR$-preproof} is a triple
+  $\Pi = (C, \lambda, \delta)$ consisting of a cyclic
+  tree $C = (T, \beta)$ together with a labeling $\lambda \colon T \to \Seq$ such
+  that for every $t \in \dom(\beta)$ one has $\lambda(t) = \lambda(\beta(t))$ and
+  a partial function $\delta \colon (T \setminus \dom(\beta)) \pto \RR$ such that for
+  each $t \in T \setminus \dom(\beta)$
+  \begin{itemize}
+  \item either $t \in \dom(\delta)$ with $\rho(\delta(t)) = (\Gamma, \Delta_1, \ldots,
+    \Delta_n)$ and $\lambda(t) = \Gamma$ and furthermore $\Chld(t) = \{t_1,
+    \ldots, t_n\}$ and $\lambda(t_i) = \Delta_i$ 
+  \item or $t \in \Leaf(T)$.
+  \end{itemize}
+  Denote by $\Pp(\RR)$ for the set of $\RR$-preproofs.
+  The sequent $\lambda(\varepsilon)$ is called the \emph{endsequent} of $\Pi$. Each leaf $o \in
+  \Leaf(T) \setminus \dom(\delta)$ is called \emph{open} and its associated
+  sequent $\lambda(o)$ is a \emph{assumption} of $\Pi$.
+  % By convention, we list the
+  % open leaves (and their corresponding assumptions) from left to right, according
+  % to $\lro$.
+\end{definition}
+
+\begin{definition}[Cyclic proof system]
+  A \emph{cyclic proof system} is a tuple $(\Seq, \RR, \rho, \SC)$ consisting of a
+  derivation system $(\Seq, \RR, \rho)$ and a set $\SC \subseteq \Pp(\RR)$ of $\RR$-preproofs
+  without assumptions called \emph{$\RR$-proofs}. Any $\Pi \in \SC$ with endsequent $\Gamma$ is called
+  \emph{a proof of ~$\Gamma$}. Such a preproof is said to satisfy the
+  \emph{soundness condition} of $\RR$. We extend the naming convention for
+  derivation systems to cyclic derivation systems, referring to $(\Seq, \RR,
+  \rho, \SC)$ by $\RR$.
+\end{definition}
+
+\TODO{Say something about \Cref{sec:abs-ps}}
+
+Observe that the specification of $\CPA$ we given in \Cref{sec:cpa} fits the
+definitions above. In that case, $\SC$ contains precisely those $\CPA$
+pre-proofs which satisfy the global trace condition. Allowing different
+derivation rules $r, r' \in \RR$ with the same interpretation, i.e.\ $\rho(r) =
+\rho(r')$, is useful when considering cyclic proof systems in which there can
+sometimes be
+two rule-instances with identical premises and conclusion
+which have different `effects' on traces through them.
+
+\section{Trace Categories}
+\label{sec:tcs}
+
+In the previous section, we left the soundness conditions quite vague. In this
+section we describe one kind of soundness condition: the global trace condition.
+More specifically, we describe a generic way of specifying the global trace
+condition in terms of certain categories. We then go on to define a family of
+such categories that are sufficient to specify most global trace conditions from
+the literature. The definitions we give in this
+section are adapted from~\cite{afshariAbstractCyclicProofs2022}
+and~\cite{wehrAbstractFrameworkAnalysis2021}.
+
+% Trace categories
+A \emph{semi-category} is a category which may not have identity morphisms.
+That is, a semi-category $\CC$ consists of a collection of objects $\Ob(\CC)$ 
+and collections of morphisms  $\Hom_{\CC}(X, Y)$ between each pair of objects  $X, Y \in
+\Ob(\CC)$. There is a composition
+$\mathrel{\circ}\, : \Pi X, Y, Z \in \Ob(\CC).~\Hom_{\CC}(Y, Z) \times \Hom_{\CC}(X,
+Y) \to \Hom_{\CC}(X, Z)$ which is associative.
+A \emph{semi-functor} is a semi-category homomorphism. That is, for
+semi-categories $\CC, \DD$, a semi-functor $F : \CC \to \DD$ consists of a map
+on objects $F_0 : \Ob(\CC) \to \Ob(\DD)$ and a further map $F_2$ on
+morphisms of $C$ such that for $f : X \to Y$ we have $F_1(f) : F_0(X)
+\to F_0(Y)$.
+$F_1$ distributes over the composition
+operation, i.e. $F_1(g \circ f) = F_1(g) \circ F_1(f)$. As is also common for standard functors,
+we denote both $F_0$ and $F_1$ by $F$.
+
+The standard $<$-ordering of the natural numbers $\omega$ induces a semi-category whose
+objects are the natural numbers and in which there is a unique morphism
+between $n$ and $m$, denoted `$n < m : n \to m$', if $n < m$. The $\leq$-ordering
+ induces an analogous proper category. In this article, we denote both of
+these categories by $\omega$; which one is meant will
+be clear from the context.
+
+A \emph{path} through a category $\TT$ is a functor $P \colon \omega \to \TT$.
+Given $P, P' \colon \omega \to \TT$ we call $P$ a subpath of $P'$, written  $P \subseteq
+  P'$, if there is a semi-functor $S \colon \omega \to \omega$ between the $\omega$-semi-categories such that $P = P'
+  \circ S$. The transitive, symmetric closure of $\subseteq$ is
+  denoted $\sim$.
+In other words, $P \subseteq P'$ holds if $P'$ can be transformed
+  into the $P$ by applying a combination of two path transformations:
+  \begin{enumerate}
+  \item 
+    Discarding a finite prefix of path $P'$, for example by taking $S(m) \coloneq m + n$.
+  \item 
+    Composing morphisms along $P'$. For example, if $P'$ is of the form
+    \[X_0^0 \xrightarrow{\tau^0_0} X_0^1 \xrightarrow{\tau^1_0} \cdots
+      X_0^{n_0} \xrightarrow{\tau_0^{n_0}} X_1^0 \xrightarrow{\tau_1^0} \cdots X_1^{n_1}
+      \xrightarrow{\tau_1^{n_1}} X_2^0 \xrightarrow{\tau_2^0} \cdots X_2^{n_2} \xrightarrow{\tau_2^{n_2}} \hdots\]
+    then $P \subseteq P'$ for the path $P$ below
+    \[X_0^0 \xrightarrow{\tau^{n_0}_0 \circ \cdots \circ \tau^0_0} X_1^0
+      \xrightarrow{\tau^{n_1}_1 \circ \cdots \circ \tau^{0}_1 } X_2^0
+      \xrightarrow {\tau^{n_2}_2 \circ \cdots \circ \tau^{0}_2 } \hdots\]
+    witnessed by $S(i) \coloneq \sum_{j < i} (n_j + 1)$.
+  \end{enumerate}
+
+Infinite branches of cyclic proofs may be represented as paths through suitable categories.
+
+\begin{definition}[Trace category]\label{def:trace-cond}
+A \emph{trace category} is a category $\TT$ equipped with a \emph{trace
+  condition} \( C_{\TT} \) on paths, invariant under $\sim$, i.e.
+  if $P \sim P'$ then $C_{\TT}(P)$ if and only if $C_{\TT}(P')$ holds.
+\end{definition}
+
+The notion of trace category is abstract, only requiring the trace
+condition to be closed under the subpath relation. However, this already gives
+some insight in the nature of trace conditions. For example, all trace
+conditions must be closed under discarding and adding prefixes to branches. In
+the trace condition of $\CPA$, as in most other
+trace conditions in the literature, this is ensured by explicitly allowing the
+progressing trace to start at any point of the branch. Indeed, we are not aware
+of any trace condition in the cyclic proof theory literature which is not closed
+under prefixes.
+
+We next define trace interpretations, which allow specifying notion of trace and
+progress of a derivation system $\RR$ in terms of a trace category $\TT$. The
+sequents of $\RR$ are identified with objects of $\TT$ and each `step' from a
+conclusion to a premise in a derivation rule of $\RR$ is associated with a
+morphism between the objects associated to said conclusion and premise. Under
+this interpretation, every branch through a preproof induces a path $\omega \to
+\TT$ which allows for a general specification of the global trace condition in
+terms of the trace condition of $\TT$. Multiple examples of such trace
+interpretations for cyclic proof systems from the literature can be found in
+\Cref{sec:concrete} and in \cite[Chapter 6]{wehrAbstractFrameworkAnalysis2021}.
+
+\begin{definition}[Trace intrepretation]
+  Let $(\Seq, \RR, \rho)$ be a derivation system and $\TT$ a trace category. A
+  \emph{trace interpretation} $\iota \colon \RR \to \TT$ consists of a map $\iota \colon \Seq
+  \to \Ob(\TT)$ and for each rule $r \in \RR$ with $\rho(r) = (\Gamma, \Delta_1,
+  \ldots, \Delta_n)$ morphisms $r_i \colon \iota(\Gamma) \to \iota(\Delta_i)$ for each \( 1 \le i \le n \).
+\end{definition}
+
+\begin{definition}[$\iota(\RR)$]\label{def:tc-induced}
+  Let $(\Seq, \RR, \rho)$ be a derivation system with a trace interpretation 
+  \( \iota \colon \RR \to \TT\). Let $\Pi = (C, \lambda, \delta)$ be a preproof and $\pi$ be a a path
+  through $C$. This induces a path $\hat{\pi} \colon \omega \to \TT$ given by \(
+  \hat{\pi}(i) \coloneq \iota(\lambda(\pi_i)) \) and
+  \[ \hat{\pi}(i < i + 1) \coloneq
+    \begin{cases}
+      \delta(\pi_i)_j \colon \iota(\lambda(\pi_i)) \to \iota(\lambda(\pi_{i + 1})) & \pi_{i + 1} = \pi_{i + 1} j \\
+      1_{\hat{\pi}(i)} & \pi_i \in \dom(\beta)
+    \end{cases}
+  \]
+
+  This induces a cyclic proof system $\iota(\RR) \coloneq (\Seq, \RR, \rho,
+  \SC)$ with $\Pi \in \SC$ iff $\Pi$ has no open assumptions and for every path
+  $\pi$ through $\Pi$ the trace condition $C_{\TT}(\hat{\pi})$ of $\TT$ holds.
+\end{definition}
+
+The trace conditions in the literature are usually formulated in terms of a
+notion of `trace', or rather some syntactic feature which is `traced' along a
+branch, and a notion of `progress'. We present a family of trace categories
+which formalises this observation. The notion of `progress' is modelled by
+\emph{activation algebras}.
+An activation algebra is a tuple $\Aa = (A, \leq, \vee, 0, \alpha)$
+consisting of
+a finite semilattice $(A, \leq, \vee, 0)$ and an \emph{activation
+  element} $\alpha \in A$ where $0 \neq \alpha$. We often write $\Aa$ to refer
+to the carrier set $A$. For a proof that the categories given below are indeed trace
+categories, i.e.\ that their trace condition is closed under $\sim$, refer to
+\parencite[Proposition 5.9]{wehrAbstractFrameworkAnalysis2021}. \TODO{Maybe include proofs?}
+
+\begin{definition}[Trace category $\TT_{\Aa}$]\label{def:aa-activ-tc}
+  Let $\Aa$ be an activation algebra.
+  The \emph{$\Aa$-activated trace category $\TT_{\Aa}$} has as its objects the finite sets. The
+  morphisms between sets $X, Y$ are relations $\tau \subseteq X \times \Aa
+  \times Y$.
+  The identities are $1_X \coloneq \{(x, 0, x) ~|~ x \in X\}$. We often write $x \tau^a y$ to mean $(x, a, y) \in \tau$.
+  Given morphisms $\tau \colon X \to Y, \tau' \colon Y \to Z$ their composition is specified by $(x, c, z) \in \tau' \circ R$ iff
+  \[\exists y \in Y \exists a, b
+    \in A.\;(x, a, y)
+    \in \tau \text{ and } (y, b, z) \in \tau' \text{ and } a \vee b = c.\]
+
+  A path $P \colon \omega \to \TT_{\Aa}$
+  \emph{satisfies the trace condition} if there exists a subpath $P' \subseteq
+  P$ and a sequence $\sigma \colon \Pi i \in \omega. P'(i)$ along it such that $\sigma_i P'(i <
+  i + 1)^\alpha \sigma_{i + 1}$ for all $i \in \omega$.
+\end{definition}
+
+\begin{example}
+  The simplest example of an activation algebra is the binary Boolean algebra $\BB =
+  \{0, 1\}$.
+  The choice $\alpha \coloneq 1$ is forced by $0 \neq \alpha$.
+  This activation algebra is implicit in the
+  abstract notion of trace previously considered by \textcite{brotherstonSequentCalculusProof2006}
+  and suffices to model most trace conditions in the literature:
+  traces have
+  progress points (represented by triples $(x, 1, y)$ in maps of $\TT_{\BB}$) and a
+  path satisfies the trace condition if it has infinitely many progress points.
+  It is easily verified that the trace condition of $\TT_{\BB}$ is precisely this.
+\end{example}
+
+\begin{example}
+  Some logics, especially $\mu$-calculi (see \Cref{def:ff-mu-tc} for an example), require more complex activation algebras
+  to model their trace conditions. An example is the \emph{failure algebra} $\FF
+  \coloneq (\{0, 1, 2\}, \leq, \vee, 0, 1)$. The value $2 > \alpha$ can be used to
+  represent `failure' of trace condition satisfaction. That is,
+  traces through $\TT_{\FF}$ satisfy the trace condition if they have
+  infinitely many progress points (triples $(x, 1, y)$ in maps of $\TT_{\FF}$) and
+  \emph{no} failure points (triples $(x, 2, y)$ in maps of $\TT_{\FF}$). Again,
+  the trace condition of $\TT_{\FF}$ ensures precisely this condition.
+  The failure
+  algebra appears in the literature as one of the common trace conditions for
+  the modal $\mu$-calculus ().
+\end{example}
+
+The trace categories $\TT_{\Aa}$ are a natural medium for the study of cyclic
+proof theory. They are abstract enough to capture many trace conditions from the
+literature but also concrete enough to allow various theorems of cyclic proof
+theory to be derived for them, such as the decidability result below.
+
+\begin{proposition}\label{lem:tc-dec}
+  Fix a derivation system $\RR$ and an $\RR$-preproof $\Pi$. Given a trace
+  interpretation $\iota \colon \RR \to \TT_{\Aa}$, it is decidable whether $\Pi$ is a
+  proof in $\iota(\RR)$.
+\end{proposition}
+\begin{proof}
+  There are various ways of proving this. For example by appealing to infinite
+  word automata~\cite[Theorem 4.4]{wehrAbstractFrameworkAnalysis2021} or to
+  Ramsey's theorem~\cite[Theorem 3]{afshariAbstractCyclicProofs2022}.
+\end{proof}
+
+
+We illustrate the use of $\TT_{\Aa}$ to specify trace conditions by supplying such
+a specification for $\CPA$ in
+terms of a trace interpretation $\iota : \CPA \to \TT_{\BB}$.
+
+\begin{definition}\label{def:bb-cpa-tc}
+  The trace interpretation $\iota \colon \CPA \to \TT_{\BB}$ is given by
+  \(
+  \iota(\Gamma \sdash \Delta) \coloneq \FV(\Gamma, \Delta)\).
+  For each $r \in \CPA$ with $\rho(r) = (\Gamma \sdash \Delta, \Gamma_1 \sdash
+  \Delta_1, \ldots, \Gamma_n \sdash \Delta_n)$
+  the trace maps $r_i \colon \iota(\Gamma \sdash \Delta) \to \iota(\Gamma_i
+  \sdash \Delta_i)$ are defined by
+  \(
+  r_i \coloneq \{(x, a(r, i, x), x) ~|~ x \in \FV(\Gamma, \Delta) \cap \FV(\Gamma_i, \Delta_i) \}
+  \) where
+  \[
+    a(r, i, x) \coloneq
+    \begin{cases}
+      1, & \text{ if } r \text{ instance of } \RCase_x \text{ and } i = 2 \\
+         & \text{ (i.e.\ } \Gamma_i \sdash \Delta_i \text{ is the right-hand premise)} \\
+      0, & \text{ otherwise.}
+    \end{cases}
+  \]
+\end{definition}
+
+From the fact that the only $(x, 1, x)$ pair can be found in the trace map
+leading from the conclusion to the right-hand premise of the $\RCase_x$-rule, it
+is easily concluded that a $\CPA$ pre-proof satisfies the global trace condition
+induced by \Cref{def:bb-cpa-tc} iff it satisfies that specified in
+\Cref{def:bb-cpa-gtc}. A detailed proof of this requires a rather combinatorial
+argument.
+The curious reader can find a detailed version of a similar argument in
+\parencite[Proposition 2]{afshariAbstractCyclicProofs2022}.\TODO{Include this?}
+
+\TODO{$\CHAl$ TI}
+\begin{definition}
+  The \emph{trace interpretation} $\iota \colon \CA \to \TT_{\BB}$ is given by $\iota(\Gamma
+  \sdash \Delta) \coloneq \term(\Gamma \sdash \Delta)$ and for any $R \in \CA$
+  with $\rho(R) = (\Gamma \sdash \Delta, \Gamma_1 \sdash \Delta_1, \ldots,
+  \Gamma_n \sdash \Delta_n)$ the trace map $r_i \colon \term(\Gamma \sdash \Delta) \to
+  \term(\Gamma_i \sdash \Delta_i)$ is given by
+  \begin{align*}
+    r_i \coloneq & \{(t, 0, t') ~|~ t \in \term(\Gamma \sdash \Delta), t' \in \term(\Gamma_i
+                   \sdash \Delta_i) \text{ and } t' \leftarrow^i_R t\} \,\cup \\
+                 & \left\{(t, 1, s) ~\middle|~
+                   \begin{array}{l}
+                     t \in \term(\Gamma \sdash \Delta) \text{ and } t', s \in \term(\Gamma_i \sdash \Delta_i) \\
+                     \text{such that } t \leftarrow^i_R t' \text{ and } s < t' \in \Gamma_i
+                   \end{array}
+                   \right\}
+  \end{align*}
+  This trace interpretation induces the soundness condition of $\CA$ as described in
+  \Cref{def:tc-induced}.
+\end{definition}
+
+\section{Abstract Soundness Conditions?}
+\label{sec:asc}
+
+% GTCs vs IOs
+Most soundness conditions
+can be
+made sense of in terms of this more abstract notion of trace. For example, the
+induction orders in \Cref{def:io} can be presented in terms of $\TT_{\Aa}$.
+In a slight abuse of notation, we denote the composition of the trace maps along
+a simple cycle $\gamma(t)$ by $\gamma(t)$.
+
+\begin{definition}[Induction order]\label{def:io-abstract-a}
+  Let $(\Seq, \RR, \rho)$ be a deduction system and $\iota : \RR \to \TT_{\Aa}$ be
+  a trace interpretation such that for every $r \in \RR$ and $1 \leq i < n$ for
+  $\rho(r) = (\Gamma, \Delta_1, \ldots, \Delta_n)$ it is the case that $(x, a,
+  y) \in r_i : \iota(\Gamma) \to \iota(\Delta_i)$ implies $x = y$.
+
+  Then an induction order for an $\iota(\RR)$ pre-proof $\Pi = (C, \lambda, \delta)$ is
+  a pair $(\preceq, x_{-})$ consisting of a
+  pre-order
+  $\mathrel{\preceq}\: \subseteq
+  \dom(\beta) \times \dom (\beta) $ together with a mapping $x_{-} : \Pi s \in \dom(\beta).~\iota(\lambda(s)))$
+  such that
+  \begin{itemize}
+  \item every strongly connected subgraph $C[\eta]$ has a
+    $\preceq$-maximal element,
+  \item if $s \preceq t$ then the cycle $\gamma(s)$ \emph{preserves} $x_t$, i.e.\ $(x_t,
+    a, x_t) \in \gamma(s)$ for some $a \leq \alpha$,
+  \item the cycle $\gamma(s)$ \emph{progresses} $x_s$, i.e.\ $(x_s, \alpha, x_s) \in \gamma(s)$
+  \end{itemize}
+\end{definition}
+
+This definition reveals a syntactic feature of $\CPA$ we relied on in our
+definition of induction orders in \Cref{def:io}: Traces always trace a single
+variable, thus allowing the trace values $x_t$ to be specified at a per-cycle level.
+The notion of induction order can be generalised to arbitrary trace
+interpretations $\iota : \RR \to \TT_{\Aa}$, which may introduce more
+`complicated' traces, albeit this requires a more complicated
+definition, given below.
+
+\begin{definition}[Induction order]\label{def:io-abstract-b}
+  Let $(\Seq, \RR, \rho)$ be a deduction system and let $\iota : \RR \to
+  \TT_{\Aa}$ be a trace interpretation.
+  An induction order for an $\iota(\RR)$ pre-proof $\Pi = (C, \lambda, \delta)$
+  is a pre-order
+  $\mathrel{\preceq}\: \subseteq
+  \dom(\beta) \times \dom (\beta)$ such that
+  the following
+  condition holds for every $t \in \dom(\beta)$: Let $\eta$ be maximal for $t$,
+  i.e.\ the greatest $\eta \subseteq \dom(\beta)$ for which $t$ is
+  $\preceq$-maximal and $C[\eta]$ is a strongly connected subgraph of $C$.
+  We write $\tau_{uv}$ for $u, v \in \Node(T)$ for the trace map obtained by
+  composing the maps given by the trace interpretation for the shortest path
+  from $u$ to $v$.
+  There must exist elements $x_t^{-} : \Pi s \in \eta.~\iota(s)$ for each bud in
+  $\eta$ such that,
+  \begin{enumerate}[label=\roman*.]
+  \item for any $u, v \in \eta$ with $\beta(u)$ below $v$, $(x_t^{u}, a, x_t^{v}) \in
+    \tau_{\beta(u) v}$ with $a \leq \alpha$
+  \item for any $u, v \in \eta$ with $\beta(u)$ below $\beta(v)$, $(x_t^u, a, x_t^v) \in
+    \tau_{\beta(u) \beta(v)}$ with $a \leq \alpha$
+  \item $(x_t^t, \alpha, x_t^t) \in \tau_{\beta(t) t}$ for the $\preceq$-maximal $t$
+  \end{enumerate}
+\end{definition}
+Conditions i.~and
+ii.~correspond to the \emph{preservation} condition and iii.~to the
+\emph{progress} condition of induction orders as presented in \Cref{def:io}.
+The selection of elements $x_t^{-}$ corresponds to the fixed elements $x_t$ in
+the simpler \Cref{def:io-abstract-a}, taking into account that the identity of
+the traced element may change between nodes of the proof.
+Under the preconditions of \Cref{def:io-abstract-a}, the two definitions
+coincide, as $x_t^u = x_t^v$ for any $u, v \in \eta$. For both conditions, one
+can prove that any $\iota(\RR)$ pre-proof with an induction order satisfies the
+soundness condition of $\iota(\RR)$ with an argument analogous to \Cref{lem:io-correct}.
+
+% Simple vs complex traces
+In this thesis, we often describe the traces of $\CPA$ as `simple', contrasting
+them with the more `complex' traces of the cyclic Peano arithmetic
+considered by \textcite{simpsonCyclicArithmeticEquivalent2017}. Using the trace
+categories $\TT_{\Aa}$, we can characterise some trace phenomena which introduce
+complexity. For example, in any trace map $\tau$ introduced via the trace
+interpretation $\iota : \CPA \to \TT_{\BB}$ in \Cref{def:bb-cpa-tc}, it follows
+from $(x, a, y), (x, b, z) \in \tau$ that $a = b$ and $x = y = z$. In contrast,
+the interpretation of Simpson's proof system may produce trace maps $\tau$ such
+that for $(x, a, y), (x, b, z) \in \tau$ both $a \neq b$ and $y \neq z$ are
+possible. Furthermore, it may also produce trace maps with $(x, a, y), (z, b, y)
+\in \tau$. When working with Simpson's proof system, one must be much more
+careful in definitions involving traces, for example having to rely on the more
+complex definition of induction orders. Hence, another important point when choosing
+the representation of one's logic as a cyclic proof system is thus to strive to
+keep the traces as `simple', in the sense above, as possible.
+
+The discussion in this section reveals a crucial fact about the abstract notions
+of \textcite{wehrAbstractFrameworkAnalysis2021}: While the notion of trace
+category is sufficient to define the global trace condition, the
+family $\TT_{\Aa}$ of trace categories which feature a concrete notion of `trace'
+and `progress' are often better suited to the abstract discussion of soundness
+conditions more generally. Indeed, \papOne{} also operates at the level of
+$\TT_{\Aa}$, rather than general trace categories.
+
+\section{Counterexample Zoo}
+\label{sec:zoo}
+
+\section{PSPACE-completeness of Cyclic Proof Checking}
+\label{sec:pspace}
+
+
+% Trace vs soundness condition
+% In the cyclic proof theory literature, the terms `trace condition' and `global
+% trace condition' are often used interchangeably. The abstract notions of cyclic
+% proof considered in this section clearly demonstrate that these are two separate
+% notions. A trace condition simply specifies which infinite branches are sound,
+% often in terms of objects `traced' along a branch which can `progress'. The
+% soundness conditions of cyclic proof systems are almost always defined in terms
+% of a trace condition but the global trace condition is only one among many.

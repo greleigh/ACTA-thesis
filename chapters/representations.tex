@@ -1,0 +1,827 @@
+% Emacs, this is -*-latex-*-
+
+\chapter{Representing Cyclic Arithmetic}
+\label{chap:representation}
+
+% capture notion 'representation'
+In this section, we illustrate what we mean when speaking of
+`representations of cyclic proofs' and why we believe them to be central to
+cyclic proof theory.
+% illustrate why 'repr' matters
+% Less canonical?
+
+% Different representations of the same logic
+There are usually many cyclic proof systems for a logic or logical theory. For
+example, we have presented three different
+cyclic proof systems for Heyting arithmetic in \Cref{chap:ca}.
+These can each be thought of as
+`cyclic representations' of Heyting arithmetic. All of the aforementioned proof
+systems employ a global trace condition as their soundness condition. It is
+possible to
+adapt these proof systems to other soundness conditions. Often,
+this leaves the derivation rules unchanged, only modifying which pre-proofs are
+considered proofs. Sometimes, however, it also requires the derivation rules to be
+changed, for example by introducing new non-logical rules. In either case,
+adapting a cyclic proof system to a different soundness
+condition can yield a different `representation' of the `same' proof system.
+In this context, one can also consider a notion of different `representations'
+of an individual cyclic proof. For example, a cyclic proof satisfying a certain
+soundness condition might need to be unfolded or otherwise slightly modified to
+satisfy a different soundness condition. This usually does not change the underlying
+`argument' of the cyclic proof.
+% Often also of the same proof system
+
+All considerations relating to representation of cyclic proofs can be
+crucial when carrying out investigations in cyclic proof theory. Often,
+carefully choosing which cyclic representation of a logic to consider can
+considerably ease the effort required to derive certain results.
+
+In the next three sections, we discuss some of the issues around the
+representations of cyclic proof systems for the example of $\CHA$, specifically
+those relating to different
+soundness conditions. \Cref{sec:gtcs} focuses on global trace
+conditions, highlighting their shortcomings and thus motivating the
+consideration of other soundness conditions. In \Cref{sec:ios} we present
+induction orders, a soundness condition especially well-suited to explaining the
+soundness of cyclic proofs to human readers.
+\Cref{sec:reset} introduces reset proof systems, which
+are particularly well suited for computational or proof theoretic uses of cyclic
+proof systems. These three different soundness conditions all play key
+roles in \papOne{} and \papTwo{}.
+
+There is another perspective from which one can consider the representation of
+cyclic proofs. As pointed out before, the global trace conditions in the
+literature follow the same template, differing only in their notion of
+`trace' and `progress'. This is true for soundness conditions more generally,
+which can often be considered purely in terms of `trace'. Thus,
+general discussions of soundness conditions are most
+appropriately held at a level of abstraction which ignores the logic-specific
+details of each cyclic proof system and instead operates in terms of an abstract
+notion of trace. We introduce one such abstract notion of cyclic proof systems
+in \Cref{sec:acds} which is also central to \papOne{}.
+
+\section{Global Trace Conditions}
+\label{sec:gtcs}
+
+The global trace condition (GTC) is the prevalent soundness condition in the
+literature of cyclic proof theory.
+The formulations of GTCs in the
+literature follow a simple pattern: Every infinite branch of a cyclic proof must
+have a suffix along which a progressing trace exists. While the notions of `trace'
+and `progress' vary between logics, the shape of the condition remains the same.
+
+Most of this section focuses on the shortcomings of the GTC.
+Nonetheless, the positive aspects of GTC
+deserve mentioning. The GTC's central property is its \emph{simplicity}. When
+constructing a cyclic proof system for a new logic, finding a GTC can
+be quite easy: Simply fix suitable notions of `trace' and `progress'. These
+notions often arise naturally from the semantics of the logic. Furthermore, many
+simple properties of cyclic proofs are proven most easily for proof systems
+with a GTC. The simple properties include those which are expected to be covered
+in any article putting forward a novel cyclic proof system, such as soundness,
+completeness and decidability of proof checking.
+These strengths of the GTC make it the `default' soundness condition in many
+settings. For example, the soundness conditions we present in other sections are
+justified by reducing them to GTC satisfaction.
+
+One disadvantage of the global trace condition is that is \emph{difficult to
+  verify for humans}.
+% Given a pre-proof in a cyclic proof system defined in terms of a
+% GTC, it can often be difficult for humans to determine whether said pre-proof
+% satisfies said GTC.
+For an example, consider the $\CHA$ proof in \Cref{fig:ack}.
+It proves the totality of a recursive function, coded as a three-place relation
+$A(x, y, z)$. The pre-proof has three buds, all sharing the same companion,
+marked with $\star$. We encourage the reader to try to convince themselves that
+the pre-proof indeed is a $\CHA$ proof. The difficulty of this endeavour stems
+from the fact that
+there are many (in fact, uncountably many) different infinite branches through the
+pre-proof. To verify the GTC, humans would usually first group these branches
+into finitely many distinct groups and then verify that each such group
+satisfies the trace condition.
+\begin{figure}[h]
+  \centering
+
+  \begin{scprooftree}{0.75}
+    \AXC{}
+    \UIC{$\sdash \exists z.~A(0, y, z)$}
+    \AXC{$\sdash \exists z.~A(x, y, z) ~~\star$}
+    \LSC{$\RSubst$}
+    \UIC{$\sdash \exists z.~A(x, 1, z)$}
+    \UIC{$\sdash \exists z.~A(Sx, 0, z)$}
+    \AXC{$\sdash \exists z.~A(x, y, z) ~~\star$}
+    \LSC{$\RSubst$}
+    \UIC{$\sdash \exists z.~A(x', y, z)$}
+    \LSC{$\RSubst$}
+    \UIC{$\sdash \exists z.~A(Sx, y, z)$}
+    \AXC{$\sdash \exists z.~A(x, y, z) ~~\star$}
+    \RSC{$\RWk$,$\RSubst$}
+    \UIC{$A(Sx, y, z') \sdash \exists z.~A(x, z', z)$}
+    \RSC{$\exists$L}
+    \UIC{$\exists z'.~A(Sx, y, z') \sdash \exists z.~A(Sx, Sy, z)$}
+    % \UIC{$\sdash \exists z.~A(Sx, Sy, z)$}
+    \RSC{$\RCut$}
+    \BIC{$\sdash \exists z.~A(Sx, Sy, z)$}
+    \RSC{$\RCase_y$}
+    \BIC{$\sdash \exists z.~A(Sx, y, z)$}
+    \RSC{$\RCase_x$}
+    \BIC{$\sdash \exists z.~A(x, y, z) ~~\star$}
+  \end{scprooftree}
+  \caption{A $\CHA$ proof, $\star$ marking cycles}
+  \label{fig:ack}
+\end{figure}
+
+The verification is somewhat eased by revealing which function is coded by $A(x,
+y, z)$: the Ackermann function. By scrutinising the definition given below, one finds that the function terminates according to the lexicographic ordering
+of the parameters $x$ and $y$. With this knowledge, GTC satisfaction in
+\Cref{fig:ack} is easily verified.
+\[
+  A(x, y) \coloneq
+  \begin{cases}
+    y + 1 & x = 0 \\
+    A(x - 1, 1) & x > 0, y = 0 \\
+    A(x - 1, A(x, y - 1)) & x > 0, y > 0
+  \end{cases}
+\]
+
+Note that \Cref{fig:ack} is still a rather simple example of a cyclic proof.
+Cyclic proofs in proof systems with more complex traces, such as that of
+\textcite{simpsonCyclicArithmeticEquivalent2017},
+can make verification of the global
+trace condition even more difficult.
+
+Generally, a key property of proof systems
+is that proofs should be easy to verify, usually by simply checking whether each
+rule has been applied correctly. Sometimes this comes at the cost of proofs being difficult
+to construct. This notion has, for example, been made formal by
+\textcite{cookRelativeEfficiencyPropositional1979} who require poly-time
+verifiability as part of their abstract notion of `proof system'.
+In cyclic proof systems, especially those with a GTC, this
+principle is turned on its head: as proof verification also requires checking of
+the GTC, it becomes more difficult. As pointed out in \Cref{chap:cyclic-proofs},
+the construction of cyclic proofs, for example by automatic theorem provers, is
+eased by their lack or simplification of induction rules.
+
+The difficulty of verifying the global trace condition experienced by humans
+extends to the realm of machines: the global trace condition is
+\emph{computationally expensive} to verify. Indeed, for some proof systems, such
+as multiplicative-additive linear logic with fixed points
+\parencite{nolletPSPACECompletenessThreadCriterion2019} or the cyclic proof system
+for Heyting arithmetic given by \textcite{simpsonCyclicArithmeticEquivalent2017}, the problem of verifying the GTC is known to be
+PSPACE-complete. This result has been transferred to an abstract rendition of
+cyclic proofs with GTCs by \textcite{afshariAbstractCyclicProofs2022}. However,
+it has not been settled yet whether most concrete cyclic proof systems exhibit full
+PSPACE-completeness. The reduction for $\mu$MALL and Simpson's system rely on
+rather complex trace patterns which most cyclic proof systems likely cannot
+replicate.
+
+One might argue that the difficulty of verification by humans is just a
+consequence of the sheer computational complexity of the task. However, in
+\Cref{sec:ios} we present a soundness condition which, in practice, is often
+easy for humans to verify while still being in coNP.
+
+Lastly, and most crucially to this thesis, cyclic proof systems with a global
+trace condition are often \emph{ill-suited to proof theoretic investigations}. For a
+simple example, consider the task of proving the admissibility of the following
+induction rule in $\CHA$, in which $x \not\in \FV(\Gamma)$:
+\[
+  \inference[$\RInd$]{\Gamma, \varphi \sdash \varphi[Sx / x]}{\Gamma, \varphi[0 / x] \sdash \varphi[t / x]}
+\]
+It should be noted that `admissibility' in cyclic proof systems is a more subtle
+than in inductive proof systems. Here, we understand admissibility of $\RInd$ in
+$\CHA$ to mean that a $\CHA$ proof employing said rule, with traces through it
+being defined in terms of free variable occurrences analogously to the `proper' rules of
+$\CHA$, remains sound. To prove this, one may supply a pre-proof with $\Gamma,
+\varphi \sdash \varphi[Sx / x], \Delta$ as an open leaf and then prove that
+every $\RInd$-application in a $\CHA$-proof may be replaced by said pre-proof
+without invalidating the soundness condition.
+A suitable pre-proof can quickly be found, such as the one depicted in \Cref{fig:ind-adm}.
+When the derivation is `inserted' into a pre-proof,
+the subderivation above the $\RInd$-premise is inserted above the right-most leaf.
+It remains to verify that a $\CHA$ proof employing the $\RInd$-rule remains a
+proof, i.e.\ satisfies the GTC, once the $\RInd$-instance is replaced by the
+derivation above. The simplest method of showing this is proving that every
+branch through the modified proof `corresponds' to a branch through the original
+proof. Even for $\CHA$, which employs a comparably simple notion of trace, this
+requires a subtle argument relying on a technical notion of branch bisimulation.
+
+\begin{figure}
+  \centering
+
+  \begin{scprooftree}{0.9}
+    \AXC{}
+    \LSC{$\RAx$}
+    \UIC{$\Gamma, \varphi[0 / x] \sdash \varphi[0 / x]$}
+    \AXC{$\Gamma, \varphi[0 / x] \sdash \varphi ~~\star$}
+    \LSC{$\RWk$}
+    \UIC{$\Gamma, \varphi[0 / x] \sdash \varphi, \varphi[Sx / x]$}
+    \AXC{$\Gamma, \varphi \sdash \varphi[Sx / x]$}
+    \RSC{$\RWk$}
+    \UIC{$\Gamma, \varphi[0 / x], \varphi \sdash \varphi[Sx / x]$}
+    \LSC{$\RCut$}
+    \BIC{$\Gamma, \varphi[0 / x] \sdash \varphi[Sx / x]$}
+    \LSC{$\RCase_x$}
+    \BIC{$\Gamma, \varphi[0 / x] \sdash \varphi~~\star$}
+    \LSC{$\RSubst$}
+    \UIC{$\Gamma, \varphi[0 / x] \sdash \varphi[t / x]$}
+  \end{scprooftree}
+  \caption{A derivation of $\RInd$ in $\CHA$, $\star$ marking a cycle}
+  \label{fig:ind-adm}
+\end{figure}
+
+Most articles in the cyclic proof theory literature which carry out more
+sophisticated proof theoretic investigations rely on soundness conditions
+different from
+the global trace condition.
+This can be taken as
+another piece of evidence of the unsuitability of the global trace condition to
+carrying out proof theoretic investigations.
+For example, all interpolation results
+employing cyclic proof systems rely on cyclic proof systems with \emph{path conditions}
+\parencite[see][]{afshariUniformInterpolationCyclic2021,afshariLyndonInterpolationModal2022,martiFocusSystemAlternationFree2021,shamkanovCircularProofsGodelLob2014,savateevNonWellFoundedProofsGrzegorczyk2018}.
+Path conditions are soundness conditions on cyclic
+pre-proofs in cycle normal form which are phrased in terms of the simple cycles,
+i.e. the paths between each companion $\beta(b)$ and bud $b$. In a sense, these
+conditions are much more `local' than the global trace condition.
+
+These disadvantages of the global trace condition can be circumvented by
+choosing to represent cyclic proofs in terms of different soundness conditions.
+We present two such soundness conditions in \Cref{sec:ios,sec:reset}
+
+\section{Strict Trace Conditions}
+\label{sec:strict-tcs}
+
+
+\section{Induction Orders}
+\label{sec:ios}
+
+This section describes \emph{induction orders}, a soundness condition first put
+forward by \textcite{sprengerGlobalInductionMechanisms2003}. The main advantage
+of induction orders over global trace conditions is that they tend to be much
+easier to verify for humans. They also play a key role in \papTwo{}.
+
+To define induction orders, we must first introduce some auxiliary notions. A
+\emph{strongly connected subgraph} of a cyclic tree $(T, \beta)$ is a set of nodes $S
+\subseteq \Node(T)$ such that between every $s, t \in S$ there is a path from
+$s$ to $t$ through $(T, \beta)$, moving from nodes to their children and possibly using the cycles via $\beta$, which
+only passes nodes in $S$. If the cyclic tree is in cycle normal form, strongly connected subgraphs correspond to sets of buds $\eta \subseteq
+\dom(\beta)$ via
+\(C[\eta] \coloneq \{s \in \Node(T) \mid \exists t \in \eta.~s \in \gamma(t)\}\)
+in which $\gamma(t)$ for a bud $t \in \dom(\beta)$ is the set of nodes which
+occur on the shortest path from $\beta(t)$ to $t$. We call the path whose nodes
+are in $\gamma(t)$ the \emph{simple cycle} of $\gamma(t)$.
+The nodes passed infinitely by an infinite branch $s \in
+\Node(T)^\omega$ through $(T, \beta)$ always form a strongly connected subgraph, i.e.
+$\Inf(s) = C[\eta]$ for some $\eta \subseteq \dom(\beta)$.
+
+We define induction orders for $\CHA$ pre-proofs. Because the notions
+of the previous paragraph only applies to cyclic trees in cycle normal form, we
+restrict our attention to $\CHA$ pre-proofs in cycle normal form.
+
+\begin{definition}[Induction order]\label{def:io}
+  Let $\Pi = (C, \lambda)$ be a pre-proof in cycle normal form.
+  An \emph{induction order} is a pre-order
+  $\mathrel{\preceq}\: \subseteq
+  \dom(\beta) \times \dom (\beta) $ together with an associated mapping $x_{-} : \Pi s \in \dom(\beta).~\FV(\lambda(s))$
+  such that
+  \begin{itemize}
+  \item every strongly connected subgraph $C[\eta]$ has a
+    $\preceq$-maximal element,
+  \item if $s \preceq t$ then $\gamma(s)$ \emph{preserves} $x_t$, i.e. $x_t \in
+    \FV(\lambda(u))$ for every $u \in \gamma(s)$,
+  \item the cycle $\gamma(s)$ \emph{progresses} $x_s$, i.e.
+    $\RCase_{x_s}$-instance is applied along the path $\gamma(s)$
+  \end{itemize}
+\end{definition}
+
+The idea behind induction orders is to fix, for each simple cycle $\gamma(s)$
+with $s \in \dom(\beta)$, a variable $x_s$ on which induction is being
+`performed' along said cycle. The induction order $\preceq$ ensures that along
+any infinite branch through the proof
+some induction variable is preserved and progressed infinitely.
+
+\begin{theorem}\label{lem:io-correct}
+  If a $\CHA$ pre-proof in cycle normal form has an induction order, it
+  satisfies the global trace condition.
+\end{theorem}
+\begin{proof}
+  Consider such a pre-proof $(C, \lambda)$ with induction order $(\preceq,
+  x_{-})$. An infinite branch $s \in \Node(T)^\omega$ of $C$ passes precisely
+  the nodes of some
+  strongly connected subgraph $C[\eta]$, for $\eta \subseteq \dom(\beta)$, infinitely.
+  Thus $s_i \in C[\eta]$ for $i > N$. There must be some $\preceq$-maximal
+  element $t \in \eta$. As every simple cycle of $C[\eta]$ preserves $x_t$, we
+  know that $x_t \in \FV(\lambda(u))$ for every $u \in C[\eta]$ and thus that
+  $x_t \in \FV(\lambda(s_i))$ for $i > N$. As the simple cycle $\gamma(t)$
+  contains a $\RCase_{x_t}$-instance, this instance is passed infinitely by $s$.
+  As $x_t$ is preserved, $\gamma(t)$ must pass through the right-hand side of
+  the $\RCase_{x_t}$ rule. Hence, $s$ has a progressing $x_t$-trace.
+\end{proof}
+
+Induction orders are most easily defined for cyclic proof systems with simple
+notions of `trace', such as $\CHA$, in which a trace always follows a fixed
+variable. Other cyclic proof systems, such as that for Heyting arithmetic
+considered by \textcite{simpsonCyclicArithmeticEquivalent2017} in which the term
+being followed may change along a trace, require a more intricate notion of
+induction order which we present in \Cref{def:io-abstract-b}.
+
+The following result is a consequence of the simplicity of the notion of `trace'
+employed by $\CHA$. Often, pre-proofs satisfying the global trace condition must
+first be unfolded to exhibit an induction order. A proof of it can be found in
+Lemma 11 of \papTwo{}.
+
+\begin{fact}
+  Every $\CHA$ proof in cycle normal form has an induction order.
+\end{fact}
+
+Even though the global trace condition and the existence of induction orders
+guarantee the soundness of the same $\CHA$ pre-proofs, the `information'
+contained in an induction order often makes it easier to verify to humans. For
+example, reconsider the $\CHA$ proof of the totality of the Ackermann function,
+recalled in \Cref{fig:ack-io}. To distinguish between the simple cycles of the
+proof, each bud is annotated with a number $\star^i$. The buds still share the
+same companion marked with $\star$. An induction order for the proof is $\star^2
+\prec \star^1 \prec \star^3$, associating to $\star^2$ the variable $y$ and to
+$\star^1$ and $\star^3$ the variable $x$. As the order is linear, every strongly connected subgraph has a $\preceq$-maximal bud. Verifying that this
+is indeed an induction order thus reduces to checking the progress and
+preservation conditions, which is easily done.
+
+\begin{figure}[h]
+  \centering
+  \begin{scprooftree}{0.75}
+    \AXC{}
+    \UIC{$\sdash \exists z.~A(0, y, z)$}
+    \AXC{$\sdash \exists z.~A(x, y, z) ~~\star^1$}
+    \LSC{$\RSubst$}
+    \UIC{$\sdash \exists z.~A(x, 1, z)$}
+    \UIC{$\sdash \exists z.~A(Sx, 0, z)$}
+    \AXC{$\sdash \exists z.~A(x, y, z) ~~\star^2$}
+    \LSC{$\RSubst$}
+    \UIC{$\sdash \exists z.~A(x', y, z)$}
+    \LSC{$\RSubst$}
+    \UIC{$\sdash \exists z.~A(Sx, y, z)$}
+    \AXC{$\sdash \exists z.~A(x, y, z) ~~\star^3$}
+    \RSC{$\RWk$,$\RSubst$}
+    \UIC{$A(Sx, y, z') \sdash \exists z.~A(x, z', z)$}
+    \RSC{$\exists$L}
+    \UIC{$\exists z'.~A(Sx, y, z') \sdash \exists z.~A(Sx, Sy, z)$}
+    % \UIC{$\sdash \exists z.~A(Sx, Sy, z)$}
+    \RSC{$\RCut$}
+    \BIC{$\sdash \exists z.~A(Sx, Sy, z)$}
+    \RSC{$\RCase_y$}
+    \BIC{$\sdash \exists z.~A(Sx, y, z)$}
+    \RSC{$\RCase_x$}
+    \BIC{$\sdash \exists z.~A(x, y, z) ~~\star$}
+  \end{scprooftree}
+
+  \caption{A $\CHA$ proof, $\star$ marking cycles}
+  \label{fig:ack-io}
+\end{figure}
+
+Induction orders are somewhat more computationally tractable than the worst case
+of global
+trace conditions, being verifiable in coNP.
+We do not know whether there are more efficient algorithms than the one we give
+below.
+
+\begin{proposition}
+  That $(\preceq, x_{-})$ is not an induction order for $\CHA$ pre-proof $\Pi = (C,
+  \lambda)$ can be decided by a non-deterministic Turing machine in polynomial
+  time.
+\end{proposition}
+\begin{proof}
+  Well-derivedness of $\Pi$ according to the derivation rules of $\CHA$ as well
+  as the progress and preservation conditions for $(\preceq, x_{-})$ can be
+  verified deterministically in polynomial time. If one of these properties is
+  not satisfied, accept. Otherwise, `guess' a subset $\eta \subseteq
+  \dom(\beta)$. If $C[\eta]$ is no strongly connected subgraph of, which can be
+  verified in polynomial time \parencite{tarjanDepthFirstSearchLinear1972},
+  reject. Otherwise, accept iff $\eta$ has no $\preceq$-maximal element.
+
+  The algorithm above clearly runs in polynomial time on a non-deterministic
+  Turing machine. It accepts iff $\Pi$ is not well-formed or there are issues
+  surrounding progress and preservation or there is a strongly connected
+  subgraph $C[\eta]$ of $\Pi$ with no $\preceq$-minimal element. In other
+  words, it accepts iff $\Pi$ is no proof justified by $(\preceq, x_{-})$.
+\end{proof}
+
+Induction orders are better suited than global trace conditions for verifying
+proof transformations. For example, reconsider the problem of proving the
+admissibility of $\RInd$-rule. This can now be achieved with a rather simple
+argument.
+
+\begin{lemma}
+  The following rule is admissible in $\CHA$ for $x \not\in \FV(\Gamma)$:
+  \[
+    \inference[$\RInd$]{\Gamma, \varphi \sdash \varphi[Sx / x]}{\Gamma, \varphi[0 / x] \sdash \varphi[t / x]}
+  \]
+\end{lemma}
+\begin{proof}
+  Let $\Pi$ be a $\CHA$ pre-proof which w.l.o.g.\ makes use of the $\RInd$-rule precisely
+  once. Replace the $\RInd$-application with the following derivation:
+  \begin{scprooftree}{0.9}
+    \AXC{}
+    \LSC{$\RAx$}
+    \UIC{$\Gamma, \varphi[0 / x] \sdash \varphi[0 / x]$}
+    \AXC{$\Gamma, \varphi[0 / x] \sdash \varphi ~~\star$}
+    \LSC{$\RWk$}
+    \UIC{$\Gamma, \varphi[0 / x] \sdash \varphi, \varphi[Sx / x]$}
+    \AXC{$\Gamma, \varphi \sdash \varphi[Sx / x]$}
+    \RSC{$\RWk$}
+    \UIC{$\Gamma, \varphi[0 / x], \varphi \sdash \varphi[Sx / x]$}
+    \LSC{$\RCut$}
+    \BIC{$\Gamma, \varphi[0 / x] \sdash \varphi[Sx / x]$}
+    \LSC{$\RCase_x$}
+    \BIC{$\Gamma, \varphi[0 / x] \sdash \varphi~~\star$}
+    \LSC{$\RSubst$}
+    \UIC{$\Gamma, \varphi[0 / x] \sdash \varphi[t / x]$}
+  \end{scprooftree}
+  As $\Pi$ is a $\CHA$ proof, it has an induction order $(\preceq, x_{-})$. We
+  extend this induction order to justify the modified proof. Fix the induction
+  variable $x_\star$ of the $\star$-cycle to be $x$, which is clearly preserved
+  and progressed along $\gamma(\star)$. Set $\star \prec t$ iff
+  $t \in \dom(\beta)$ is a bud whose simple cycle $\gamma(t)$ passes through the
+  $\RInd$-application, i.e.\ any bud which is above the $\RInd$-application
+  and whose companion is below the $\RInd$-application. By the preservation
+  properties of the induction order of the original $\Pi$, $x_t \in \FV(\Gamma, \varphi \sdash \varphi[Sx / x])$ if $\star \prec t$ and hence
+  $x_t$ is free along every node of $\gamma(\star)$.
+
+  It remains to prove that every strongly connected subgraph $C[\eta]$ of the
+  modified proof has a $\preceq$-maximal element. It suffices to consider the
+  case of $\{\star\} \subsetneq \eta$. There must be a bud $t \in \eta$ which
+  is above the $\RInd$-application, as this corresponds to the only kind of
+  cycle $\star$ can `access'. Furthermore, one of the buds $t' \in \eta$ above
+  the $\RInd$-application must have a companion below the $\star$-companion, as
+  there could not be a path from such buds to the $\star$-companion otherwise,
+  and hence $\star \prec t'$.
+  $\eta \setminus \{\star\}$ induces a strongly connected subgraph of the original
+  $\CHA$ proof and thus has a $\preceq$-maximal element $s$. Then $\star \prec
+  t' \preceq s$, meaning $s$ is also $\preceq$-maximal for $\eta$ in the
+  modified proof.
+\end{proof}
+
+Induction orders have seen little use in deriving proof theoretic
+results. The only instance we are aware of is the method for proving the
+equivalence of cyclic and inductive proof systems introduced by
+\textcite{sprengerStructureInductiveReasoning2003} and transferred to the setting
+of Heyting and Peano arithmetic in \papTwo{}.
+
+\section{Reset Proofs}
+\label{sec:reset}
+\TODO{Update}
+
+This section describes \emph{reset proofs}, another representation of cyclic
+proofs. They were first introduced by
+\textcite{jungteerapanichTableauSystemsModal2010} for the modal $\mu$-calculus.
+To convert a cyclic proof system into a reset proof, additional derivation rules
+must be introduced and the existing ones must be modified. \papOne{} gives a
+generic description of this process. Reset proof systems employ
+\emph{annotations} which are used to track preservation and progress in a
+syntactic manner. Reset proof systems are best suited to computational and proof
+theoretic purposes.
+
+Below, we give a reset proof system for Heyting arithmetic. It was obtained from
+$\CHA$ by
+the method described in \papOne{}.
+
+\begin{definition}[Reset Heyting arithmetic]
+  The \emph{sequents} of \emph{reset Heyting arithmetic} ($\RHA$) are
+  expressions $\Theta; \sigma \rsep \Gamma \sdash \Delta$ consisting of a
+  sequent $\Gamma \sdash \Delta$ of first-order arithmetic, a finite,
+  repetition-free sequence $\Theta$ of distinct letters called the
+  \emph{control} and an \emph{assignment} $\sigma : \FV(\Gamma, \Delta) \to \RSub(\Theta)$
+  mapping the free variables of $\Gamma \sdash \Delta$ to subsequences of
+  $\Theta$. The sequence $\sigma(x)$ is called the \emph{annotation} of $x$.
+
+  The derivation rules of $\RHA$ are in \Cref{fig:rpa}. In rules in which
+  free variables in the conclusion might not be present in the premises,
+  $\sigma'$ denotes the restriction of $\sigma$ to the
+  remaining free variables and $\Theta'$ the subsequence of $\Theta$ which only
+  contains letters which occur in at least one annotation $\sigma'(x)$. Conversely,
+  in rules in which new free variables might be introduced in the premise,
+  $\sigma^+$ denotes the extension of $\sigma$ which annotates each new variable
+  with the empty sequence $\varepsilon$.
+  \begin{figure}
+    \centering
+    \begin{mathpar}
+      \inference[\RAx]{}{\Theta; \sigma \rsep \Gamma, \varphi \sdash \varphi, \Delta}
+
+      \inference[$\to$L]{\Theta'; \sigma' \rsep \Gamma, \varphi \sdash \Delta \quad \Theta'; \sigma' \rsep \Gamma \sdash
+        \psi, \Delta}{\Theta; \sigma \rsep \Gamma, \varphi \to \psi \sdash \Delta}
+
+      \inference[$\to$R]{\Theta; \sigma \rsep \Gamma, \varphi \sdash
+        \psi, \Delta}{\Theta; \sigma \rsep \Gamma \sdash \varphi \to \psi, \Delta}
+
+      \inference[$\wedge$L]{\Theta; \sigma \rsep \Gamma, \varphi, \psi
+        \sdash \Delta}{\Theta; \sigma \rsep \Gamma, \varphi \wedge
+        \psi \sdash \Delta}
+
+      \inference[$\wedge$R]{\Theta'; \sigma' \rsep \Gamma \sdash \varphi, \Delta \quad
+        \Theta'; \sigma' \rsep \Gamma \sdash \psi, \Delta}{\Theta; \sigma \rsep \Gamma
+        \sdash \varphi \wedge \psi, \Delta}
+
+      \inference[$\vee$L]{\Theta'; \sigma' \rsep \Gamma, \varphi \sdash \Delta \quad \Theta'; \sigma' \rsep \Gamma, \psi \sdash \Delta}{\Theta; \sigma \rsep \Gamma, \varphi \vee
+        \psi \sdash \Delta}
+
+      \inference[$\vee$R]{\Theta; \sigma \rsep \Gamma \sdash \varphi, \psi, \Delta}{\Theta; \sigma \rsep \Gamma \sdash
+        \varphi \vee \psi, \Delta}
+
+      \inference[$\forall$L]{\Theta; \sigma^+ \rsep \Gamma, \varphi[t / x] \sdash \Delta}{\Theta; \sigma \rsep \Gamma, \forall x.\varphi \sdash \Delta}
+
+      \inference[$\forall$R]{x \not\in \FV(\Gamma, \forall x. \varphi) \\
+        \Theta; \sigma^+ \rsep \Gamma \sdash \varphi, \Delta}{\Theta; \sigma \rsep
+        \Gamma \sdash \forall x.\varphi, \Delta}
+
+      \inference[$\exists$L]{x \not\in \FV(\Gamma, \exists x. \varphi, \Delta)
+        \\ \Theta; \sigma^+ \rsep \Gamma, \varphi \sdash \Delta }{\Theta; \sigma \rsep \Gamma, \exists x. \varphi \sdash \Delta}
+
+      \inference[$\exists$R]{\Theta; \sigma^+ \rsep \Gamma \sdash \varphi[t /
+        x], \Delta}{\Theta; \sigma \rsep \Gamma \sdash \exists x. \varphi, \Delta}
+
+      \inference[$=$L]{x, y \not\in \FV(s, t) \\ \Theta; \sigma \rsep \Gamma[t / x, s / y] \sdash \Delta[t / x, s / y] }{\Theta; \sigma \rsep \Gamma[s / x, t / y], s = t \sdash \Delta[s / x, t
+        / y]}
+
+      \inference[$=$R]{}{\Theta; \sigma \rsep \Gamma \sdash t = t, \Delta}
+
+      \inference[$\bot$L]{}{\Theta; \sigma \rsep \Gamma, \bot \sdash \Delta}
+
+      \inference[$\RSubst$]{x \not\in \FV(t) \quad \Theta'; \sigma'^{+} \rsep \Gamma \sdash \Delta}{\Theta;
+        \sigma \rsep \Gamma[t / x] \sdash \Delta[t / x]}
+
+      \inference[\RWk]{\Theta'; \sigma' \rsep \Gamma \sdash \Delta}{\Theta; \sigma \rsep \Gamma, \Gamma' \sdash \Delta}
+
+      \inference[\RCut]{\Theta'; \sigma'^+ \rsep \Gamma \sdash \varphi, \Delta \quad \Theta; \sigma^+ \rsep \Gamma, \varphi \sdash \Delta}{\Theta; \sigma \rsep \Gamma \sdash \Delta}
+
+      \inference[$\RCase_x$]{a \not\in \Theta \\ \Theta'; \sigma' \rsep \Gamma(0) \sdash \Delta(0)
+        \quad \Theta a; \sigma[x \mapsto ua] \rsep \Gamma(Sx) \sdash \Delta(Sx)}{\Theta;
+        \sigma[x \mapsto u] \rsep \Gamma(x) \sdash \Delta(x)}
+
+      \inference[$\RClear$]{\Theta'; \sigma[x \mapsto \varepsilon] \rsep \Gamma \sdash \Delta}{\Theta; \sigma[x \mapsto u] \rsep \Gamma \sdash \Delta}
+
+      \inference[$\RReset_a$]{ u' \text{non-empty} \\ \Theta'; \sigma[x \mapsto u a] \rsep
+        \Gamma \sdash \Delta}{\Theta; \sigma[x \mapsto u a u'] \rsep \Gamma \sdash \Delta}
+    \end{mathpar}
+    
+    \caption{The derivation rules of $\RHA$}
+    \label{fig:rpa}
+  \end{figure}
+  Furthermore, the sequents $\Theta; \sigma \rsep \Gamma \sdash \Delta$, in which
+  $\Gamma \sdash \Delta$ is taken from the sequents below, are axioms.
+  \begin{align*}
+    & \sdash 0 \neq S t & S s = S t & \sdash s = t && \sdash s + 0 = 0 \\
+    &\sdash s + St = S(s + t) & & \sdash s \cdot 0 = 0 && \sdash s \cdot St = (s \cdot t) + s
+  \end{align*}
+
+  The pre-proofs of $\RHA$ are defined analogously to those of $\CHA$. That is,
+  they are a pair $\Pi = (C, \lambda)$ consisting a cyclic tree $C$ in cycle
+  normal form and a
+  labelling function $\lambda$. The labelling $\lambda$ must
+  be according to the derivation rules given above, labelling non-bud leaves
+  with axioms and satisfying $\lambda(\beta(s)) = \lambda(s)$ for $s \in
+  \dom(\beta)$.
+
+  An $\RHA$ pre-proof is an $\RHA$ proof if every simple cycle $\gamma(t)$
+  has an \emph{invariant}\emph{:} a sequence $\theta a$
+  which is a prefix to all controls along the simple cycle $\gamma(t)$ of $t$ and
+  $\beta(t)$ and the $\textsc{Reset}_a$ rule is applied along $\gamma(t)$. We
+  often refer to the longest invariant of a simple cycle
+  as \emph{the} invariant of said cycle. Write $\RHA \vdash \Gamma
+  \sdash \Delta$ if there is an $\RHA$ proof of $\varepsilon; \{x \mapsto
+  \varepsilon\} \rsep \Gamma \sdash \Delta$, i.e. a proof whose endsequent has an
+  empty control and in which all variables are assigned the empty sequence.
+\end{definition}
+
+Proofs in $\RHA$ employ the control $\Theta$ and assignment $\sigma$ to record the
+progress and ensure the preservation of the free variables in the sequent. Most
+of the derivation rules of $\RHA$ are those of first-order logic, modified to
+ensure the invariants governing the control $\Theta$ and the assignment
+$\sigma$. The three most interesting derivation rules of $\RHA$ are $\RCase_x$,
+$\RClear$ and $\RReset_a$. $\RCase_x$ corresponds the eponymous rule of $\CHA$,
+modified to extend annotation of the variable $x$ in the right-hand
+premise, thereby recording that progress has occurred for $x$. The rules
+$\RClear$ and $\RReset_a$ allow for the `management' of assignments, each
+erasing some of the progress recorded by an annotation.
+
+For any given $\RHA$ pre-proof $\Pi$, there exists a corresponding $\CHA$
+pre-proof $\widehat\Pi$ which is obtained by erasing $\Theta;
+\sigma$ from each sequent and removing the applications of the $\RClear$- and $\RReset_a$-rules from $\Pi$.
+The method of ensuring soundness is easiest explained by connecting the annotations of
+$\RHA$ proofs $\Pi$ to induction orders of $\CHA$ proofs $\widehat\Pi$. While
+presented in terms of Heyting arithmetic, the following argument can be carried
+out in any setting in which a reset proof system is given for a cyclic proof
+system with induction orders.
+
+\begin{proposition}
+  If $\Pi$ is an $\RHA$ proof then $\widehat\Pi$ has an induction order.
+\end{proposition}
+\begin{proof}
+  Clearly, $\widehat\Pi$ is a $\CHA$ pre-proof. It remains to show that it
+  possesses an induction order.
+
+  Consider a simple
+  cycle $\gamma(t)$ from $\beta(t)$ to $t$ of $\Pi$ with invariant $\theta a$. Because the
+  $\RCase_x$-rule is the only method of extending annotations, any letter $b$ in
+  $\theta a$ must annotate precisely one variable $x$ along $\gamma(t)$. This
+  variable must be preserved along $\gamma(t)$ as the annotation of $x$, and thus
+  the letter $b$, would otherwise disappear at some point along $\gamma(t)$, meaning the
+  invariant $\theta a$ would not be prefix to all annotations along $\gamma(t)$.
+  Now fix $x_t$ for each such simple cycle with invariant $\theta a$ to be the
+  variable annotated by $a$. Observe that in $\beta(t)$ and $t$, $x_t$ must be
+  annotated with the same sequence. Because the $\RReset_a$-application
+  along $\gamma(t)$ removes some letters from the annotation of $x_t$,
+  said annotation is must also be extended along $\gamma(t)$. Because
+  $\RCase_{x_t}$ is the only method of
+  extending annotations, $\gamma(t)$ must thus pass through the right-hand side of a
+  $\RCase_{x_t}$-application, progressing $x_t$.
+
+  Define the order $\preceq$ on $\dom(\beta)$ according to
+  which $s \preceq t$ holds iff the invariant $\theta a$ of $t$ is a prefix of the invariant
+  of $s$ and $a$ annotates the variable $x_t$ in $s$.
+  From the previous arguments, we may already conclude that $\preceq$ satisfies
+  the conditions regarding progress and preservation for induction orders.
+  That $(\preceq, x_{-})$ is an induction order on $\widehat\Pi$ follows from
+  the fact that 
+  every strongly connected subgraph of $\Pi$, and thus of $\widehat\Pi$, has a $\preceq$-maximal element.
+  The proof of this is rather combinatorial and can be found in
+  Proposition 13 of \papOne{}.
+\end{proof}
+
+The proofs of $\RHA$ can be viewed as a normal form of $\CHA$ proofs. 
+One can annotate a $\CHA$ proof with controls and assignments and insert
+suitable applications of $\RReset_a$ to obtain an $\RHA$ proof. However, the
+original $\CHA$ proof must usually first be unfolded. The result below is a
+corollary of the more general Theorem 17 of \papOne{}.
+
+\begin{fact}
+  If $\Pi$ is a $\CHA$ proof of $\Gamma \sdash \Delta$ then an unfolding of
+  $\Pi$ can be annotated into an $\RHA$ proof of $\Gamma \sdash \Delta$.
+\end{fact}
+
+Note that no $\RHA$ proof produced by the result above will contain any
+$\RClear$-applications. The $\RClear$-rule is
+an admissible rule of $\RHA$ which often allows for smaller $\RHA$
+proofs to be constructed, which is why we include it.
+
+The key property of reset proofs is that their soundness condition is a
+\emph{path condition}. A path condition is a soundness condition which is
+formulated purely in terms of the simple cycles of pre-proofs. A path condition
+can hence be verified by simply considering each individual simple
+cycle. It should be noted that, while induction orders are formulated using the
+notion of simple cycles, the ordering $\preceq$ still induces a global component,
+which means induction orders are no path condition.
+
+Path conditions possess many desirable properties. For example, they can usually
+be verified in polynomial time. In the case of reset proofs, verification can be carried
+out in linear time, assuming a reasonable representation of pre-proofs. This is
+significantly faster than the usual verification of global trace conditions or
+induction orders.
+
+\begin{proposition}
+  It can be determined in linear time whether an $\RHA$ pre-proof is a proof.
+\end{proposition}
+\begin{proof}
+  For each simple cycle $\gamma(t)$, compute the largest prefix $\theta_t$ of all
+  controls along $\gamma(t)$, which requires one pass per simple cycle.
+  Then verify that every simple cycle $\gamma(t)$ contains a
+  $\RReset_a$-application for some letter $a$ in $\theta_t$, which requires
+  one pass per simple cycle. The pre-proof is a proof iff such an application can
+  be found for every cycle.
+\end{proof}
+
+Converting a $\CHA$ proof to an $\RHA$ proof thus reduces the coNP-problem of
+checking $\CHA$ proofs to a poly-time problem. If this reduction could be
+carried out in polynomial time and with a polynomial size increase, one may be
+able to
+conclude $\text{P} = \text{coNP}$ and thus $\text{P} = \text{NP}$. However, all
+known techniques of translating $\CHA$ proofs to $\RHA$ proofs lead to at least
+an exponential size increase, yielding no breakthroughs in complexity theory.
+For example, we present one such technique with a $O(n!)$ size increase in
+Section 5.2 of \papOne{}.
+
+Cyclic proof systems with path conditions have played key roles in many proof
+theoretic investigations of cyclic proof systems. For example, every
+interpolation result in cyclic proof theory relies on a path condition
+\parencite[see][]{shamkanovCircularProofsGodelLob2014,savateevNonWellFoundedProofsGrzegorczyk2018,martiFocusSystemAlternationFree2021,afshariUniformInterpolationCyclic2021,afshariLyndonInterpolationModal2022}.
+Path conditions allow the
+interpolant to be `closed' at each companion in a manner accounting for the
+cycle, yielding rather simple definitions of interpolants per recursion on the
+tree underlying the derivation.
+The proof theoretic $\RCut$-free completeness result for Kozen's axiomatisation
+of the modal $\mu$-calculus given by \textcite{afshariFinitaryProofSystems2016}
+employs various reset proof systems.
+Arguably, even the tree-discharged induction orders relied upon by
+\textcite{sprengerStructureInductiveReasoning2003} and us in \papTwo{} are a
+kind of path condition.
+
+Reset proof systems are more generally well-suited to carrying out proof theoretic
+investigations of cyclic proof systems, as the `global' nature of global trace
+conditions is `localised' into the control and annotation. For example,
+admissibility arguments and other proof transformations can often be verified
+easily, as demonstrated by the proof below.
+
+\begin{lemma}\label{lem:rp-adm}
+  The following rule is admissible in $\RHA$ for variables $x \not\in
+  \FV(\Gamma, \Delta)$:
+  \[
+    \inference[$\RInd$]{\Theta'; \sigma'^{+} \rsep \Gamma, \varphi \sdash \varphi[Sx / x], \Delta}{\Theta;
+      \sigma \rsep \Gamma, \varphi[0 / x] \sdash \varphi[t / x], \Delta}
+  \]
+\end{lemma}
+\begin{proof}
+  Observe that $\sigma'^{+} = \sigma'[x \mapsto \varepsilon]$ in $\Theta';
+  \sigma'^{+} \rsep \Gamma, \varphi \sdash \varphi[Sx / x], \Delta$.
+  A suitable pre-proof $\Pi_1$ is given below:
+  \begin{scprooftree}{0.9}
+    \AXC{}
+    \LSC{$\RAx$}
+    \UIC{$\Theta'; \sigma' \rsep \Gamma, \varphi[0 / x] \sdash \varphi[0 / x], \Delta$}
+    % \AXC{$\Gamma, \varphi[0 / x] \sdash \varphi, \Delta ~~\star$}
+    \AXC{$\Pi_2$}
+    \AXC{$\Theta'; \sigma'[x \mapsto \varepsilon] \rsep \Gamma, \varphi \sdash \varphi[Sx / x], \Delta$}
+    \RSC{$\RClear$}
+    \UIC{$\Theta' a; \sigma'[x \mapsto a] \rsep \Gamma, \varphi \sdash \varphi[Sx / x], \Delta$}
+    \LSC{$\RCut$, $\RWk$}
+    \BIC{$\Theta' a; \sigma'[x \mapsto a] \rsep \Gamma, \varphi[0 / x] \sdash \varphi[Sx / x], \Delta$}
+    \LSC{$\RCase_x$}
+    \BIC{$\Theta'; \sigma'[x \mapsto \varepsilon] \rsep \Gamma, \varphi[0 / x] \sdash \varphi, \Delta$}
+    \LSC{$\RSubst$}
+    \UIC{$\Theta; \sigma \rsep \Gamma, \varphi[0 / x] \sdash \varphi[t / x], \Delta$}
+  \end{scprooftree}
+  The pre-proof $\Pi_1$ relies on another pre-proof $\Pi_2$ given below, $\star$
+  marking a cycle:
+  \begin{scprooftree}{0.88}
+    \AXC{}
+    \LSC{$\RAx$}
+    \DOC{}
+    \AXC{$\Theta' a; \sigma[x \mapsto a] \rsep \Gamma, \varphi[0 / x] \sdash \varphi, \Delta ~~\star$}
+    \LSC{$\RReset_a$}
+    \UIC{$\Theta' ab; \sigma[x \mapsto ab] \rsep \Gamma, \varphi[0 / x] \sdash \varphi, \Delta$}
+    \AXC{$\Theta'; \sigma'[x \mapsto \varepsilon] \rsep \Gamma, \varphi \sdash \varphi[Sx / x], \Delta$}
+    \RSC{$\RClear$}
+    \UIC{$\Theta' ab; \sigma'[x \mapsto ab] \rsep \Gamma, \varphi \sdash \varphi[Sx / x], \Delta$}
+    \LSC{$\RCut$, $\RWk$}
+    \BIC{$\Theta' ab; \sigma'[x \mapsto ab] \rsep \Gamma, \varphi[0 / x] \sdash \varphi[Sx / x], \Delta$}
+    \LSC{$\RCase_x$}
+    \BIC{$\Theta'; \sigma'[x \mapsto a] \rsep \Gamma, \varphi[0 / x] \sdash
+      \varphi, \Delta ~~ \star$}
+  \end{scprooftree}
+
+  We claim that any $\RInd$-application in an $\RHA$ proof $\Pi$ may be replaced by
+  the pre-proof $\Pi_1$, inserting the subtree above the premise of the
+  $\RInd$-application above the right-most leaf of both $\Pi_1$ and $\Pi_2$. The
+  simple $\star$-cycle satisfies the reset condition as it has invariant $\Theta'
+  a$ and a $\RReset_a$ takes place along $\gamma(\star)$.
+  Furthermore, any prefix $\theta$ of both $\Theta$ and $\Theta'$ is also a
+  prefix of every control occurring in $\Pi_1$ and $\Pi_2$. Thus, no invariants
+  in the original $\RHA$ proof $\Pi$ are `disturbed' by replacing the
+  $\RInd$-application by $\Pi_1$, preserving the reset condition of $\Pi$.
+\end{proof}
+
+The pre-proofs $\Pi_i$ used in the proof of \Cref{lem:rp-adm} illustrate how the
+exponential size-increase of $\RHA$ proofs
+comes about: Because an annotation must contain at least two letters to be
+subject to the $\RReset$-rule, the $\RCase_x$-applications introducing the
+letters must be `duplicated'. In the course of this, the subproof above the
+premise of the $\RInd$-rule is duplicated as well. Thus, applying the above
+admissibility result to all instances of $\RInd$ in an $\RHA$ proof can result
+in another exponential size increase. Similar reasons cause an exponential size
+increase translating $\CHA$ to $\RHA$.
+
+% Term proof search
+% - uniform interpolation
+% - JS for decision
+Another core property of reset proof systems is that they tend to induce a
+\emph{terminating proof search procedure}. That is, one can bound the size of the
+smallest existing reset proof of a given endsequent in terms of the size of the
+endsequent. By simply enumerating all reset proofs of this size, one can thus
+decide provability of a given sequent. Because $\RHA$ contains a $\RCut$-rule,
+it does not exhibit this property. However, reset proof systems for the modal
+$\mu$-calculus do possess this property. Indeed, the first reset proof system in
+the literature was given by \textcite{jungteerapanichTableauSystemsModal2010}
+to derive a tableaux-style
+decision procedure for the modal $\mu$-calculus. Terminating proof search is also closely connected to the
+uniform interpolation property. A reset proof system has been used by \textcite{afshariUniformInterpolationCyclic2021}
+to establish this property for the modal
+$\mu$-calculus proof theoretically.
+
+While highly suitable for computational and proof theoretic uses, reset proof
+systems are arguably not as well-suited to human use as, say, induction orders.
+Because proofs in $\RHA$ can be exponentially larger than $\CHA$ proofs,
+deriving these proofs by hand quickly becomes infeasible. This is also the
+reason why the totality proof of $A(x, y, z)$ is not recalled in this section.
+Its $\RHA$ proof is simply too large. Furthermore, the syntactic clutter of the
+annotation mechanism often makes $\RHA$ proofs difficult to read and
+subsequently verify.
+
+\section{Stack-controlled Proofs}
+\label{sec:sc-proofs}
+
+
+% Trace vs soundness condition
+% In the cyclic proof theory literature, the terms `trace condition' and `global
+% trace condition' are often used interchangeably. The abstract notions of cyclic
+% proof considered in this section clearly demonstrate that these are two separate
+% notions. A trace condition simply specifies which infinite branches are sound,
+% often in terms of objects `traced' along a branch which can `progress'. The
+% soundness conditions of cyclic proof systems are almost always defined in terms
+% of a trace condition but the global trace condition is only one among many.

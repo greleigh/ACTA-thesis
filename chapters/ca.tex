@@ -1,0 +1,764 @@
+% Emacs, this is -*-latex-*-
+
+\chapter{Cyclic Arithmetics}
+\label{chap:ca}
+
+\section{Simple Cyclic Heyting Arithmetic}
+\label{sec:cha}
+
+We begin by introducing a cyclic proof system for Heyting arithmetic, using
+said system to illustrate some wider aspects of cyclic proof theory. We call
+this system \emph{simple} cyclic Heyting arithmetic because some of its
+combinatorial aspects are simpler than those of the cyclic proof systems for
+Heyting arithmetic we introduce in \Cref{sec:more-cas}.
+
+Heyting arithmetic employs the language of first-order arithmetic,
+which is given below. We fix a countable set of variables $\var$ and write
+$\FV(\varphi)$ for the set of \emph{free variables} which occur unbound in a
+formula $\varphi$.
+\begin{align*}
+  s,t \in \term \langeq~& x ~|~ 0 ~|~ S s ~|~ s + t ~|~ s \cdot t  & x \in \var \\
+  \varphi, \psi \in \form \langeq~& s = t ~|~ \bot ~|~ \varphi \wedge \psi ~|~ \varphi \vee \psi ~|~ \varphi \to \psi ~|~ \forall x.\varphi ~|~ \exists x. \varphi
+\end{align*}
+Denote by $[t / x]$ the usual \emph{substitution operation}, replacing all free
+occurrences of the variable $x$ by the term $t$. On formulas, this is a partial
+operation, $\varphi[t / x]$ being undefined if the free variables in $t$ are not
+distinct from the bound variables in $\varphi$. Henceforth, writing $\varphi[t /
+x]$ will double as an assertion of the resulting formula being defined.
+
+We begin by recalling an inductive proof system for Heyting arithmetic, i.e. one
+presented in the common manner of finite derivation trees.
+
+\begin{definition}[Heyting arithmetic]
+  The \emph{sequents} of \emph{Heyting arithmetic} are expressions $\Gamma \sdash \delta$ where
+  $\Gamma$ is a finite set of formulas and $\delta$ a single formula of first-order arithmetic.
+  Write $\Gamma, \varphi$ for
+  $\Gamma \cup \{\varphi\}$ and $\Gamma, \Gamma'$ for $\Gamma \cup \Gamma'$.
+  The \emph{derivation rules} of $\HA$ comprise of the following choice of standard rules for
+  classical first-order logic with equality,
+  \begin{mathpar}
+    \inference[\RAx]{}{\Gamma{}, \delta{} \sdash{} \delta}
+
+    \inference[$\to$L]{\Gamma{}, \varphi{} \sdash{} \delta{} \quad \Gamma{} \sdash{}
+      \psi{}}{\Gamma{}, \varphi{} \to \psi{} \sdash{} \delta}
+
+    \inference[$\to$R]{\Gamma{}, \varphi{} \sdash{} \psi{}}{\Gamma{} \sdash{} \varphi{} \to \psi{}}
+
+    \inference[$\wedge$L]{\Gamma{}, \varphi{}, \psi{} \sdash{} \delta{}}{\Gamma{},
+      \varphi{} \wedge{} \psi{} \sdash \delta{}}
+
+    \inference[$\wedge$R]{\Gamma \sdash \varphi \quad \Gamma \sdash \psi}{\Gamma \sdash \varphi \wedge
+      \psi}
+
+    \inference[$\vee$L]{\Gamma, \varphi \sdash \delta \quad \Gamma, \psi \sdash \delta}{\Gamma, \varphi \vee{}
+      \psi \sdash \delta}
+
+    \inference[$\vee$R]{\Gamma{} \sdash \varphi_i}{\Gamma{} \sdash
+      \varphi_1 \vee{} \varphi_2}
+
+    \inference[$\forall$L]{\Gamma, \varphi[t / x] \sdash \delta}{\Gamma, \forall x.\varphi \sdash \delta}
+
+    \inference[$\forall$R]{\Gamma \sdash \varphi \quad x \not\in
+      \FV(\Gamma, \forall x. \varphi)}{\Gamma
+      \sdash \forall x.\varphi}
+
+    \inference[$\exists$L]{\Gamma, \varphi \sdash \delta \quad x \not\in
+      \FV(\Gamma, \exists x. \varphi, \delta)}{\Gamma, \exists x. \varphi \sdash \delta}
+
+    \inference[$\exists$R]{\Gamma \sdash \varphi[t / x]}{\Gamma \sdash \exists x. \varphi}
+
+    \inference[$\bot$L]{}{\Gamma, \bot \sdash \delta}
+
+    \inference[$=$L]{\Gamma[x / y] \sdash \delta[x / y] \quad x,
+      y \not\in \FV(s, t)}{\Gamma[s / x, t / y], s = t \sdash \delta[s / x, t
+      / y]}
+
+    \inference[$=$R]{}{\Gamma \sdash t = t}
+  \end{mathpar}
+  with the following two structural rules,
+  \begin{mathpar}
+    \inference[\RWk]{\Gamma \sdash \delta}{\Gamma, \Gamma' \sdash \delta}
+  
+    \inference[\RCut]{\Gamma \sdash \varphi \quad \Gamma, \varphi \sdash \delta}{\Gamma \sdash \delta}
+  \end{mathpar}
+  the following axiomatic sequents which characterise the function symbols of
+  first-order arithmetic,
+  \begin{align*}
+    & \sdash 0 \neq S t & S s = S t & \sdash s = t && \sdash s + 0 = 0 \\
+    &\sdash s + St = S(s + t) & & \sdash s \cdot 0 = 0 && \sdash s \cdot St = (s \cdot t) + s
+  \end{align*}
+  and the axiomatic sequents of \emph{induction}, for any formula $\varphi$,
+  \[ \varphi(0), \forall x. \varphi(x) \to \varphi(Sx) \sdash \varphi(s) . \]
+  If a
+  proof with endsequent $\Gamma \sdash \delta$
+  exists then $\Gamma \sdash \delta$ is \emph{provable in Heyting arithmetic},
+  denoted by $\HA \vdash \Gamma \sdash \delta$.
+\end{definition}
+
+To illustrate the contrast with cyclic proof systems, it is helpful to consider
+the representation of proofs in Heyting arithmetic.
+Formally, a proof in $\HA$ is
+a pair $\Pi = (T, \lambda)$ consisting of a finite tree $T$ and a function
+$\lambda : \Node(T) \to \Seq$ labelling the nodes in accordance with the derivation
+rules given above.
+Considering the conclusions of rules without premises as axiomatic,
+if $t \in \Leaf(T)$ then $\lambda(t)$ is
+an axiomatic sequent.
+
+The underlying structure of cyclic proofs is somewhat more complicated.
+Often, this structure is described simply as `finite graphs'. However,
+in practice, a stricter notion consisting of a finite tree with `added cycles'
+often proves more useful, retaining common notions, such as `root',
+`leaf' and `subtree'.
+A \emph{cyclic tree} is a pair $C = (T, \beta)$ consisting of a finite tree $T$ and a
+partial function $\beta \colon \Leaf(T) \to \Inner(T)$ mapping some leaves of
+$T$ onto inner nodes of $T$. A leaf $b \in \dom(\beta)$ is called a \emph{bud}
+and $\beta(b)$ its \emph{companion}.
+
+Commonly, a further restriction is imposed on the cyclic trees underlying cyclic proofs.
+A cyclic tree is said to be in \emph{cycle normal form}
+if for every bud $b \in \dom(\beta)$ its companion $\beta(b)$ occurs along the
+path from the tree's root to $b$. This restriction has various useful consequences.
+For example, all buds of an inner node must be located in
+the subtree above it, easing recursive proof translations. Furthermore, trees
+in cycle normal form possess a well-defined notion of the `inside' of a cycle:
+the path from $\beta(t)$ to $t$ for $t \in \dom(\beta)$.
+Every cyclic tree can be unfolded into a
+cyclic tree in cycle normal form, although this may cause a super-exponential
+increase in the number of nodes~\parencite[see][Theorem
+6.3.6]{brotherstonSequentCalculusProof2006}.
+
+We proceed by defining a cyclic proof system $\CHA$ for Heyting arithmetic. It eschews
+the induction axioms in favour of \emph{cycles} which allow leaves to
+be considered closed if they are labelled by a sequent that has previously
+appeared on the branch between the root and said node.
+
+\begin{definition}[$\CHA$ pre-proofs]\label{def:pre-proof}
+  The sequents of \emph{cyclic Heyting arithmetic} are the same as in regular
+  Heyting arithmetic.
+  A \emph{pre-proof} of $\CHA$ is a pair $\Pi = (C, \lambda)$
+  consisting of a cyclic tree $C = (T, \beta)$
+  and a labelling function $\lambda : \Node(T) \to \Seq$.
+  The labelling function $\lambda$ labels the nodes of $T$ with sequents such that
+  \begin{itemize}
+  \item
+    inner nodes are labelled according to the derivation rules of $\HA$ or the $\CHA$-specific derivation rules
+    \[
+      \inference[$\RCase_x$]{\Gamma[0 / x] \sdash
+        \delta[0 / x] \quad \Gamma[Sx / x] \sdash \delta[Sx / x]}{\Gamma \sdash
+        \delta}
+    \]
+    \[
+      \inference[$\RSubst$]{\Gamma \sdash \delta}{\Gamma[t / x] \sdash \delta[t / x]}
+    \]
+    in which $x \not\in \FV(\Gamma, \delta)$ for $\RCase_x$ and $x \not\in
+    \FV(t)$ for $\RSubst$.
+  \item
+    leaves, with the exception of buds, must be labelled with $\HA$ axioms,
+    excluding the induction axioms
+  \item each bud and companion share labels, i.e. $\lambda(s) = \lambda(\beta(s))$ for $s \in \dom(\beta)$.
+  \end{itemize}
+\end{definition}
+
+For an example of a $\CHA$ pre-proof, consider \Cref{fig:ind}. It concludes the
+induction scheme of $\HA$. We employ the shorthand $\ol{\varphi} \coloneq
+\varphi(0), \forall x. \varphi(x) \to \varphi(Sx)$ for the left-hand side of the
+induction scheme. The two sequents marked with a $\star$ form a cycle.
+
+\begin{figure}[h]
+  \centering
+
+  \begin{comfproof}
+    \AXC{}
+    \LSC{\textsc{Ax}}
+    \UIC{$\ol{\varphi}, \varphi(0) \sdash \varphi(0)$}
+    \AXC{$\ol{\varphi} \sdash \varphi(x) ~~\star$}
+    \LSC{\textsc{Wk}}
+    \UIC{$\ol{\varphi} \sdash \varphi(x), \varphi(S\,x)$}
+    \AXC{}
+    \RSC{\textsc{Ax}}
+    \UIC{$\ol{\varphi}, \varphi(S\,x) \sdash \varphi(S\,x)$}
+    \RSC{$\forall$L,$\to$L}
+    \BIC{$\ol{\varphi}, \forall x. \varphi(x) \to \varphi(Sx) \sdash \varphi(S\,x)$}
+    \insertBetweenHyps{\hskip 4pt}
+    \LSC{$\textsc{Case}_x$}
+    \BIC{$\ol{\varphi} \sdash \varphi(x) ~~\star$}
+    \LSC{$\RSubst$}
+    \UIC{$\ol{\varphi} \sdash \varphi(s)$}
+  \end{comfproof}
+
+  \caption{A $\CHA$ pre-proof of the induction axiom, $\star$ marking a cycle}
+  \label{fig:ind}
+\end{figure}
+
+However, not every $\CHA$ pre-proof is a sound argument. For a counterexample,
+consider \Cref{fig:unsound}, in which an `argument' concluding the inconsistency
+$\sdash \bot$ is made.
+
+\begin{figure}[h]
+  \centering
+
+  \begin{comfproof}
+    \AXC{}
+    \LSC{$\bot$L}
+    \UIC{$\bot \sdash \bot$}
+    \AXC{$\sdash \bot ~~\star$}
+    \LSC{$\RCut$}
+    \BIC{$\sdash \bot~~\star$}
+  \end{comfproof}
+
+  \caption{An unsound $\CHA$ pre-proof, $\star$ marking a cycle}
+  \label{fig:unsound}
+\end{figure}
+
+To ensure soundness of $\CHA$ proofs, an additional condition beyond
+well-formedness, called a \emph{soundness condition}, must be imposed. The
+soundness condition given in \Cref{def:cpa-gtc} is called a \emph{global
+trace condition}. We consider alternative soundness conditions for cyclic Heyting
+arithmetic in \Cref{chap:representation}.
+
+\begin{definition}[$\CHA$ proofs]\label{def:cha-gtc}
+  Let $\Pi = (C, \lambda)$ be a pre-proof. An \emph{infinite branch} through $\Pi$
+  is an infinite sequence $t \in \Node(T)^\omega$ with $t_0$ being the root node
+  of $T$ and such
+  that for each $i \in \omega$ either $t_{i + 1} \in \Chld(t_i)$ or $t_i \in
+  \dom(\beta)$ and $t_{i + 1} = \beta(t_i)$. This induces an infinite sequence
+  $(\Gamma_i \sdash \delta_i)_{i \in \omega}$ of sequents with $\lambda(t_i) = \Gamma_i \sdash
+  \Delta_i $, which we use interchangeably with $(t_i)_{i
+    \in \omega}$ to denote an infinite branch. A variable $x$ is said to have \emph{a
+    trace along} $(\Gamma_i \sdash \delta_i)_{i \in \omega}$ if there exists an
+   $n \in \omega$ such that $x \in \FV(\Gamma_i, \delta_i)$ for all $i \geq n$.
+   Such a trace on $x$ is said to be \emph{progressing} if it passes through
+   instances of the $\RCase_x$-rule (for the same variable \( x \)) infinitely often.
+
+  A pre-proof $\Pi$ is a \emph{proof} in cyclic Heyting arithmetic if for every
+  infinite branch through $\Pi$ there exists a variable which has a progressing trace along
+  it. $\CHA \vdash \Gamma \sdash \delta$ denotes provability in $\CHA$.
+\end{definition}
+
+Observe that the pre-proof of $\sdash \bot$ in \Cref{fig:unsound} is no $\CHA$
+proof because it does not contain any free variables. The pre-proof of the
+induction scheme in \Cref{fig:ind} is a proper proof: It only has one infinite
+branch, obtained by following the $\star$-cycle indefinitely. This branch has an
+$x$-trace, starting above the $\RSubst$-application, which passes through the
+$\RCase_x$-rule infinitely often.
+
+% Proofs as programs
+From the perspective of proof-as-programs, cyclic proofs correspond to
+recursively defined functions, the soundness conditions corresponding to
+termination conditions. This connection has been used to bring notions and
+results from the field of program
+termination~\parencite{leeSizechangePrincipleProgram2001} to the setting of
+cyclic proof
+theory~\parencite{nolletPSPACECompletenessThreadCriterion2019,afshariAbstractCyclicProofs2022}.
+
+% Similarity of GTCs/TCs
+The global trace condition is the most common soundness condition in cyclic
+proof theory. It usually follows a common template: Along every infinite branch,
+a syntactic feature (such as a term, fixed-point quantifier, formula, ...) can
+be traced which \emph{progresses} (e.g.~decreases, is unfolded, is principal to
+certain derivation rules, ...) infinitely often. Based on this observation,
+abstract notions of trace, progress and cyclic proof have been formulated which
+allow the study of cyclic proofs from a general
+perspective~\parencite{brotherstonSequentCalculusProof2006,afshariAbstractCyclicProofs2022}.
+We discuss the latter framework in \Cref{sec:acds}.
+It is relied on in \papOne{} to carry out a construction for
+many cyclic proof systems at once.
+
+% Other PA GTC-systems
+The system $\CHA$ is merely one possible cyclic proof system for
+Heyting arithmetic. Even when restricting one's attention to cyclic proof systems
+with global trace conditions, there are two other renditions of Heyting arithmetic
+as a cyclic proof system in the literature, both of which we present in
+\Cref{sec:more-cas}.
+
+The cyclic proof system $\CHA$ can be transformed into a cyclic proof system
+$\CPA$ of Heyting arithmetic via the usual broadening of the right-hand side of sequents to a
+finite set $\Delta$. The global trace condition, including the employed
+notions of branch, trace and progress, remain unchanged.
+% The same transformation
+% can be carried out for the cyclic proof systems for Peano arithmetic given in
+% \textcite{simpsonCyclicArithmeticEquivalent2017} and
+% \textcite{berardiEquivalenceInductiveDefinitions2017} with the same result.
+
+The purpose of the global trace condition in \Cref{def:cpa-gtc} is most easily
+illustrated by proving the soundness of $\CHA$ proofs over the standard model of
+the natural numbers, i.e. the structure $\omega$ of first-order arithmetic whose
+domain are the natural numbers and which interprets the function symbols in the
+usual manner.
+
+\begin{theorem}[Soundness]\label{lem:cha-sound}
+  If $\CHA \vdash \Gamma \sdash \delta$ then $\omega \vDash \Gamma \sdash \delta$.
+\end{theorem}
+\begin{proof}
+  Let $\Pi$ be a $\CHA$ proof of $\Gamma \sdash \delta$ and suppose, towards
+  contradiction, that there is an assignment $\rho : \var \to \omega$ such that
+  $\rho \not\vDash \Gamma \sdash \delta$. Consider the last $\CHA$-rule applied
+  to derive $\Gamma \sdash \delta$ in $\Pi$. There must exist a premise
+  $\Gamma_1 \sdash \delta_1$ and an assignment $\rho_1$ such that $\rho_1
+  \not\vDash \Gamma_1 \sdash \delta_1$. We treat a few illustrative cases:
+  \begin{description}
+  \item[$\wedge$R:] Then $\delta = \varphi_0 \wedge \varphi_1$ and the
+    premises of the rule are $\Gamma \sdash \varphi$ and $\Gamma \sdash
+    \psi$. Fix $\rho_1 \coloneq \rho$. If $\rho \not\vDash \Gamma \sdash \delta$ then $\rho \vDash
+    \Gamma$ and $\rho \not\vDash \delta$.
+    Thus there must be $i \in \{0, 1\}$ such that $\rho \not\vDash
+    \varphi_i$ and thus $\rho \not\vDash \varphi_i$.
+  \item[$\RSubst$:] Then $\Gamma = \Gamma'[t / x]$ and $\delta = \delta'[t / x]$
+    for $x \not\in \FV(t)$. Furthermore, the premise of the rule is
+    $\Gamma' \sdash \delta'$. Fix $\rho_1 \coloneq \rho[x \mapsto
+    t^\rho]$, i.e. the environment which assigning the same values to $y \neq x$
+    as $\rho$ and the evaluation of $t$ under $\rho$ to $x$. Observe that for
+    every term $s$, $(s[t / x])^\rho = s^{\rho_1}$. Thus, $\rho \not\vDash
+    \Gamma[t / x] \sdash \delta[t / x]$ entails $\rho_1 \not\vDash \Gamma \sdash
+    \delta$.
+  \item[$\forall$R:] Then $\delta = \forall x. \varphi$ with $x \not\in
+    \FV(\Gamma, \delta)$ and the premise is $\Gamma \sdash \varphi$.
+    By $\rho \not\vDash \Gamma \sdash \forall x. \varphi$
+    there must exist $n \in
+    \omega$ such that $\rho[x \mapsto n] \not\vDash \varphi$. Hence, fixing
+    $\rho_1 \coloneq \rho[x \mapsto n]$, obtains $\rho_1 \not\vDash \Gamma
+    \sdash \varphi$ because $x \not\in \FV(\Gamma, \delta)$.
+  \item[$\forall$L:] Then $\Gamma = \Gamma', \forall x. \varphi$ and the premise
+    is $\Gamma, \varphi[t / x] \sdash \delta$. From $\rho \not\vDash \Gamma,
+    \forall x. \varphi$ it follows that $\rho \vDash \forall x. \varphi$ and
+    thus $\rho[x \mapsto t^\rho] \vDash \varphi$, or equivalently, $\rho \vDash
+    \varphi[t / x]$. Hence, fixing $\rho_1 \coloneq \rho$, it follows that
+    $\rho_1 \not\vDash \Gamma', \varphi[t / x] \sdash \delta$.
+  \item[$=$L:] Then $\Gamma = \Gamma'[s / x, t / y], s = t$ and $\delta =
+    \delta'[s / x, t / y]$ with $x, y \not\in \FV(s, t)$ and the premise is $\Gamma'[t / x, s / y]
+    \sdash \delta'[t / x, s / y]$. From $\rho \not\vDash \Gamma \sdash \delta$
+    it follows that $\rho \vDash s = t$ and hence $s^\rho = t^\rho$. Hence, for
+    any term $u$ and $v \in \{x, y\}$, $(u[s / v])^\rho = (u[t / x])^\rho$ and
+    thus $\rho \not\vDash \Gamma'[s / x, t / y], s = t \sdash \delta'[s / x, t /
+    y]$ entails $\rho \not\vDash \Gamma'[t / x, s / y] \sdash \delta'[t / x, s /
+    y]$.
+  \item[$\RCase_x$:] Then $x \in \FV(\Gamma, \delta)$. Observe that either
+    $\rho(x) = 0$ or $\rho(x) = n + 1$. In the former case, $\rho \not\vDash
+    \Gamma[0 / x] \sdash \delta[0 / x]$, in the latter case $\rho[x \mapsto n]
+    \not\vDash \Gamma[S x / x] \sdash \delta[S x / x]$.
+  \end{description}
+  The remaining cases are analogous to those considered above.
+  This argument can
+  be applied to any non-axiomatic node of $\Pi$.
+  The contradicted premises arrived at
+  cannot be axioms as they cannot be contradicted in the
+  standard model.
+  Iterating this
+  argument, `following' buds to their companions, yields an infinite branch $(\Gamma_i \sdash \delta_i)_{i \in \omega}$
+  through $\Pi$ and a sequence $(\rho_i)_{i \in \omega}$ of contradicting
+  assignments such that $\rho_i \not\vDash \Gamma_i \sdash \delta_i$. As $\Pi$ is a proof, there exists a progressing $x$-trace along $(\Gamma_i \sdash
+  \delta_i)_{i \in \omega}$ (w.l.o.g.\ we assume it starts at $\Gamma_0 \sdash \delta_0$). Now consider the sequence
+  $(\rho_i(x))_{i \in \omega}$ in $\omega$. From the cases above it follows
+  that an increase, i.e. $\rho_i(x) < \rho_{i + 1}(x)$, can only occur in the
+  cases of $\forall$R and $\exists$L with $x$ being the bound variable. However,
+  as $x$ is free in all $\Gamma_i, \delta_i$, this cannot occur along the
+  branch. On the
+  other hand, decreases, i.e. $\rho_i(x) > \rho_{i + 1}(x)$, take place whenever
+  the right-hand side of a $\RCase_{x}$-rule is passed. As this takes place
+  infinitely often, $(\rho_i(x))_{i \in \omega}$ is a never increasing,
+  infinitely decreasing sequence of natural numbers, which cannot exist.
+  Hence, the conclusion of $\Pi$ could not have been invalid to begin with.
+\end{proof}
+
+% Illustrates well-foundedness in logic
+We have stated that the common strategies to incorporate the
+infinite branches of ill-founded proofs into sound arguments was to
+introduce well-foundedness or coinduction at the level of the logic. $\CHA$
+takes the former approach, ensuring that all infinite branches of a $\CHA$ proof
+produce an infinitely decreasing sequence and can thus be disregarded when
+considering soundness. Other systems, such as $\mu$-calculi, allow for
+coinductive arguments, ensuring that greatest fixed points are unfolded
+infinitely along infinite branches
+
+% Other soundness proofs
+The proof strategy in \Cref{lem:cpa-sound} is employed
+throughout the literature to prove soundness of cyclic proof systems with a
+global trace condition. Often, the demonstrated decreasing sequence is a
+sequence of ordinals, rather than just natural numbers. \textcite[Section
+4.2.1]{brotherstonSequentCalculusProof2006} gives a general account of this
+style of soundness proof. \TODO{We give a better proof!} It should be noted the soundness proof
+is highly classical: deducing the existence of a contradicted premise requires
+variants of the law of the excluded middle and `constructing' the contradicted
+branch by iterating the argument requires a variant of the axiom of choice.
+A corollary of the equivalences between $\CHA$ and $\HA$ proven in \papTwo{} is
+a fully constructive soundness proof of $\CHA$.
+
+\section{Relating Proof Systems}
+\label{sec:relating}
+
+This section discusses how cyclic proof systems may be related to other kinds of
+proof systems. We continue to work with $\CHA$ as the example. The soundness
+result in \Cref{lem:cpa-sound} does not contribute towards proving the
+equivalence between the `inductive' proof system $\HA$ and the cyclic proof
+system $\CHA$. Instead, this equivalence is witnessed by proof theoretic
+translations back and forth. One of the two directions can be proven using the
+notions introduced so far.
+
+\begin{theorem}\label{lem:ha-into-cha}
+  If $\HA \vdash \Gamma \sdash \delta$ then $\CHA \vdash \Gamma \sdash \delta$.
+\end{theorem}
+\begin{proof}
+  Recall that \Cref{fig:ind} gives $\CHA$ proofs for every instance of the
+  induction scheme of $\HA$.
+  Now, suppose $\HA \vdash \Gamma \sdash \delta$. A
+  $\HA$ proof $\Pi$ differs from a $\CHA$ pre-proof only by the
+  fact that some of its leaves may be labelled with instances of the induction
+  schemes. Thus, a $\CHA$ pre-proof $\Pi'$ of $\Gamma \sdash \delta$ may be obtained by
+  `grafting' copies of the $\CHA$ proof in \Cref{fig:ind} onto each such leaf of
+  $\Pi$. As there are no cycles in $\Pi$, every infinite branch of $\Pi'$
+  must follow the $\star$-cycle of one of the `grafted on' induction scheme
+  proofs and thus has a successful trace. Hence $\Pi'$ is a $\CHA$ proof
+  witnessing $\CHA \vdash \Gamma \sdash \delta$.
+\end{proof}
+
+Whereas the translation given in \Cref{lem:pa-into-cpa} is rather simple, the
+converse direction of the equivalence is much more complicated. It was
+simultaneously obtained by
+\textcite{simpsonCyclicArithmeticEquivalent2017} and \textcite{berardiEquivalenceInductiveDefinitions2017}. It is also the main
+concern of \TODO{\papTwo{}}. We thus contend ourselves with simply stating the result,
+referring the reader to \papTwo{} for its proof.
+
+\begin{fact}\label{lem:cha-into-ha}
+  If $\CHA \vdash \Gamma \sdash \delta$ then $\HA \vdash \Gamma \sdash \delta$.
+\end{fact}
+
+In cyclic proof systems for logics, rather than first-order theories like Heyting
+or Peano arithmetic, the equivalence to inductive proof systems is usually
+established by proving the soundness and completeness of the cyclic proof system
+directly in terms of a canonical semantics of the logic. When comparing the
+proofs of soundness and completeness between the inductive and cyclic proof
+systems, cyclic proof systems often require more intricate proofs of
+soundness (as witnessed by \Cref{lem:cha-sound}) but allow for simpler
+completeness proofs. One intuition behind this phenomenon is that ill-founded
+proofs (and hence cyclic proofs) are \emph{coinductive} objects whereas
+inductive proofs are \emph{inductive} objects. Framed in the language of
+category theory, algebras ease
+the construction of morphisms `out of them' via recursion
+(corresponding to the `direction' of soundness) whereas coalgebras ease the
+construction of morphisms `into them' via corecursion (corresponding to the
+`direction' of completeness).
+
+For some cyclic proof systems, it is not yet known whether they are equivalent
+to the `corresponding' inductive proof system.
+\textcite{brotherstonSequentCalculusProof2006} puts forward a family of
+inductive ($\mathrm{LKID}$) and cyclic ($\mathrm{CLKID}^\omega$) proof systems
+of first-order logic extended with concrete inductive definitions. He
+conjectures but does not prove the equivalence of $\mathrm{LKID}$ and
+$\mathrm{CLKID}^\omega$, a claim which is now referred to as the
+\emph{Brotherston-Simpson conjecture}.
+\textcite{berardiEquivalenceInductiveDefinitions2017} give a partial solution to
+the conjecture: If the systems feature an inductive natural number predicate
+$N\,t$ and the functions of first-order arithmetic, i.e. if the systems contain
+Peano arithmetic, then $\mathrm{LKID}$ and $\mathrm{CLKID}^\omega$ prove the
+same theorem. This result has been extended to intuitionistic variants of
+$\mathrm{LKID}$ and $\mathrm{CLKID}^\omega$ containing Heyting arithmetic in
+\parencite{berardiEquivalenceIntuitionisticInductive2017}. Further,
+\textcite{tatsutaClassicalSystemMartinLof2019} have shown that for a `weaker'
+inductive predicate, the two systems are not equivalent. However, a full
+classification of which inductive predicates induce equivalence has not yet been
+given.
+
+Cyclic proofs can be viewed as finite representations of ill-founded proofs. In
+the setting of first-order arithmetic, such ill-founded proofs are interesting
+in their own right.
+
+\begin{definition}[$\CHA$ $\infty$-proofs]\label{def:infty-proofs}
+  The \emph{sequents} of $\CHA$ $\infty$-pre-proofs are the same as those of
+  Peano arithmetic.
+  An \emph{$\infty$-pre-proof} is a pair $\Pi = (T, \lambda)$
+  consisting of a (possibly) ill-founded tree $T$
+  and a labelling function $\lambda : \Node(T) \to \Seq$.
+  The labelling function $\lambda$ labels the nodes of $T$ with sequents such that
+  \begin{itemize}
+  \item
+    inner nodes are labelled according to the derivation rules of $\HA$ or the $\CHA$-specific derivation rule
+    \[
+      \inference[$\RCase_x$]{\Gamma[0 / x] \sdash
+        \delta[0 / x] \quad \Gamma[Sx / x] \sdash \delta[Sx / x]}{\Gamma \sdash \delta}
+      \qquad
+      \inference[$\RSubst$]{\Gamma \sdash \delta}{\Gamma[t / x] \sdash \delta[t / x]}
+    \]
+    in which $x \not\in \FV(\Gamma, \delta)$ for $\RCase_x$ and $x \not\in
+    \FV(t)$ for $\RSubst$.
+  \item
+    leaves labelled with $\HA$ axioms,
+    excluding the induction axioms.
+  \end{itemize}
+
+  A $\CHA$ $\infty$-pre-proof $\Pi$ is a \emph{$\CHA$ $\infty$-proof} if for every infinite branch
+  through $\Pi$ there exists a variable which has a progressing trace along it.
+  Provability via $\CHA$ $\infty$-proofs is denoted $\CHA \vdash^\infty \Gamma
+  \sdash \delta$.
+\end{definition}
+
+Every $\CHA$ pre-proof can be `unfolded' into an $\CHA$ $\infty$-pre-proof by
+continuously replacing each bud with the subtree above, and including, its companion. Because
+the soundness condition imposed on $\CHA$ proofs and $\CHA$ $\infty$-proofs is
+`the same', this method transforms $\CHA$ proofs into $\infty$-proofs. The
+$\CHA$ proofs corresponds to a class of $\infty$-proofs: the \emph{regular}
+$\CHA$ $\infty$-proofs, i.e.\ those with finitely many distinct subproofs. The
+notion of $\infty$-proof is rather general and can be considered in the context
+of any cyclic proof system. Conversely, the regular proofs of an $\infty$-proof
+system always induce a cyclic proof systems.
+
+From Gödel's incompleteness theorems, it follows that $\HA$ (and
+thus $\CHA$) is incomplete, i.e.\ that there are statements satisfied by the
+standard model $\omega$ of arithmetic which are not provable in $\HA$.
+Completeness can be achieved by extending $\HA$ with an infinitary $\omega$-rule which allows
+universal statements to be deduced from derivations of the statement for every
+numeral $S^n 0$ for $n \in \omega$.
+\[
+  \inference[$\omega$]{\Gamma \sdash \varphi[0 / x] \quad \Gamma \sdash
+    \varphi[S0 / x] \quad \ldots \quad \Gamma \sdash \varphi[S^n 0 / x] \quad \ldots}{\Gamma \sdash \forall x. \varphi}
+\]
+\textcite[][Theorem 4]{simpsonCyclicArithmeticEquivalent2017} observes that the $\omega$-rule is admissible in
+$\infty$-proofs.
+
+\begin{proposition}
+  The $\omega$-rule is admissible in $\infty$-proofs.
+\end{proposition}
+\begin{proof}
+  Suppose there were $\infty$-proofs $\Pi_n$ of $\Gamma \sdash \varphi[S^n 0 /
+  x]$ for every $n \in \omega$. Consider the $\infty$-pre-proof $\Pi$ below,
+  in which w.l.o.g.\ $x \not\in \FV(\Gamma, \forall x.\varphi)$.
+  \begin{comfproof}
+    \AXC{$\Pi_0$}
+    \UIC{$\Gamma \sdash \varphi[0 / x]$}
+    \AXC{$\Pi_1$}
+    \UIC{$\Gamma \sdash \varphi[S0 / x]$}
+    \AXC{$\Pi_n$}
+    \UIC{$\Gamma \sdash \varphi[S^n0 / x]$}
+    \AXC{}
+    \DOC{}
+    \UIC{$\Gamma \sdash \varphi[S^{n + 1}x / x]$}
+    \RSC{$\RCase_x$}
+    \BIC{$\Gamma \sdash \varphi[S^nx / x]$}
+    \DOC{}
+    \UIC{$\Gamma \sdash \varphi[S^2x / x]$}
+    \RSC{$\RCase_x$}
+    \BIC{$\Gamma \sdash \varphi[Sx / x]$}
+    \LSC{$\RCase_x$}
+    \BIC{$\Gamma \sdash \varphi$}
+    \LSC{$\forall$R}
+    \UIC{$\Gamma \sdash \forall x. \varphi$}
+  \end{comfproof}
+  It remains to argue that $\Pi$ is a proof. Thus, consider an
+  infinite path through it. Such a path must either infinitely pass through the
+  right-hand sides of the $\RCase_{x}$-applications or enter one of the $\Pi_n$.
+  Per assumption, every branch through the $\Pi_n$ has a progressing trace. As
+  the notion of progressing trace is closed under taking prefixes, all
+  the branches through $\Pi$ entering one of the $\Pi_n$ exhibit one. The branch passing
+  infinitely many right-hand sides of $\RCase_{x}$ clearly has a progressing
+  $x$-trace. Hence $\Pi$ is a proof.
+\end{proof}
+\begin{corollary}[Completeness]
+  If $\omega \vDash \Gamma \sdash \delta$ then $\CHA \vdash^\infty \Gamma \sdash
+  \delta$.
+\end{corollary}
+
+For the cyclic proofs for first-order logic with inductive definitions considered by
+\textcite{brotherstonSequentCalculusProof2006}, a similar mismatch is exhibited,
+the $\infty$-proofs being complete for standard second-order models.
+However, this disagreement between cyclic and $\infty$-proofs is not universal.
+For example, in modal logics like the modal
+$\mu$-calculus~\parencite{niwinskiGamesMcalculus1996}, Gödel-Löb
+logic~\parencite{shamkanovCircularProofsGodelLob2014} and Grzegorczyk
+logic~\parencite{savateevNonWellFoundedProofsGrzegorczyk2018}, cyclic proofs and
+$\infty$-proofs prove exactly the same theorems. More generally, cyclic and
+$\infty$-proof systems in which only finitely many distinct
+sequents can occur in a proof are always equivalent \parencite[see][Theorem
+4.6]{wehrAbstractFrameworkAnalysis2021}.
+This result applies to many proof systems which exhibit a subformula property,
+such as the modal logics listed above.
+
+Returning to the setting of first-order arithmetic, Heyting and true arithmetic
+corresponding to regular and unrestricted $\infty$-proofs, respectively,
+naturally raises the question whether correspondences between other classes of
+$\infty$-proofs and fragments of first-order arithmetic can be found. An
+interesting extension of regular trees are the classes of hyper-regular
+trees generated by higher-order recursion schemes as considered
+in~\textcite{ongModelCheckingTreesGenerated2006}. The article proves that
+acceptance of $\omega$-regular conditions, such as the global trace condition,
+on such hyper-regular trees is decidable, extending the property of
+decidable proof checking to hyper-regular $\infty$-proofs. However, the trees
+considered may only employ a finite supply of labels, corresponding to the case
+of proof systems with finitely many sequents discussed in the previous
+paragraph. Hence, higher-order recursion system generated $\infty$-proofs (for
+virtually every cyclic proof system in the literature) prove the same theorems
+as cyclic proofs. This is the only other such result we are aware of.
+
+\section{More Cyclic Arithmetics}
+\label{sec:more-cas}
+
+\textcite{simpsonCyclicArithmeticEquivalent2017} presents a proof system over
+the language of first-order arithmetic extended by a relation $s < t$. Traces in
+his system are sequences of terms appearing along the branch which are, at each
+`step', either equal or ordered by a formula $s < t$ to the left of $\sdash$.
+Each $<$-step is considered a progression.
+\textcite{berardiEquivalenceInductiveDefinitions2017} consider a system of
+first-order arithmetic extended by inductively defined predicates, including a
+one-place predicate $N\,t$ asserting that $t$ denotes a natural number.
+Traces are sequences of inductively defined predicates appearing
+to the left of $\sdash$. Progress takes place whenever a case-distinction rule
+is applied to the traced predicate, the effect of a case-distinction on $N\,t$
+being analogous to that of the $\RCase_{x}$-rule of \Cref{def:pre-proof}.
+An important difference between our notion of trace and those employed in the two
+aforementioned articles is that it does not `respect' the $\RSubst$ rule, i.e.\
+if an $x$-trace passing through a $\RSubst$-instance which replaces $x$ by a
+fresh $y$ does not `switch focus' to $y$ but is simply terminated.
+
+
+\subsection{Simpson-style Cyclic Heyting Arithmetic}
+\label{sec:simpson-cha}
+
+The term and formula languages of $\CHAl$ are given below. The formula language is
+non-standard, treating inequality $s < t$ as a primitive, rather than a defined
+notion. As will become clear below, this eases the definition of the global
+trace condition of $\CHAl$.
+\begin{align*}
+  s,t \in \term \langeq~& x ~|~ 0 ~|~ S s ~|~ s + t ~|~ s \cdot t \\
+  \varphi, \psi \in \form \langeq~& s = t ~|~ s < t ~|~ \bot ~|~ \varphi \wedge \psi ~|~ \varphi \vee \psi ~|~ \varphi \to \psi ~|~ \forall x.\varphi ~|~ \exists x. \varphi
+\end{align*}
+We still denote by $[t / x]$ the \emph{substitution operation} described in
+\Cref{sec:cha}.
+
+\begin{definition}\label{def:chal-rules}
+  The \emph{sequents} of $\CHAl$ are expressions $\Gamma \sdash \delta$ where
+  $\Gamma$ is a finite sets of formulas and $\delta$ a single formula.
+  Write $\Gamma, \varphi$ for
+  $\Gamma \cup \{\varphi\}$ and $\Gamma, \Gamma'$ for $\Gamma \cup \Gamma'$.
+  The \emph{derivation rules} of $\CHAl$ comprise of the following choice of standard rules for
+  intuitionistic first-order logic,
+  \begin{mathpar}
+    \inference[\RAx]{}{\Gamma{}, \delta{} \sdash{} \delta}
+
+    \inference[$\to$L]{\Gamma{}, \varphi{} \sdash{} \delta{} \quad \Gamma{} \sdash{}
+      \psi{}}{\Gamma{}, \varphi{} \to \psi{} \sdash{} \delta}
+
+    \inference[$\to$R]{\Gamma{}, \varphi{} \sdash{} \psi{}}{\Gamma{} \sdash{} \varphi{} \to \psi{}}
+
+    \inference[$\wedge$L]{\Gamma{}, \varphi{}, \psi{} \sdash{} \delta{}}{\Gamma{},
+      \varphi{} \wedge{} \psi{} \sdash \delta{}}
+
+    \inference[$\wedge$R]{\Gamma \sdash \varphi \quad \Gamma \sdash \psi}{\Gamma \sdash \varphi \wedge
+      \psi}
+
+    \inference[$\vee$L]{\Gamma, \varphi \sdash \delta \quad \Gamma, \psi \sdash \delta}{\Gamma, \varphi \vee{}
+      \psi \sdash \delta}
+
+    \inference[$\vee$R]{\Gamma{} \sdash \varphi_i}{\Gamma{} \sdash
+      \varphi_1 \vee{} \varphi_2}
+
+    \inference[$\forall$L]{\Gamma, \varphi[t / x] \sdash \delta}{\Gamma, \forall x.\varphi \sdash \delta}
+
+    \inference[$\forall$R]{\Gamma \sdash \varphi \quad x \not\in
+      \FV(\Gamma, \forall x. \varphi)}{\Gamma
+      \sdash \forall x.\varphi}
+
+    \inference[$\exists$L]{\Gamma, \varphi \sdash \delta \quad x \not\in
+      \FV(\Gamma, \exists x. \varphi, \delta)}{\Gamma, \exists x. \varphi \sdash \delta}
+
+    \inference[$\exists$R]{\Gamma \sdash \varphi[t / x]}{\Gamma \sdash \exists x. \varphi}
+
+    \inference[$\bot$L]{}{\Gamma, \bot \sdash \delta}
+
+    \inference[$=$L]{\Gamma[t / x, s / y] \sdash
+      \delta[t / x, s / y] \quad x, y \not\in \FV(s, t)}{\Gamma[s / x, t / y], s = t \sdash \delta[s / x, t
+      / y]}
+
+    \inference[$=$R]{}{\Gamma \sdash t = t}
+  \end{mathpar}
+  with the following structural rules,
+  \begin{mathpar}
+    \inference[\RWk]{\Gamma \sdash \delta}{\Gamma, \Gamma' \sdash \delta}
+
+    \inference[\RCut]{\Gamma \sdash \varphi \quad \Gamma, \varphi \sdash \delta}{\Gamma \sdash \delta}
+    
+    \inference[\RSub]{\Gamma \sdash \delta}{\Gamma[s / x] \sdash \delta[s / x]}
+  \end{mathpar}
+  with $x \not\in
+    \FV(t)$ for $\RSubst$ and
+  % \begin{mathpar}
+  %   \inference[\RWk]{\Gamma \sdash \Delta}{\Gamma, \Gamma' \sdash \Delta, \Delta}
+  %
+  %   \inference[\RCut]{\Gamma, \varphi \sdash \Delta \quad \Gamma \sdash \varphi,
+  %     \Delta}{\Gamma \sdash \Delta}
+  %
+  %   \inference[\RSub]{\Gamma \sdash \Delta}{\Gamma[s / x] \sdash \Delta[s / x]}
+  %
+  %   \inference[Repeat]{[\Gamma \sdash \Delta] \\ \vdots \\ \Gamma \sdash \Delta}{\Gamma \sdash \Delta}
+  % \end{mathpar}
+  the following arithmetic-specific axioms%
+  \begin{align*}
+    s < t, t < u & \sdash s < u &
+    s < t & \sdash Ss < St \\
+    & \sdash s + St = S(s + t) &
+    s < t, t < s & \sdash \\
+    & \sdash s < t \vee s = t \vee t < s &
+    & \sdash t \cdot 0 = 0 \\
+    s < t, t < Ss & \sdash &
+    & \sdash t < St \\
+    & \sdash s \cdot St = (s \cdot t) + s &
+    t < 0 & \sdash \\
+    & \sdash t + 0 = t
+  \end{align*}
+  and the arithmetic-specific derivation rule%
+  \begin{mathpar}
+    \inference[S]{\Gamma, t = Sx \sdash \delta \quad x \text{ fresh}}{\Gamma, 0 < t \sdash \delta}
+  \end{mathpar}
+  $ $
+\end{definition}
+
+
+\begin{definition}[Trace]
+  A term $t$ \emph{occurs} in a sequent $\Gamma \sdash
+  \delta$ if it appears, possibly as a subterm of another term, in a formula in
+  $\Gamma$ or $\delta$. Write $\term(\Gamma \sdash \delta)$ for the set of
+  terms occurring in $\Gamma \sdash \delta$.
+
+  Let $R$ be a rule of $\CHAl$ of the form
+  \[
+    \inference[R]{\Gamma_1 \sdash \delta_1 \qquad \ldots \qquad \Gamma_n \sdash \delta_n}{\Gamma \sdash \delta}
+  \]
+  Fix $t \in \term(\Gamma \sdash \delta)$ and $t' \in \term(\Gamma_i \sdash
+  \delta_i)$. The term $t'$ is called a
+  \emph{precursor} of $t$, denoted $t' \leftarrow^i_R t$ if one of the following three
+  conditions holds:
+  \begin{itemize}
+  \item $R$ is an instance of $(\textsc{Sub})$ and $\Gamma = \Gamma'[s / x], \delta =
+    \delta'[s / x]$ and $t = t'[s / x]$;
+  \item or $R$ is an instance of a rule \emph{other than} $(\RSub)$ and $t = t'$;
+  \item or \( R \) is an instance of \( (=\hspace{-0.25em}\text{L})\) and $\Gamma = \Gamma''[s / x,
+    t / y], \Gamma' = \Gamma''[t / x, s / y]$ and analogously for the $\delta$
+    and there exists a term $t''$ such that $t = t''[s / x, t / y]$ and $t' =
+    t''[t / x, s / y]$.
+  \end{itemize}
+
+  Now let $\Pi$ be $\CHAl$ pre-proof and
+  let $(\Gamma_i \sdash \delta_i)_{i \in \omega}$ be an infinite branch of
+  $\Pi$. A trace along said branch is a sequence of terms $(t_i)_{i \in \omega}$
+  and an offset $N$ such that for every $i \in \omega$ we have $t_i \in \term(\Gamma_{N + i} \sdash \delta_{N +
+    i})$ and furthermore, if $\Gamma_{N + i + 1} \sdash \delta_{N + i + 1}$ is
+  the $j$th premise of $\CHAl$-rule $R$:
+  \begin{enumerate}[label=(\roman*)]
+  \item either $t_{i + 1} \leftarrow^j_R t_i$
+  \item or $s < t_i \in \Gamma$ and $t_{i + 1} \leftarrow^j_R t_i$.
+  \end{enumerate}
+  A trace is said to be progressing if case (ii) applies infinitely often along it.
+\end{definition}
+
+\begin{definition}[$\CHAl$-proof]
+  A $\CHAl$ pre-proof $\Pi$ is a proof if every infinite branch of $\Pi$ has a
+  progressing trace. We write $\CHAl \vdash \Gamma \sdash \delta$ to mean that
+  there exists a $\CHAl$-proof $\Pi$ with endsequent $\Gamma \sdash \delta$.
+\end{definition}
+
+\subsection{Brotherston-Simpson Cyclic Arithmetic}
+\label{sec:brotherston-simpson}
+
+\subsection{Translating between Cyclic Arithmetics}
+\label{sec:translating-cas}
+
+\section{Complexity results}
+\label{sec:cha-complexity}

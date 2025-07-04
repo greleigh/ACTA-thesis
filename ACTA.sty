@@ -33,10 +33,12 @@ showframe=true
 \fi
 ]{geometry}
 
-\RequirePackage[swedish,UKenglish,USenglish]{babel}
+\RequirePackage[swedish,UKenglish,USenglish]{babel} % UKEnglish -> british ??
+\RequirePackage{csquotes}
+
 \RequirePackage{amsmath}
 \RequirePackage{amssymb}
-\RequirePackage{amsthm}
+% \RequirePackage{amsthm}
 
 \RequirePackage[no-math]{fontspec}
 \RequirePackage[math-style=TeX, bold-style=TeX]{unicode-math}
@@ -85,9 +87,9 @@ showframe=true
 %%% Math sans serif font
 \setmathsf[Scale=MatchLowercase]{Libertinus Sans}
 
-
 %%% This font is only used for the typsetting of the XeLaTeX and BibTeX logos. They looks horrible in Garamond.
-\newfontfamily\latexfont{Latin Modern Roman}
+% \newfontfamily\latexfont{Latin Modern Roman}
+\providecommand{\latexfont}{}
 \def\BibTeX{{\textrm{B}\kern-.05em{\textsc{i}\kern-.025em \textsc{b}}\kern-.08em\latexfont\TeX}}
 
 %%% Garamond-Math for mathematics.
@@ -95,10 +97,10 @@ showframe=true
 %%% and change Garamond-Math to Garamond-math.otf below.
 %%%
 %%% Make Greek letters 'upright' by uncommenting the four lines below. The Garamond-Math 'upright' Greek is still a little italic.
-% \ExplSyntaxOn
-% \bool_gset_true:N  \g__um_upGreek_bool % make upper case Greek 'upright'
-% \bool_gset_true:N   \g__um_upgreek_bool % make lower case greek 'upright'
-% \ExplSyntaxOff
+\ExplSyntaxOn
+\bool_gset_true:N  \g__um_upGreek_bool % make upper case Greek 'upright'
+\bool_gset_true:N   \g__um_upgreek_bool % make lower case greek 'upright'
+\ExplSyntaxOff
 
 %%% unicode-math options:
 \setmathfont{Garamond-Math}[Scale=MatchUppercase,StylisticSet={8,9},RawFeature=+lnum]

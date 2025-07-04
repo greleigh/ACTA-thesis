@@ -1,0 +1,47 @@
+\ProvidesPackage{wenvironments}[2023/03/07 All my custom environs]
+
+
+
+\RequirePackage[amsmath,hyperref,thmmarks]{ntheorem}
+\RequirePackage{thm-restate}
+
+%% Theorems
+\theoremstyle{plain}
+\theoremheaderfont{\scshape\bfseries}
+\theorembodyfont{\normalfont}
+\newtheorem{lemma}{Lemma}[chapter]
+\newtheorem{fact}[lemma]{Fact}
+\newtheorem{proposition}[lemma]{Proposition}
+\newtheorem{theorem}[lemma]{Theorem}
+\newtheorem{corollary}[lemma]{Corollary}
+\newtheorem{conjecture}[lemma]{Conjecture}
+\newtheorem{assumption}[lemma]{Assumption}
+\newtheorem{exercise}[lemma]{Exercise}
+\newtheorem{example}[lemma]{Example}
+\newtheorem{claim}[lemma]{Claim}
+\theoremsymbol{{\ensuremath{\lrcorner}}}
+\newtheorem{definition}[lemma]{Definition}
+\theoremsymbol{}
+
+%
+\theoremstyle{nonumberplain}
+\newtheorem{remark}{Remark}
+\newtheorem{note}{Note}
+\theoremsymbol{{\ensuremath{\square}}}
+\newtheorem{proof}{Proof}
+\newtheorem{conproof}{Constructive Proof}
+\newtheorem{classproof}{Classical Proof}
+\newtheorem{proofidea}{Proof Idea}
+
+% %% Floats
+% \setcounter{topnumber}{3}
+% \setcounter{bottomnumber}{0}
+% \setcounter{totalnumber}{3}
+% \renewcommand*{\floatpagefraction}{0.7}
+% \renewcommand{\@makecaption}[2]{\vskip+3mm\centering%
+%   {\textsc{#1}: #2}}
+
+%% Samepage
+\renewenvironment{samepage}{%
+  \trivlist\item\relax\minipage{\textwidth}}{%
+  \endminipage\endtrivlist}

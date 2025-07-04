@@ -10,6 +10,27 @@
 %%% Available options: draft/final. Switch to final at any point to see the final formatting.
 \usepackage[draft]{ACTA}
 
+\usepackage{wimports}
+\usepackage{wmacros}
+\usepackage{weditorial}
+\usepackage{wenvironments}
+
+%%% Document constituents
+\includeonly{
+  % chapters/ACTA-titlepages,
+  % chapters/ACTA-frontmatter,
+  % chapters/frontmatter,
+  % chapters/preface,
+  chapters/introduction,
+  chapters/ca,
+  % chapters/representations,
+  % chapters/acds,
+  % chapters/reset,
+  % chapters/stacks,
+  % chapters/applications,
+  % chapters/constructive,
+}
+
 %%% Only used to generate placeholder text.
 \usepackage{lipsum}
 
@@ -39,27 +60,49 @@
 
 %%% For bibliography formatting according to ACTA regulations. If you don't want to use
 %%% natbib, you'll have to make the two tweaks below in some other (to me unknown) way.
-\usepackage{natbib}
-\bibliographystyle{apalike} % or whatever you prefer
-\setlength{\bibhang}{0.6cm}
-\setlength{\bibsep}{6pt}
+% \usepackage{natbib}
+% \bibliographystyle{apalike} % or whatever you prefer
+% \setlength{\bibhang}{0.6cm}
+% \setlength{\bibsep}{6pt}
+%
+% Prefer BibLateX ??
+% Fix \mu in the bibliography
+% \DeclareUnicodeCharacter{03BC}{$\mu$}
+\RequirePackage[
+    bibstyle=authortitle,
+    citestyle=authoryear,
+    sorting=nyt,
+    maxbibnames=99,
+    backref=false,
+    doi=true,
+    isbn=false,
+    url=false,
+    eprint=false,
+    backend=biber
+    ]{biblatex}
 
+\bibliography{bibliography}
  
 %%% Here's the document.
 %%%
 %%%
+
  
  
 \begin{document}
 %%% For hyphenation, etc. Can be changed to USenglish, if preferred.
 \selectlanguage{UKenglish}
 
+
+\newcommand{\papOne}{Paper \hyperref[p:acrp]{I}}
+\newcommand{\papTwo}{Paper \hyperref[p:unraveling]{II}}
+
 \frontmatter
 \pagestyle{empty}
 %%% These two lines includes the files typesetting the title pages and various frontmatter.
 %%% Make sure to edit these files to insert the correct information.
-\include{ACTA-titlepages}
-\include{ACTA-frontmatter}
+\include{chapters/ACTA-titlepages}
+\include{chapters/ACTA-frontmatter}
 
 %%% Shorten longest skips around math displays: was 14pt plus 3pt minus 7pt. The worst case 17pt is huge.
 %%% Can be redefined if needed, but beware of resulting Bad Typography.
@@ -77,46 +120,36 @@
 %%% Write your thesis, or include your chapter files below.
 \mainmatter
 
-\chapter{The very first chapter}
-\lipsum[1]
-
-\section{A section of the chapter}
-\lipsum[2-3]
-
-\subsection{With a subsection}
-\lipsum[4]\footnote{A very short footnote.}
-
-\subsubsection{A single subsubsection}
-\lipsum[5]
-
-\subsection{And another subsection}
-\lipsum[6]
-
-\section{The last section}
-\lipsum[7-8]
-
-\chapter{Another chapter}
-\lipsum
+\include{chapters/preface}
+\include{chapters/introduction}
+\include{chapters/ca}
+\include{chapters/representations}
+\include{chapters/acds}
+\include{chapters/reset}
+\include{chapters/stacks}
+\include{chapters/applications}
+\include{chapters/constructive}
+% \include{mainmatter}
 
 \backmatter
 %%% BACKMATTER
 %%%
 %%% This changes the name of the chapter Bibliography to References.
 %%% Remove the following line for default name Bibliography.
-\renewcommand{\bibname}{References}
+% \renewcommand{\bibname}{References}
 
 %%% If that doesn't work, uncomment the line below. Unless you want
 %%% your reference list to be called Bibliography.
 % \renewcommand{\bibsection}{\chapter{\bibname}}
 
 %%% To keep the bibliography non-empty. Should be removed once you've added your own references.
-\nocite{test2021}
+% \nocite{test2021}
 
 %%% I recommend using BibTeX. Replace the bibliography file with your own.
 \bgroup
 %%% ACTA formatting
 \fontsize{12}{14}\selectfont
-\bibliography{ACTA-template}
+\printbibliography{}
 \egroup
 
 %%% Alternatively, put your author-year-formatted \bibitems in here: 

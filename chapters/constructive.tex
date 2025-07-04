@@ -1,0 +1,135 @@
+% Emacs, this is -*-latex-*-
+
+\chapter{Constructivity of Cyclic Proof Theory}
+\label{chap:constructivity}
+
+\section{Working in the CIC}
+\label{sec:cic-intro}
+
+All arguments in this chapter are carried out over the base theory of the
+Calculus of Inductive Constructions (CIC) \needcite{}, the type theory
+underpinning the Rocq interactive theorem prover~\needcite{}. Giving a full,
+formal account of the CIC would be both very finicky and not very useful for the
+rest of the chapter. Instead, we shall attempt to convey the important
+intuitions relating to the `user's perspective' of the CIC.
+
+% Constructive
+The CIC provides a \emph{constructive} foundation of mathematics. In fact, for
+the purpose of this chapter, we take `constructive' to always refer to the
+notion of constructivity embodied by the CIC. \TODO{Expand}
+
+% Type theory
+The CIC is a type theory, meaning its central judgment is of the
+form $a : A$, read as `$a$ is of type $A$'.
+% - Two type levels
+Because the CIC is a
+\emph{dependent} type theory, types themselves have types called \emph{type
+  universes}. There are two kinds of such type universes, the universe $\Prop$
+of propositions and the universes $\Type_i$ of computational types. Their
+relationships are as follows:
+\[
+  \Prop \subset \Type_0 \subset \ldots \subset \Type_n \subset \ldots
+  \qquad \qquad
+  \Prop : \Type_0 \quad \Type_0 : \Type_1 \quad \ldots
+\]
+No type universe $\Univ$ contains itself, i.e. $\Univ : \Univ$ is never the
+case, as this would give rise to an inconsistency. To aid readability by not
+bothering with having to identify universe levels for every type (instance), we
+following the CIC's implementation by Rocq in identifying all universes
+$\Type_i$ with a singular universe $\Type$.
+
+% - Type are computational types
+% - A -> B are functions
+Intuitively, the universe $\Type$ of computational types contains types of
+concrete values which one wishes to reason about, for example the types $\NN$ of
+natural numbers and $\BB$ of booleans. A function $f : A \to B$ with $A, B :
+\Type$ should be read\footnote{\label{ft:cic}in the absence of any axioms beyond
+the CIC} as a \emph{computable transformation} of $A$-values into
+$B$-values.
+
+The type $\Prop$ of propositions, on the other hand, contains types which
+represent logical expressions in the sense of the Curry-Howard-correspondence,
+such as the type $a =_A b$ of equality proofs between two values $a, b : A$ or
+the empty type $\bot$ of falsity. A function $f : A \to B$ with $A, B : \Prop$
+should be read\footref{ft:cic} as a \emph{constructive proof} that $A$ implies
+$B$. A dependent function $g : \forall a : A.~B(a)$, even with $A :
+\Type$, yields a proof $g(a) : B(a)$ for every $a : A$ and should thus be viewed
+as a proof of the equinimous universal statement.
+
+% - Consintency of Prop are propositions
+While the `behavior' of the CIC within $\Type$ is unsurprising, within $\Prop$
+it exhibits some properties which may not be expected. The CIC was designed in
+such a way that principles like those below are consistent.
+\[
+  \forall P : \Prop.~P =_{\Prop} \top \vee P =_{\Prop} \bot
+  \qquad \qquad
+  \forall P : \Prop. \forall a, b : P.~a =_{\Prop} b
+\]
+To ensure such consistencies, all functions $f : A \to B$ with $A : \Prop$ and
+$B : \Type$ are constricted by the so-called \emph{elim-restriction}. While the
+details are intricate, the upshot is that `the transfer of information from
+$\Prop$ to $\Type$ is blocked'.
+% - Props are to be erased ?
+
+% - Two kinds of connectives
+Because of the elim-restriction, the CIC features two variants of the
+`constructively interesting' connectives: the \emph{logical} connectives $\vee$ and
+$\exists$ in $\Prop$ and the \emph{computational} connectives $+$ and $\Sigma$
+in $\Type$. The crucial difference is that the `outcome' of $A + B$ and the
+witness of $\Sigma x : X.~C(x)$ may be used to construct values of a type $Y :
+\Type$, the outcome of $A \vee B$ and the witness of $\exists x : X.~C(x)$ may not.
+\TODO{$\vee_{\Univ}$ and $\text{exists}_{\Univ}$ notation}
+
+To illustrate the difference, consider the standard definition of the
+decidability of a predicate $P : X \to \Prop$ given below, which requires a
+computationally `usable' choice between $P(x)$ and $\neg P(x)$ for every $x : X$.
+\begin{definition}
+  For $X : \Type$ a predicate $P : X \to \Prop$ is \emph{decidable} if $\forall
+  x : X.~P(x) + \neg P(x)$.
+\end{definition}
+
+The computational `usability' is illustrated below. Observe that the outcome of
+$P(x) + \neg P(x)$ may be used in the definition of the \emph{computational}
+function $f : X \to \BB$ with $X, \BB : \Type$.
+\begin{proposition}
+  If $P : X \to \Prop$ is decidable, there exists a function $f : X \to \BB$
+  such that $f(x) = \btrue$ iff $P(x)$ holds for every $x : X$.
+\end{proposition}
+\begin{proof}
+  Let $g : \forall x : X.~P(x) + \neg P(x)$ be the witness of decidability. Then define
+  \[
+    f(x) \coloneq
+    \begin{cases}
+      \btrue & \text{ if } g(x) = \sleft \\
+      \bfalse & \text{ if } g(x) = \sright
+    \end{cases}.
+  \]
+  Correctness of $f : X \to B$ easily follows.
+\end{proof}
+
+All `classical' reverse mathematics (see e.g.~\needcite{}) is done relative to
+subsystems of second-order arithmetic.
+A difficulty of constructive reverse mathematics, in comparison, is that that
+there is no such common base over which it is carried out. Indeed, some of the
+bases used in the literature differ in the `computational content of their
+constructively interesting connectives': In essence, whether ``there exists'' is
+interpreted as $\exists$ or $\Sigma$ in the sense of the CIC and similarly for ``or''.
+From this perspective, the CIC is an ideal setting for constructive analyses as
+it can accommodate various combinations of logical and computational
+interpretations of `constructively interesting' connectives, allowing results
+derived within it to naturally extend to many other bases of constructive
+mathematics (see \Cref{sec:other-con} for more on this).
+
+\section{Non-constructive Principles}
+\label{sec:ncp}
+
+\section{Cyclic Proofs in the CIC}
+\label{sec:cic-cp}
+
+\section{Constructive Analysis}
+\label{sec:canalysis}
+
+\section{Other constructive bases}
+\label{sec:other-con}
+
+\TODO{Vis-a-vis HoTT/Agda: Unique choice not provable}

@@ -1,0 +1,966 @@
+% Emacs, this is -*-latex-*-
+
+\chapter{Applications}
+\label{chap:applications}
+
+\section{Consistency of Cyclic Peano Arithmetic}
+\label{sec:cons-of-cha}
+
+\subsection{Ordinal-bounded stack-controlled Peano arithmetic}
+\label{sec:ord-spa}
+
+In this section, we consider a (conservative) extension of Peano Arithmetic with
+bounded quantification. That is, the syntax we employ is given below.
+\begin{align*}
+  s,t \in \term \langeq &~ x ~|~ 0 ~|~ S s ~|~ s + t ~|~ s \cdot t  & x \in \var \\
+  \varphi, \psi \in \form \langeq &~ s = t ~|~ \bot ~|~ \varphi \to \psi ~|~ \forall x.\varphi ~|~
+                \forall x < s. \varphi ~|~ \forall x \leq s. \varphi & n \in \omega
+\end{align*}
+
+The sequents we consider are of the form $\Lambda \vdash^\alpha_k \Gamma \sdash
+\Delta$ where $\Gamma \sdash \Delta$ is a $\PA$-sequent in the language above
+with $\Gamma, \Delta$ \emph{lists of formulas},
+ $\alpha$ is a \emph{height bound} in the
+usual ordinal notation system for $\varepsilon_0$ and $k < \omega$ is a
+\emph{$\RCut$-rank}. $\Lambda$ is a list of jump-labels $x^\sigma \mapsto \Gamma
+\sdash \Delta$, with the same restrictions as in \needcite{}, except $\Gamma,
+\Delta$ additionally may not contain $\forall x < s. \varphi$ or $\forall x \leq
+s. \varphi$ as subformulas.
+
+We begin by specifying the rules of $\APA$ \TODO{Fix system name} which are
+essentially taken from \parencite{mancosuIntroductionProofTheory2021}.
+Deviating from them, we introduce an explicit $\RRaise$-rule
+for raising $\RCut$-ranks. This does not impact the arguments but simplifies
+their presentation.
+Below, $\alpha + \beta$ denotes the usual commutative addition operator defined on the
+ordinal notation system for $\varepsilon_0$ and $s(\varphi)$ is the usual
+measure of formula size.
+
+  \begin{description}
+	\item [Logical rules] The following rules which do not interact with companion labels:
+  \begin{mathpar}
+    \inference[$\to$L]{\Lambda \vdash^{\alpha}_{k} \Gamma{}, \varphi \sdash \Delta \quad \Lambda \vdash^{\beta}_{k} \Pi \sdash \psi, \Sigma}{\Lambda \vdash^{\alpha + \beta}_{k} \Gamma, \Pi, \varphi \to \psi \sdash \Delta, \Sigma}
+
+    \inference[$\to$R]{\Lambda \vdash^{\alpha}_{k} \Gamma, \varphi \sdash \psi, \Delta}{\Lambda \vdash^{\alpha + 1}_{k} \Gamma \sdash \varphi \to \psi, \Delta}
+
+
+    \inference[$\forall$L]{\Lambda \vdash^{\alpha}_{k} \Gamma, \varphi[t / x] \sdash \Delta}{\Lambda \vdash^{\alpha + 1}_{k} \Gamma, \forall x.\varphi \sdash \Delta}
+
+    \inference[$\forall$R]{\Lambda \vdash^{\alpha}_{k} \Gamma \sdash \varphi[y/x], \Delta \quad y \not\in \FV(\Gamma, \forall x. \varphi, \Delta)}{\Lambda \vdash^{\alpha + 1}_{k} \Gamma \sdash \forall x.\varphi, \Delta}
+
+    \inference[$=$L]{\Lambda \vdash^{\alpha}_{k} \Gamma[t / x, s / y] \sdash \Delta[t / x, s / y] \quad x, y \not\in \FV(s, t)}{\Lambda \vdash^{\alpha + 1}_{k} \Gamma[s / x, t / y], s = t \sdash \Delta[s / x, t / y]}
+
+    \inference[$=$R]{}{\Lambda \vdash^{1}_{k} \; \sdash t = t}
+
+	\inference[$\bot$L]{}{\Lambda \vdash^{1}_{k} \bot \sdash }
+
+  \inference[\RWk]{\Lambda \vdash^{\alpha}_{k} \Gamma \sdash \Delta}{\Lambda \vdash^{\alpha}_{k} \Gamma, \Gamma' \sdash \Delta, \Delta'}
+
+  \inference[\RLEx]{\Lambda \vdash^{\alpha}_{k} \Gamma, \psi, \varphi, \Gamma'
+    \sdash \Delta}{\Lambda \vdash^{\alpha}_{k} \Gamma, \varphi, \psi, \Gamma' \sdash \Delta}
+
+  \inference[\RREx]{\Lambda \vdash^{\alpha}_{k} \Gamma \sdash \Delta, \psi,
+    \varphi, \Delta'}{\Lambda \vdash^{\alpha}_{k} \Gamma \sdash \Delta, \varphi, \psi, \Delta'}
+
+  \inference[\RLCtr]{\Lambda \vdash^{\alpha}_{k} \Gamma, \varphi, \varphi \sdash \Delta}{\Lambda \vdash^{\alpha}_{k} \Gamma, \varphi \sdash \Delta}
+
+  \inference[\RRCtr]{\Lambda \vdash^{\alpha}_{k} \Gamma \sdash \varphi, \varphi, \Delta}{\Lambda \vdash^{\alpha}_{k} \Gamma \sdash \varphi, \Delta}
+
+  \inference[\RCut]{s(\varphi) < k \\ \Lambda \vdash^{\alpha}_{k} \Gamma \sdash \varphi, \Delta \quad
+    \Lambda \vdash^{\beta}_{k} \Pi, \varphi \sdash \Sigma}{\Lambda \vdash^{\alpha + \beta}_{k} \Gamma, \Pi \sdash \Delta, \Sigma}
+
+  \inference[$\RRaise$]{\Lambda \vdash^{\alpha}_{k + 1} \Gamma \sdash \Delta}{\Lambda \vdash^{\omega^\alpha}_{k} \Gamma \sdash \Delta}
+  \end{mathpar}
+  where we impose another restriction on $=$L: $\Gamma, \Delta$ may not contain
+  a subformula in which $x$ or $y$ occur in the upper bound of bounded
+  quantification. That is, if $\forall z < u.~\varphi$ or $\forall z \leq
+  u.~\varphi$ is a subformula of $\Gamma, \Delta$ then $\FV(u) \cap \{x, y\} = \emptyset$.
+  \item [Arithmetical axioms] These are of the form: 
+  \begin{align*}
+    \varepsilon \vdash^{1}_{k} \;  0 = S t \sdash ~ & & \varepsilon \vdash^{1}_{k} S s = S t \sdash s = t && \varepsilon \vdash^{1}_{k} \; \sdash s + 0 = 0 \\
+    \varepsilon \vdash^{1}_{k} \; \sdash s + St = S(s + t) && \varepsilon \vdash^{1}_{k} \; \sdash s \cdot 0 = 0 &&\varepsilon \vdash^{1}_{k} \; \sdash s \cdot St = (s \cdot t) + s
+  \end{align*}
+\end{description}
+
+Let $<^{-} \coloneq <$ and $<^{+} \coloneq \leq$. We write $\forall \vec{x}
+<^{\vec{\sigma}} \vec{t}$ as a shorthand for a sequence of bounded quantifications $\forall x_0 <^{\sigma_0} t_0
+\ldots \forall x_i <^{\sigma_i} t_i \ldots$. Consider two such sequences
+$\forall \vec{x} <^{\vec{\sigma}} \vec{t}$ and $\forall \vec{x} <^{\vec{\sigma'}}
+\vec{s}$ such that the $\vec{t}$ and $\vec{s}$ are numerals, i.e. $t_i = \ol{n_i}$
+and $s_i = \ol{m_i}$ with $n_i, m_i \in \omega$. We say that $\vec{\sigma'} ;
+\vec{s}$ is a shifting of $\vec{\sigma} ; \vec{t}$, writing $\vec{\sigma'} ;
+\vec{s} \preceq \vec{\sigma} ; \vec{t}$ if for ever $i < \abs{x}$:
+\begin{itemize}
+\item either $\sigma'_i = +$ and $\sigma_i = -$ and $m_i < n_i$,
+\item or $\sigma'_i = -$ or $\sigma_i = +$ and $m_i \leq n_i$.
+\end{itemize}
+Observe that these are exactly the sound `shifts' of bounds.
+We now add the following rules for the bounded quantifiers. Note that these are
+chosen to provide a complete axiomatization of bounded quantification but rather
+as exactly those auxiliary rules which we need for our argument.
+\begin{mathpar}
+  \inference[$\Ale$R]{\varepsilon \vdash^{\alpha_0}_k \Gamma \sdash A(0) \quad
+    \ldots \quad \varepsilon \vdash^{\alpha_{n - 1}}_k \Gamma \sdash
+    A(\ol{n - 1})}{\varepsilon \vdash^{\Sigma \alpha_i}_k\Gamma \sdash \forall x < \ol{n}.~A(x)}
+
+  \inference[$\Aleq$R]{\varepsilon \vdash^{\alpha_0}_k \Gamma \sdash A(0) \quad
+    \ldots \quad \varepsilon \vdash^{\alpha_{n}}_k \Gamma \sdash
+    A(\ol{n})}{\varepsilon \vdash^{\Sigma \alpha_i}_k\Gamma \sdash \forall x \leq \ol{n}.~A(x)}
+
+  \inference[$\Aleq$L]{\varepsilon \vdash^\alpha_k \Gamma,
+    A(\ol{n}) \sdash B}{\varepsilon \vdash^{\alpha + 1}_k \Gamma, \forall x \leq \ol{n}.~A(x) \sdash B}
+
+  \inference[$\RShift$]{\varepsilon \vdash^{\alpha}_k \Gamma, \forall \vec{x}
+    <{\vec{\sigma'}} \vec{s}.~\varphi \sdash \Delta ~~\text{ where } \vec{\sigma'};\vec{s}
+    \preceq \vec{\sigma}; \vec{t}}{\varepsilon \vdash^{\alpha}_k \Gamma, \forall \vec{x} <{\vec{\sigma}} \vec{t}.~\varphi \sdash \Delta}
+\end{mathpar}
+
+\TODO{What about $\RBin$ and $\Lambda$?}
+
+We call a substitution $\theta : V \to \term$ with $V \subseteq \var$
+\emph{closed} if $\im(\theta)$ are closed terms. If $\im(\theta) \subseteq
+\{\ol{n} \mid n \in \omega \}$ we call $\theta$ an assignment.
+We call $\theta$ a \emph{closing} for a sequent $\Gamma \sdash
+\delta$ if it is closed and $\dom(\theta) = \FV(\Gamma, \delta)$.
+
+As before, jump-labels are of the form $x^\sigma \mapsto \Gamma \sdash \Delta$
+with the usual side-conditions. For a jump-label stack $\Lambda$, we define $\HH_\Lambda \coloneq
+H(\emptyset, \emptyset, \Lambda)$ with
+\begin{align*}
+  H(V, I, \varepsilon) &\coloneq I \\
+  H(V, I, (x^\sigma \mapsto \Gamma \sdash \Delta); \Lambda') &\coloneq H(V \cup \{x\}, I \cup \{\varphi\}, \Lambda')
+\end{align*}
+where $\vec{v} = V \setminus \{x\}$, $\vec{y} = \FV(\Gamma, \delta) \setminus (V
+\cup \{x\})$ and $x', \vec{u}$ fresh and $\Phi \to \Psi$ is a shorthand for $\bigwedge
+\Phi \to \bigvee \Psi$:
+\[
+  \varphi \coloneq \forall x' <^\sigma x.\forall \vec{u} \leq \vec{v}. \forall
+  \vec{y}. (I, \Gamma \to \Delta)[x' / x, \vec{u} / \vec{v}].
+\]
+We shall write $\varphi(\Lambda)$ for the last formula $\varphi$ added to
+$\HH_\Lambda$.
+
+\begin{lemma}\label{lem:cons-close-buds}
+  Let $\Lambda = \Lambda'; x^+ \mapsto \Gamma \sdash \Delta$. There exists a
+  $h(\Lambda)$ such that for every assignment $\theta$ with $\dom(\theta) =
+  \var(\Lambda)$ there is a proof of $\varepsilon
+  \vdash^{h(\Lambda)}_0 \HH_\Lambda[\theta], \Gamma[\theta] \sdash
+  \Delta[\theta]$ using the rules specified so far.
+\end{lemma}
+\begin{proof}
+  The derivation can be obtained via
+  \begin{comfproof}
+    \AXC{}
+    \UIC{$\varepsilon \vdash^n_0 (\HH_{\Lambda'}, \Gamma \to \Delta)[\theta], \HH_\Lambda[\theta], \Gamma[\theta] \sdash \Delta[\theta]$}
+    \LSC{$\Aleq\text{L}^*$}
+    \UIC{$\varepsilon \vdash^{n + \abs{\var(\Lambda)}}_0 \varphi(\Lambda)[\theta], \HH_{\Lambda'}[\theta], \Gamma[\theta] \sdash \Delta[\theta]$}
+  \end{comfproof}
+  where we note that $\varphi(\Lambda)$ is of the form $\forall \vec{x'} \leq
+  \theta(\vec{x}). \forall \vec{y}. \ldots$. Observe that he premise of the
+  $\Aleq$L-steps is an instance of the tautological sequent $\Phi \to
+  \Psi, \Phi \sdash \Psi$ and thus has a proof of some finite height $n$. Then fix
+  $h(\Lambda) \coloneq n + \abs{\Lambda}$.
+\end{proof}
+
+We can now specify the height bounds and $\RCut$-ranks of the rules which manipulate
+companion labels:
+\begin{mathpar}
+  \inference[$\RComp$]{s(\varphi(\Lambda; (x^- \mapsto \Gamma \sdash \Delta))) <
+    k\\ \Lambda; (x^- \mapsto \Gamma \sdash \Delta) \vdash^{\alpha}_{k} \Gamma \sdash \Delta}{\Lambda \vdash^{\alpha^+}_{k} \Gamma \sdash \Delta}
+
+  \inference[$\RBud$]{}{\Lambda; (x^+ \mapsto \Gamma \sdash \Delta) \vdash^{h(\Lambda; (x^+ \mapsto \Gamma \sdash \Delta))}_{k} \Gamma \sdash \Delta}
+
+  \inference[$\RDrop$]{\Lambda \vdash^{\alpha}_{k} \Gamma \sdash
+    \Delta}{\Lambda; \Lambda' \vdash^{\alpha + 1}_{k} \Gamma \sdash \Delta}
+
+  \inference[$\RCase_{x}$]{\Lambda \vdash^{\alpha}_{k} \Gamma(0) \sdash \Delta(0)
+    \qquad
+    \Lambda^{+x} \vdash^{\beta}_{k} \Gamma(S\,x) \sdash \Delta(S\,x)}{\Lambda \vdash^{\alpha + \beta}_{k} \Gamma(x) \sdash \Delta(x)}
+\end{mathpar}
+
+Lastly, the system contains some `bookkeeping' rules, which represent suspended
+states of the closing procedure, which is part of the consistency argument. The
+final, $\RCut$-free proof which is produced by the argument will contain no
+instances of these rules.
+\begin{mathpar}
+  \inference[$\RSub$]{\varepsilon \vdash_k^{\alpha} \Gamma \sdash \Delta}{\varepsilon \vdash_k^{\alpha + 1} \Gamma[\theta] \sdash \Delta[\theta]}
+
+  \inference[$\RComp'$]{\Lambda; x^- \mapsto \Gamma' \sdash \delta' \vdash^\beta_k \Gamma' \sdash \delta'}{\varepsilon \vdash^{\beta^+}_k \HH_\Lambda[\theta], \Gamma'[\theta] \sdash \delta'[\theta]}
+
+  \inference[$\forall$R']{\varepsilon \vdash_k^{\alpha} \Gamma
+    \sdash \varphi[y / x], \Delta \quad y \not\in \FV(\Gamma, \forall x. \varphi, \Delta)}{\varepsilon \vdash_k^{\alpha + 1} \Gamma[\theta]
+    \sdash (\forall x.\varphi, \Delta)[\theta]}
+\end{mathpar}
+Each of the rules above imposes some restrictions on the substitution $\theta$
+used in its definition. For $\RSub$, $\theta$ may be any closed substitution.
+For $\RComp'$, $\theta$ must be an assignment with $\dom(\theta) =
+\var(\Lambda)$ and $x \not\in \dom(\theta)$. For $\forall$R',
+$\theta$ must be a closing substitution.
+
+Using the results from~\needcite{}, it is easy to see that $\CPA$-proofs embed
+into \TODO{the system}. Observe also that all transformations involved in this
+argument can be implemented primitive recursively.
+\begin{proposition}\label{lem:cons-embed-cpa}
+  If $\CPA \vdash \Gamma \sdash \Delta$ then there exists $\alpha$ such that
+  $\varepsilon \vdash^\alpha_0 \Gamma \sdash \Delta$.
+\end{proposition}
+\begin{proof}
+  \TODO{Refer to the earlier chapter.}
+\end{proof}
+
+\begin{fact}
+  If $\Lambda \vdash^{\alpha}_k \Gamma \sdash \Delta$ then $\Lambda
+  \vdash^\alpha_{k'} \Gamma \sdash \Delta$ for any $k' \geq k$.
+\end{fact}
+
+\subsection{$\RCut$-elimination procedure in ...}
+\label{sec:spa-cut-elm}
+
+We present the steps in the same order as they are carried out in the procedure.
+
+\begin{lemma}[Companion elimination]\label{lem:cons-comp-sub}
+  Let $\theta$ be a closed substitution with $\dom(\theta) = \var(\Lambda) \cup
+  \{x\}$ such that $\theta \uh \var(\Lambda)$ is an assignment. If a derivation ends in
+    \begin{comfproof}
+      \AXC{$\Pi$}
+      \UIC{$\Lambda; x^- \mapsto \Gamma \sdash \Delta \vdash^\alpha_k \Gamma \sdash \Delta$}
+      \LSC{$\RComp$}
+      \UIC{$\Lambda \vdash^{\alpha^+}_k \Gamma \sdash \Delta$}
+    \end{comfproof}
+    then $\varepsilon \vdash_k^{< \alpha^+} (\HH_\Lambda, \Gamma)[\theta] \sdash \Delta[\theta]$.
+\end{lemma}
+\begin{proof}
+  For this, we prove the following two statements by joint induction on
+  $\alpha$. Clearly, 1.\ closes the claim.
+  \begin{enumerate}
+  \item If $\theta$ is as described above and $\alpha \coloneq \beta^+$ with
+    \begin{comfproof}
+      \AXC{$\Pi$}
+      \UIC{$\Lambda; x^- \mapsto \Gamma \sdash \Delta \vdash^\beta_k \Gamma \sdash \Delta$}
+      \LSC{$\RComp$}
+      \UIC{$\Lambda \vdash^\alpha_k \Gamma \sdash \Delta$}
+    \end{comfproof}
+    then $\varepsilon \vdash_k^{< \alpha} (\HH_\Lambda, \Gamma)[\theta] \sdash \Delta[\theta]$.
+  \item Let $\Lambda \vdash^\alpha_k \Gamma \sdash \Delta$ and $\theta$ an assignment
+    with $\dom(\theta) = \var(\Lambda)$. Then
+  $\varepsilon \vdash^{\leq \alpha}_k \HH_\Lambda[\theta], \Gamma[\theta] \sdash
+  \Delta[\theta]$.
+  \end{enumerate}
+  \begin{enumerate}
+  \item
+    Denote by $\varphi^*$ the formula $\varphi(\Lambda; x^- \mapsto \Gamma
+    \sdash \Delta)$, i.e.
+    \[
+      \varphi^* = \forall x' < x.\forall \vec{u} \leq \vec{v}. \forall
+      \vec{y}. (\HH_\Lambda, \Gamma \to \Delta)[x' / x, \vec{u} / \vec{v}]
+    \]
+    where $\vec{v} = \var(\Lambda) \setminus \{x\}$, $\vec{y} = \FV(\Gamma,
+    \Delta) \setminus \{\vec{v}, x\}$ and $x', \vec{u}$ fresh.
+
+    We prove a slightly simpler claim:
+    Let $\theta'$ be an assignment with $\dom(\theta') = \var(\Lambda) \cup
+    \{x\}$. Then $\varepsilon \vdash^{\leq \beta \cdot n + l}_k \HH_\Lambda[\theta'],
+    \Gamma[\theta'] \sdash \Delta[\theta']$ for some $n, l \in \omega$.
+    We prove this claim per induction on $\theta'(x)$. Suppose the
+    claim held for all $\theta^*$ with $\theta^*(x) < \theta'(x)$.
+    Then we derive the following:
+    \begin{scprooftree}{0.8}
+      \AXC{$\ldots$}
+      \AXC{IH: $\theta^*(x) < \theta'(x)$}
+      \UIC{$\varepsilon \vdash_k^{\leq \beta \cdot n^* + l^*} \HH_\Lambda[\theta^*], \Gamma[\theta^*] \sdash \Delta[\theta^*]$}
+      \UIC{$\varepsilon \vdash_k^{\leq \beta \cdot n^* + l_2^*}~\sdash \forall \vec{y}.~(\HH_\Lambda, \Gamma \to \Delta)[\theta^*]$}
+      \AXC{$\ldots$}
+      \LSC{$\Ale$R, $\Aleq$R}
+      \TIC{$\varepsilon \vdash_k^{\leq \beta \cdot n + l} ~\sdash \varphi^*[\theta']$}
+      \AXC{IH 2.}
+      \UIC{$\varepsilon \vdash_k^{\leq \beta} \HH_\Lambda[\theta'], \varphi^*[\theta'], \Gamma[\theta'] \sdash \Delta[\theta']$}
+      \LSC{$\RCut$}
+      \BIC{$\varepsilon \vdash_k^{\leq \beta \cdot (n + 1) + l} \HH_\Lambda[\theta'], \Gamma[\theta'] \sdash \Delta[\theta']$}
+    \end{scprooftree}
+    We first explain the derivation, then how the bounds are arrived at.
+    The $\RCut$-application is allowed as the $\RComp$-rule ensures
+    $s(\varphi^*) < k$. On the right-hand side of the $\RCut$, we apply the
+    inductive hypothesis 2. of the outer induction, noting that $\HH_{\Lambda ; x^- \mapsto \Gamma
+      \sdash \Delta} = \HH_\Lambda, \varphi^*$. On the left-hand side, we apply
+    the $\Ale$R and $\Aleq$R rules until all bounded quantifiers have been
+    removed from $\varphi^*$, replacing $x'$ and the $\vec{u}$ with numerals.
+    This results in a finite number of open premises, each of the form $\sdash
+    \forall \vec{y}.(\HH_\Lambda, \Gamma \to
+    \Delta)[\theta^*]$, where $\theta^*$ is the assignment with $\theta^*(z)$
+    being the numeral inserted by the right-rule of the bounded quantification
+    on $z \in \var(\Lambda) \cup \{x\}$. With applications of $\forall$R,
+    $\to$R, $\wedge$L and $\vee$R, such sequents can be transformed back into
+    the shape $\HH_\Lambda[\theta^*], \Gamma[\theta^*] \sdash \Delta[\theta^*]$,
+    to which we may apply the inner inductive hypothesis, observing that
+    $\theta^*(x) < \theta'(x)$ by the structure of the $\Ale$R-rule.
+
+    To understand the ordinal bound, observe that the inner inductive hypothesis
+    yields derivations of height $\leq \beta \cdot n^* + l^*$ with $n^*, l^* \in
+    \omega$ for every assignment $\theta^*$ as described above which, at the
+    cost of increasing $l^*$ to some $l^*_2 \in \omega$, can be transformed into
+    derivations of $\sdash \forall \vec{y}.~(\HH_\Lambda, \Gamma \to
+    \Delta)[\theta^*]$. As the height of $\Ale$R, $\Aleq$R is simply the finite sum of the height
+    of their premises, these combine into a derivation of height $\leq \beta
+    \cdot n + l$ for some $n, l \in \omega$. The rest of the bound calculation
+    is self-explanatory.
+
+    Now, if $\theta$ already is an assignment, we are done
+    because $\beta \cdot n + l < \beta^+$.
+    Otherwise, $x \not\in \var(\Lambda)$ and $\theta(x)$ is a closed term which is not a numeral.
+    Consider the assignment $\theta' \coloneq \theta[x \mapsto
+    \ol{\theta(x)^{\NN}}]$. By the previous
+    argument, we have $\varepsilon \vdash^{\leq \beta \cdot n + l}_k
+    \HH_\Lambda[\theta'], \Gamma[\theta'] \sdash \Delta[\theta']$.
+    Because $x \not\in \var(\Lambda)$ and $\FV(\HH_\Lambda) = \var(\Lambda)$,
+    this means $\HH_\Lambda[\theta] = \HH_\Lambda[\theta']$ and the
+    aforementioned derivation already derives $\varepsilon \vdash^{\leq \beta \cdot n + l}_k
+    \HH_\Lambda[\theta], \Gamma[\theta'] \sdash \Delta[\theta']$.
+    Further, there exists $l^* \in \omega$ such that
+    $\varepsilon \vdash_k^{l} \theta(x) = \theta'(x)$. Then derive
+    \begin{scprooftree}{1}
+      \AXC{$\vdash^{l^*}_k \theta(x) = \theta'(x)$}
+      \AXC{$\varepsilon \vdash^{\leq \beta \cdot n + l}_k \HH_\Lambda[\theta], \Gamma[\theta'] \sdash \Delta[\theta']$}
+      \RSC{$=$L}
+      \UIC{$\varepsilon \vdash^{\leq \beta \cdot n + l + 1}_k \theta(x) =
+        \theta'(x), \HH_\Lambda[\theta], \Gamma[\theta] \sdash \Delta[\theta]$}
+      \LSC{$\RCut$}
+      \BIC{$\varepsilon \vdash^{\leq \beta \cdot n + l + l^* + 1}_k \HH_\Lambda[\theta], \Gamma[\theta] \sdash \Delta[\theta]$}
+    \end{scprooftree}
+    observing that still $\beta \cdot n + l + l^* + 1 < \beta^+$ as desired and
+    furthermore, $=$L may be applied to change $(\Gamma, \Delta)[\theta]$ to
+    $(\Gamma, \Delta)[\theta']$ because $\Gamma, \Delta$ do not contain any
+    bounded quantifications.
+  \item We proceed by case-distinction on the last rule applied.
+    \begin{description}
+    \item[$\RComp$:] Then the situation is as follows:
+      \begin{comfproof}
+        \AXC{$\Pi$}
+        \UIC{$\Lambda; x^- \mapsto \Gamma \sdash \Delta \vdash^\beta_k \Gamma \sdash \Delta$}
+        \LSC{$\RComp$}
+        \UIC{$\Lambda \vdash^{\beta^+}_k \Gamma \sdash \Delta$}
+      \end{comfproof}
+      There are two cases to consider. First, if $x \in \dom(\theta)$ proceed
+      like in 1.\ Otherwise, derive
+      \begin{comfproof}
+        \AXC{$\Pi$}
+        \UIC{$\Lambda; x^- \mapsto \Gamma \sdash \Delta \vdash^\beta_k \Gamma \sdash \Delta$}
+        \LSC{$\RComp'$}
+        \UIC{$\varepsilon \vdash^{\beta^+}_k \HH_\Lambda[\theta], \Gamma[\theta] \sdash \Delta[\theta]$}
+      \end{comfproof}
+    \item[$\RBud$:] This case is treated by \Cref{lem:cons-close-buds}.
+    \item[$\RDrop$:] Then the situation is as follows:
+      \begin{comfproof}
+        \AXC{$\Lambda \vdash^{\beta}_k \Gamma \sdash \Delta$}
+        \LSC{$\RDrop$}
+        \UIC{$\Lambda; \Lambda' \vdash^{\beta + 1}_k \Gamma \sdash \Delta$}
+      \end{comfproof}
+      and we derive
+      \begin{comfproof}
+        \AXC{IH 2.}
+        \UIC{$\varepsilon \vdash_k^{\leq \beta} \HH_{\Lambda}[\theta'], \Gamma[\theta'] \sdash \Delta[\theta']$}
+        \LSC{$\RSub$}
+        \UIC{$\varepsilon \vdash_k^{\leq \beta + 1} \HH_{\Lambda}[\theta], \Gamma[\theta] \sdash \Delta[\theta]$}
+        \LSC{$\RWk$}
+        \UIC{$\varepsilon \vdash_k^{\leq \beta + 1} \HH_{\Lambda; \Lambda'}[\theta], \Gamma[\theta] \sdash \Delta[\theta]$}
+      \end{comfproof}
+      where $\theta' \coloneq \theta \uh \var(\Lambda)$ and $\RSub$ is not
+      inserted if $\var(\Lambda \uh x) = \var(\Lambda)$.
+    \item[$\RCase_x$:] Only the case of $x \in \var(\Lambda)$ as below is interesting:
+      \begin{comfproof}
+        \AXC{$\Pi_0$}
+        \UIC{$\Lambda \uh x \vdash^{\beta}_k \Gamma[0 / x] \sdash \Delta[0 / x]$}
+        \AXC{$\Pi_S$}
+        \UIC{$\Lambda^{+ x} \vdash^{\beta'}_k \Gamma[S\,x / x] \sdash
+          \Delta[S\,x / x]$}
+        \LSC{$\RCase_x$}
+        \BIC{$\Lambda \vdash^{\beta + \beta' + 1}_k \Gamma \sdash \Delta$}
+      \end{comfproof}
+      Here, we must perform a case-distinction on $\theta(x)$:
+      \begin{description}
+      \item[$\theta(x) = 0$:] In this case, simply derive
+        \begin{comfproof}
+          \AXC{IH 2. for $\Pi_0$}
+          \UIC{$\varepsilon \vdash^{\leq \beta}_k \HH_{\Lambda \uh x}[\theta', 0 / x],
+            \Gamma[\theta, 0 / x] \sdash \Delta[\theta, 0 / x]$}
+          \LSC{$\RSub$}
+          \UIC{$\varepsilon \vdash^{\leq\beta + 1}_k \HH_{\Lambda \uh x}[\theta], \Gamma[\theta] \sdash \Delta[\theta]$}
+          \LSC{$\RWk$}
+          \UIC{$\varepsilon \vdash^{\leq\beta + 1}_k \HH_\Lambda[\theta], \Gamma[\theta] \sdash \Delta[\theta]$}
+        \end{comfproof}
+        where $\theta' \coloneq \theta \uh \var(\Lambda)$ and $\RSub$ is not
+        inserted if $\var(\Lambda) = \var(\Lambda; \Lambda')$.
+      \item[$\theta(x) = m + 1$:] In this case, we define $\theta' \coloneq
+        \theta[x \mapsto m]$ and derive
+        \begin{comfproof}
+          \AXC{IH 2. for $\Pi_s$}
+          \UIC{$\varepsilon \vdash_k \HH_{\Lambda^{+x}}[\theta'], \Gamma[\theta] \sdash \Delta[\theta]$}
+          \LSC{$\RShift$}
+          \UIC{$\varepsilon \vdash_k \HH_\Lambda[\theta], \Gamma[\theta] \sdash \Delta[\theta]$}
+        \end{comfproof}
+        where we note that $\bullet [S x / x][\theta'] = \bullet[\theta]$.
+        Observe that the difference between $\HH_\Lambda[\theta]$ and
+        $\HH_{\Lambda^{+x}}[\theta']$ is that all $x$-bounds are reduced from $m
+        + 1$ to $m$ and that some bounds of the form $\forall x' < x$ are
+        replaced by $\forall x' \leq x$. Both of these changes can be
+        accomplished by $\RShift$.
+      \end{description}
+    \item[Other rules:] Usual substitution + weakening argument.
+    \end{description}
+  \end{enumerate}
+\end{proof}
+
+\begin{definition}[End-part]
+  Consider a proof in \TODO{system name}. A node of the derivation is said
+  to be \emph{in the end-part} if between it and the root of the proof, there is
+  no instance of a logical connective rule. That is, no instance of $\to$L,
+  $\to$R, $\forall$L, $\forall$R, $\forall$R', $\Aleq$L, $\Ale$R or $\Aleq$R.
+
+  An instance of the aforementioned logical rules whose conclusion is in the
+  end-part is called a \emph{boundary rule application}.
+
+  We call the end-part of a proof \emph{closed} if all sequents of nodes in the
+  end-part are closed and further the premise of any $\forall$L border
+  application is closed.
+\end{definition}
+
+\begin{remark}
+  Observe that if $\varepsilon \vdash^\alpha_k \Gamma \sdash \Delta$ has a
+  closed end-part, the end-part may not contain instances of $\RComp$,
+  $\RComp$', $\RSub$, $\RBud$ or $\RCase_x$ as each of these rules requires the
+  availability of free variables, either in its premises or consequence.
+\end{remark}
+
+\begin{lemma}[End-part closing]\label{lem:cons-close-end}
+  Let $\varepsilon \vdash^\alpha_k \Gamma \sdash \Delta$ and $\theta$ be a
+  closing substitution for $\Gamma \sdash \Delta$. Then
+  $\varepsilon \vdash^{\leq \alpha}_k \Gamma[\theta] \sdash \Delta[\theta]$
+  with a closed end-part.
+\end{lemma}
+\begin{proof}
+  Per induction on $\alpha$. We proceed per case-distinction on the last rule
+  applied.
+  \begin{description}
+  \item[$\RComp'$:] Then the situation is as follows:
+    \begin{comfproof}
+      \AXC{$\Pi$}
+      \UIC{$\Lambda; x^- \mapsto \Gamma' \sdash \Delta' \vdash^\beta_k \Gamma' \sdash \Delta'$}
+      \LSC{$\RComp'$}
+      \UIC{$\varepsilon \vdash^{\beta^+}_k \HH_\Lambda[\theta'], \Gamma'[\theta'] \sdash \Delta'[\theta']$}
+    \end{comfproof}
+    where $\theta'$ is an assignment, $\dom(\theta) \cap \dom(\theta') = \emptyset$ and $x \in
+    \dom(\theta)$. First, apply \Cref{lem:cons-comp-sub} to obtain
+    $\varepsilon \vdash^{< \beta^+}_k \HH_\Lambda[\theta^*], \Gamma[\theta^*]
+    \sdash \Delta[\theta^*]$ where $\theta^* \coloneq \theta'[x \mapsto
+    \theta(x)]$. Then apply the inductive hypothesis with substitution $\theta \uh
+    \dom(\theta) \setminus \{x\}$ to obtain $\varepsilon \vdash^{\leq \beta^+}_k
+    \HH_\Lambda[\theta' \cup \theta], \Gamma[\theta' \cup \theta] \sdash
+    \Delta[\theta' \cup \theta]$ as desired.
+  \item[$\RComp$:] This is the same as $\RComp'$ with $\Lambda = \varepsilon$
+    and $\theta' \coloneq \emptyset$.
+  \item[$\RSub$:] Then the situation is as follows:
+    \begin{comfproof}
+      \AXC{$\varepsilon \vdash^\beta_k \Gamma'[\theta] \sdash \Delta[\theta]$}
+      \LSC{$\RSub$}
+      \UIC{$\varepsilon \vdash^{\beta + 1}_k \Gamma'[\theta'] \sdash \Delta[\theta']$}
+    \end{comfproof}
+    with $\dom(\theta) \cap \dom(\theta') = \emptyset$. Then apply the inductive
+    hypothesis with substitution $\theta \cup \theta'$ to obtain $\varepsilon
+    \vdash^{\leq \beta}_k \Gamma'[\theta \cup \theta'] \sdash \Delta'[\theta
+    \cup \theta']$ as desired.
+  \item[$\RCut$:] Then the situation is as follows:
+    \begin{comfproof}
+      \AXC{$\varepsilon \vdash^{\beta}_k \Gamma \sdash \varphi, \Delta$}
+      \AXC{$\varepsilon \vdash^{\beta'}_k \Pi, \varphi \sdash \Sigma$}
+      \BIC{$\varepsilon \vdash^{\beta + \beta'}_k \Gamma, \Pi \sdash \Delta, \Sigma$}
+    \end{comfproof}
+    The only interesting situation arises if $\varphi$ introduces new free
+    variables, i.e.\ $\FV(\varphi) \not\subseteq
+    \dom(\theta)$. In this case, derive
+    \begin{comfproof}
+      \AXC{$\varepsilon \vdash^{\leq\beta}_k \Gamma[\theta_L] \sdash (\varphi, \Delta)[\theta_L]$}
+      \AXC{$\varepsilon \vdash^{\leq\beta'}_k (\Pi, \varphi)[\theta_R] \sdash \Sigma[\theta_R]$}
+      \BIC{$\varepsilon \vdash^{\leq \beta + \beta'}_k (\Gamma, \Pi)[\theta]
+        \sdash (\Delta, \Sigma)[\theta]$}
+    \end{comfproof}
+    where
+    \[
+      \theta_\bullet(x) \mapsto
+      \begin{cases}
+        \theta(x) & x \in \dom(\theta) \\
+        0 & x \in \FV(\varphi) \setminus \dom(\theta)
+      \end{cases}
+    \]
+  \item[$\forall$R:] Then the situation is as follows:
+    \begin{comfproof}
+      \AXC{$\varepsilon \vdash^{\beta}_k \Gamma \sdash \varphi[y / x], \Delta$}
+      \LSC{$\forall$R}
+      \UIC{$\varepsilon \vdash^{\beta + 1}_k \Gamma \sdash \forall x.\varphi, \Delta$}
+    \end{comfproof}
+    where $x$ is fresh. Then derive
+    \begin{comfproof}
+      \AXC{$\varepsilon \vdash^{\beta}_k \Gamma \sdash \varphi[y / x], \Delta$}
+      \LSC{$\forall$R'}
+      \UIC{$\varepsilon \vdash^{\beta + 1}_k \Gamma[\theta] \sdash (\forall
+        x.\varphi, \Delta)[\theta]$}
+    \end{comfproof}
+    noting that we have reached the border of the end-part and need not continue
+    transforming the proof.
+  \item[Other rules:] Just follow the usual substitution argument.
+  \end{description}
+\end{proof}
+
+The following are Propositions 7.34 and 7.34 from \parencite{mancosuIntroductionProofTheory2021}.
+Because the end-parts in our setting and theirs are under identical
+restrictions, their results transfer to our setting with little to no modification.
+
+\begin{fact}[$\RWk$-elimination]\label{lem:cons-elim-wk}
+  Let $\varepsilon \vdash^\alpha_k \Gamma \sdash \Delta$ with $\Gamma, \Delta$
+  atomic and a closed end-part. Then $\varepsilon \vdash^\beta_{k'} \Gamma' \sdash
+  \Delta$ with $\Gamma' \subseteq \Gamma$, $\beta \leq \alpha$, $k' < k$ and a closed,
+  $\RWk$-free end-part.
+\end{fact}
+
+\begin{fact}\label{lem:cons-find-cut}
+  Let $\Pi$ be a proof of $\varepsilon \vdash^\alpha_k \Gamma \sdash \Delta$
+  with a closed, $\RWk$-free end-part. Then either all of $\Pi$ is in the
+  end-part or the end-part contains an instance of a non-atomic $\RCut$ with
+  both of its premises containing a boundary rule application to its $\RCut$-formula.
+\end{fact}
+% \begin{proof}
+%   Consider any branch originating at a non-atomic $\RCut$-instance in the
+%   end-part which `carries' a $\RCut$-formula.
+%   Because the axiomatic rules do not allow for side-formulas and the end-part is
+%   weakening free, any such a branch must contain a boundary rule instance.
+
+%   We prove this claim by successively considering $\RCut$-instances with
+%   increasing distance to the boundary.
+%   First consider any highest non-atomic $\RCut$-instance in the end-part: By the
+%   argument above, each of its premises must contain at least one boundary rule
+%   application. If both of its premises contain a boundary rule application to
+%   its $\RCut$-formula, a desired $\RCut$-instance has been found. Otherwise, it must contain a boundary rule
+%   application to a $\RCut$-formula of a $\RCut$-instance further removed from
+%   the boundary. In the latter case, iteratively consider an $\RCut$-instance such that there are at
+%   most $n$ $\RCut$-instances on any branch between it and the boundary, i.e. its
+%   $\RCut$-distance to the boundary is $n + 1$, and no
+%   such $\RCut$-instance possesses the desired property. Then both of its
+%   premises must contain at least one boundary rule application to
+%   $\RCut$-formulas of $\RCut$-height at least $n + 1$. As before, one of the
+%   premises does not contain a boundary rule application to the $\RCut$-formula
+%   under consideration, it must contain one corresponding to a $\RCut$-instance
+%   of height at least $n + 2$. Ultimately, this argument must reach a
+%   $\RCut$-instance closest to the root, which must then posses the desired
+%   property.
+% \end{proof}
+
+We can now prove the $\RCut$-reduction lemma.
+
+\begin{lemma}[$\RCut$-reduction]\label{lem:cons-cut-red}
+  Let $\Pi$ be a proof of $\varepsilon \vdash^\alpha_0 \Gamma \sdash \Delta$ with $\Gamma, \Delta$
+  atomic and a closed, $\RWk$-free end-part. If $\Pi$ is not its own end-part then $\varepsilon \vdash^\beta_0
+  \Gamma \sdash \Delta$ with $\beta < \alpha$.
+\end{lemma}
+\begin{proof}
+  By \Cref{lem:find-cut} there exists a non-atomic $\RCut$-application with
+  $\RCut$-formula $C$ in the
+  end-part such that both of its premises contain a boundary rule application
+  whose principal formula is the $\RCut$-formula. We reduce this $\RCut$,
+  the reduction strategy depending on the principal connective of the $C$.
+  Observe that, as all these reductions operate within the closed end-part and
+  no $\RComp$-instances can occur within it, every sequent we mention has stack
+  $\varepsilon$. We omit this information from the derivations below to save
+  some space and reduce clutter. Furthermore, as the end-part does not contain
+  any `cyclic rules', most of there reductions are standard. We thus only treat
+  those reductions which involve novel rules we introduced here, referring the
+  reader to, for example, \parencite{mancosuIntroductionProofTheory2021} for the
+  remaining cases.
+
+  \begin{description}
+  \item[$\forall x.A$:]
+    As $s(\forall x.A) > 1$, there must be a $\RRaise$-application
+    `underneath' the $\RCut$-application under consideration. We only handle the
+    case of the right-rule being $\forall$R', the case of $\forall$R being
+    analogous. Including the
+    $\RRaise$, the situation can be sketched as follows
+    \begin{comfproof}
+      \AXC{$\Pi'_L$}
+      \UIC{$\vdash^{\alpha'}_{k_L} \Gamma' \sdash \varphi_L[y / x], \Delta'$}
+      \LSC{$\forall$R'}
+      \UIC{$\vdash^{\alpha' + 1}_{k_L} \Gamma'[\theta] \sdash (\forall x. \varphi_L, \Delta')[\theta]$}
+      \DNC{$\Pi_L$}
+      \UIC{$\vdash^{\alpha}_{k} \Gamma \sdash \forall x. \varphi, \Delta$}
+      \AXC{$\Pi'_R$}
+      \UIC{$\vdash^{\beta'}_{k_R} \Pi', \varphi_R(t) \sdash \Sigma'$}
+      \RSC{$\forall$L}
+      \UIC{$\vdash^{\beta' + 1}_{k_R} \Pi', \forall x. \varphi_R \sdash \Sigma'$}
+      \DNC{$\Pi_R$}
+      \UIC{$\vdash^{\beta}_{k} \Pi, \forall x. \varphi \sdash \Sigma$}
+      \LSC{$\RCut$}
+      \BIC{$\vdash^{\alpha + \beta}_{k} \Gamma, \Pi \sdash \Delta, \Sigma$}
+      \DNC{$\Pi$}
+      \UIC{$\vdash^{\gamma}_{k} \Xi \sdash \Theta$}
+      \LSC{$\RRaise$}
+      \UIC{$\vdash^{\omega^\gamma}_{k - 1} \Xi \sdash \Theta$}
+      \DOC{}
+    \end{comfproof}
+    where $t$ closed and $\varphi, \varphi_L, \varphi_R$ differ only by terms
+    and bounds,
+    which may be caused by instances of $=$L and $\RShift$ along $\Pi_L$ and $\Pi_R$.
+    Further, $\alpha' + 1 \leq \alpha$, $\beta' + 1 \leq \beta$ and $\alpha +
+    \beta \leq \gamma$.
+
+    Replace this with the following derivation. We write $\Pi_\bullet,
+    \varphi(t)$ for the derivation $\Pi_\bullet$
+    weakened by $\varphi(t)$, in which case all substitutions caused by $=$L and
+    shifts caused by $\RShift$ in
+    $\forall x. \varphi$ are `replayed' in this additional $\varphi(t)$.
+    Further, observe that the $\RCut$ on $\varphi(t)$ satisfies $s(\varphi(t)) < k - 1$
+    as $s(\forall x. \varphi) = s(\varphi) + 1 < k$. For the application of
+    \Cref{lem:cons-close-end} we choose the closing substitution $\theta[y
+    \mapsto t]$.
+    \begin{scprooftree}{0.6}
+      \AXC{$\Pi'_L$}
+      \UIC{$\vdash^{\alpha'}_{k_L} \Gamma' \sdash \varphi_L[y / x], \Delta'$}
+      \LSC{\Cref{lem:cons-close-end}}
+      \UIC{$\vdash^{\alpha'}_{k_L} \Gamma'[\theta] \sdash (\varphi_L(t), \Delta')[\theta]$}
+      \LSC{$\RWk$}
+      \UIC{$\vdash^{\alpha'}_{k_L} \Gamma'[\theta] \sdash (\forall x. \varphi_L, \varphi_L(t), \Delta')[\theta]$}
+      \DNC{$\Pi_L, \varphi(t)$}
+      \UIC{$\vdash^{\alpha^*}_{k_L} \Gamma \sdash \forall x. \varphi, \varphi(t) \Delta$}
+
+      \AXC{$\Pi'_R$}
+      \UIC{$\vdash^{\beta'}_{k_R} \Pi', \varphi_R(t) \sdash \Sigma'$}
+      \RSC{$\forall$L}
+      \UIC{$\vdash^{\beta' + 1}_{k_R} \Pi', \forall x. \varphi_R \sdash \Sigma'$}
+      \DNC{$\Pi_R$}
+      \UIC{$\vdash^{\beta}_{k} \Pi, \forall x. \varphi \sdash \Sigma$}
+
+      \LSC{$\RCut$}
+      \BIC{$\vdash^{\alpha^* + \beta}_{k} \Gamma, \Pi \sdash  \varphi(t), \Delta, \Sigma$}
+      \DNC{$\Pi, \varphi(t)$}
+      \UIC{$\vdash^{\gamma_L}_{k} \Xi \sdash \varphi(t), \Theta $}
+      \LSC{$\RRaise$}
+      \UIC{$\vdash^{\omega^{\gamma_L}}_{k - 1} \Xi \sdash \varphi(t), \Theta $}
+
+
+      \AXC{$\Pi'_L$}
+      \UIC{$\vdash^{\alpha'}_{k_L} \Gamma' \sdash \varphi_L[y / x], \Delta'$}
+      \LSC{$\forall$R'}
+      \UIC{$\vdash^{\alpha' + 1}_{k_L} \Gamma'[\theta] \sdash (\forall x. \varphi_L, \Delta')[\theta]$}
+      \DNC{$\Pi_L$}
+      \UIC{$\vdash^{\alpha}_{k} \Gamma \sdash \forall x. \varphi, \Delta$}
+
+      \AXC{$\Pi'_R$}
+      \UIC{$\vdash^{\beta'}_{k_R} \Pi', \varphi_R(t) \sdash \Sigma'$}
+      \RSC{$\RWk$}
+      \UIC{$\vdash^{\beta'}_{k_R} \Pi', \varphi_R(t), \forall x. \varphi_R \sdash \Sigma'$}
+      \DNC{$\Pi_R, \varphi(t)$}
+      \UIC{$\vdash^{\beta^*}_{k} \Pi, \varphi(t), \forall x. \varphi \sdash \Sigma$}
+      \RSC{$\RCut$}
+      \BIC{$\vdash^{\alpha + \beta^*}_{k} \Gamma, \Pi, \varphi(t) \sdash \Delta, \Sigma$}
+      \DNC{$\Pi, \varphi(t)$}
+      \UIC{$\vdash^{\gamma_R}_{k} \Xi, \varphi(t) \sdash \Theta$}
+      \LSC{$\RRaise$}
+      \UIC{$\vdash^{\omega^{\gamma_R}}_{k - 1} \Xi, \varphi(t) \sdash \Theta$}
+
+      \LSC{$\RCut$}
+      \BIC{$\vdash^{\omega^{\gamma_L} + \omega^{\gamma_R}}_{k - 1} \Xi, \Xi \sdash \Theta, \Theta$}
+      \LSC{$\RCtr$}
+      \UIC{$\vdash^{\omega^{\gamma_L} + \omega^{\gamma_R}}_{k - 1} \Xi \sdash \Theta$}
+      \DOC{}
+    \end{scprooftree}
+    We continue by justifying that the claimed ordinal bounds hold. Observe
+    that for any sub-derivation of the end-part with one open premise, such as
+    $\Pi_L$, $\Pi_R$, $\Pi$ or the remaining derivation underneath the raise
+    rule, decreasing the ordinal bound at its open premise will lead to a strict
+    decrease in the ordinal bound at its root, e.g. $\alpha^* < \alpha$ at the
+    left instance of $\Pi_L$ above because the bound at its premise is $\alpha'$
+    instead of $\alpha' + 1$. This is because the only rule which could
+    `disturb' the propagation of such a decrease is the $\RComp$-rule, which we
+    know does not occur in the closed end-part. For this reason, we have $\alpha^* <
+    a$, $\beta^* < \beta$ and hence $\gamma_L, \gamma_R < \gamma$. Hence
+    $\omega^{\gamma_L} + \omega^{\gamma_R} < \omega^\gamma$, meaning the ordinal
+    bound of the resulting derivation is lower than that of the initial
+    derivation over all.
+  % \item[$\varphi \to \psi$:]
+  %   \
+  %   \begin{comfproof}
+  %     \AXC{$\Pi'_L$}
+  %     \UIC{$\vdash^{\alpha'}_{k_L} \Gamma', \varphi_L \sdash \psi_L, \Delta'$}
+  %     \LSC{$\to$R}
+  %     \UIC{$\vdash^{\alpha' + 1}_{k_L} \Gamma' \sdash \varphi_L \to \psi_L, \Delta'$}
+  %     \DNC{$\Pi_L$}
+  %     \UIC{$\vdash^{\alpha}_{k} \Gamma \sdash \varphi \to \psi, \Delta$}
+  %     \AXC{$\Pi^1_R$}
+  %     \UIC{$\vdash^{\beta_1}_{k_R} \Omega_1 \sdash \varphi_R, \Sigma_1$}
+  %     \AXC{$\Pi^2_R$}
+  %     \UIC{$\vdash^{\beta_2}_{k_R} \Omega_2, \psi_R \sdash \Sigma_2$}
+  %     \RSC{$\to$L}
+  %     \BIC{$\vdash^{\beta_1 + \beta_2}_{k_R} \Omega_1, \Omega_2, \varphi_R \to \psi_R
+  %       \sdash \Sigma_1, \Sigma_2$}
+  %     \DNC{$\Pi_R$}
+  %     \UIC{$\vdash^{\beta}_{k} \Omega, \varphi \to \psi \sdash \Sigma$}
+  %     \LSC{$\RCut$}
+  %     \BIC{$\vdash^{\alpha + \beta}_{k} \Gamma, \Omega \sdash \Delta, \Sigma$}
+  %     \DNC{$\Pi$}
+  %     \UIC{$\vdash^{\gamma}_{k} \Xi \sdash \Theta$}
+  %     \LSC{$\RRaise$}
+  %     \UIC{$\vdash^{\omega^\gamma}_{k - 1} \Xi \sdash \Theta$}
+  %     \DOC{}
+  %   \end{comfproof}
+
+  %   \begin{scprooftree}{0.5}
+  %     \AXC{$\Pi'_L$}
+  %     \UIC{$\vdash^{\alpha'}_{k_L} \Gamma', \varphi_L \sdash \psi_L, \Delta'$}
+  %     \LSC{$\to$R}
+  %     \UIC{$\vdash^{\alpha' + 1}_{k_L} \Gamma' \sdash \varphi_L \to \psi_L, \Delta'$}
+  %     \DNC{$\Pi_L$}
+  %     \UIC{$\vdash^{\alpha}_{k} \Gamma \sdash \varphi \to \psi, \Delta$}
+
+  %     \AXC{$\Pi^1_R$}
+  %     \UIC{$\vdash^{\beta_1}_{k_R} \Omega_1 \sdash \varphi_R, \Sigma_1$}
+  %     \RSC{$\RWk$}
+  %     \UIC{$\vdash^{\beta_1}_{k_R} \Omega_1, \Omega_2, \varphi_R \to
+  %       \psi_R \sdash \varphi_R, \Sigma_1, \Sigma_2$}
+  %     \DNC{$\Pi_R$}
+  %     \UIC{$\vdash^{\beta^*}_{k} \Omega, \varphi \to \psi \sdash \varphi, \Sigma$}
+
+  %     \LSC{$\RCut$}
+  %     \BIC{$\vdash^{\alpha + \beta^*}_{k} \Gamma, \Omega \sdash \varphi, \Delta, \Sigma$}
+  %     \DNC{$\Pi$}
+  %     \UIC{$\vdash^{\gamma_1}_{k} \Xi \sdash \varphi, \Theta$}
+  %     \LSC{$\RRaise$}
+  %     \UIC{$\vdash^{\omega^{\gamma_1}}_{k - 1} \Xi \sdash \varphi, \Theta$}
+
+
+
+  %     \AXC{$\Pi'_L$}
+  %     \UIC{$\vdash^{\alpha'}_{k_L} \Gamma', \varphi_L \sdash \psi_L, \Delta'$}
+  %     \LSC{$\RWk$}
+  %     \UIC{$\vdash^{\alpha'}_{k_L} \Gamma', \varphi_L \sdash \varphi_L \to
+  %       \psi_L, \psi_L, \Delta'$}
+  %     \DNC{$\Pi_L$}
+  %     \UIC{$\vdash^{\alpha^*}_{k} \Gamma, \varphi \sdash \varphi \to \psi, \psi, \Delta$}
+
+  %     \AXC{$\Pi^1_R$}
+  %     \UIC{$\vdash^{\beta_1}_{k_R} \Omega_1 \sdash \varphi_R, \Sigma_1$}
+  %     \AXC{$\Pi^2_R$}
+  %     \UIC{$\vdash^{\beta_2}_{k_R} \Omega_2, \psi_R \sdash \Sigma_2$}
+  %     \RSC{$\to$L}
+  %     \BIC{$\vdash^{\beta_1 + \beta_2}_{k_R} \Omega_1, \Omega_2, \varphi_R \to \psi_R
+  %       \sdash \Sigma_1, \Sigma_2$}
+  %     \DNC{$\Pi_R$}
+  %     \UIC{$\vdash^{\beta}_{k} \Omega, \varphi \to \psi \sdash \Sigma$}
+
+  %     \LSC{$\RCut$}
+  %     \BIC{$\vdash^{\alpha^* + \beta}_{k} \Gamma, \Omega, \varphi \sdash \psi, \Delta, \Sigma$}
+  %     \DNC{$\Pi$}
+  %     \UIC{$\vdash^{\gamma_2}_{k} \Xi, \varphi \sdash \psi, \Theta$}
+  %     \LSC{$\RRaise$}
+
+  %     \UIC{$\vdash^{\omega^{\gamma_2}}_{k - 1} \Xi, \varphi \sdash \psi, \Theta$}
+
+
+
+  %     \AXC{}
+  %     \DNC{}
+  %     \UIC{$\vdash^{\gamma_3}_{k} \Xi \sdash \psi, \Theta$}
+  %     \RSC{$\RRaise$}
+  %     \UIC{$\vdash^{\omega^{\gamma_3}}_{k - 1} \Xi \sdash \psi, \Theta$}
+
+  %     \BIC{$\vdash^{\omega^{\gamma_2} + \omega^{\gamma_3}}_{k - 1} \Xi, \Xi \sdash \psi, \Theta, \Theta$}
+  %     \BIC{$\vdash^{\omega^{\gamma_1} + \omega^{\gamma_2} + \omega^{\gamma_3}}_{k - 1} \Xi, \Xi, \Xi \sdash \Theta, \Theta, \Theta$}
+  %     \LSC{$\RCtr$}
+  %     \UIC{$\vdash^{\omega^{\gamma_1} + \omega^{\gamma_2} + \omega^{\gamma_3}}_{k - 1} \Xi \sdash \Theta$}
+  %     \DOC{}
+  %   \end{scprooftree}
+  \item[$\forall y <^\sigma n$:]
+    As $s(\forall x <^\sigma n.A) > 1$, there must be a $\RRaise$-application
+    `underneath' the $\RCut$-application under consideration. Including the
+    $\RRaise$, the situation can be sketched as below. Again, $\varphi,
+    \varphi_L, \varphi_R$ differ only by terms, which may be caused by instances
+    of $=$L along $\Pi_L$ and $\Pi_R$. Because upper bounds cannot be subject to
+    changes via $=$L, because $m$ must have
+    been arrived at from $n$ using only $\RShift$-applications, meaning $m
+    <^\sigma n$ and thus that the $\varphi_L(\ol{m})$-case must be among the premises of the $\Asig$R-application.
+    Further, $1 + \sum \alpha_i \leq \alpha$, $\beta' + 1 \leq \beta$ and $\alpha +
+    \beta \leq \gamma$.
+    \begin{comfproof}
+      \AXC{$\ldots$}
+      \AXC{$\Pi^m_L$}
+      \UIC{$\vdash^{\alpha_m}_{k_L} \Gamma' \sdash \varphi_L(\ol{m}), \Delta'$}
+      \LSC{$\Asig$R}
+      \AXC{$\ldots$}
+      \TIC{$\vdash^{1 + \sum \alpha_i}_{k_L} \Gamma' \sdash \forall x <^\sigma \ol{n}. \varphi_L, \Delta'$}
+      \DNC{$\Pi_L$}
+      \UIC{$\vdash^{\alpha}_{k} \Gamma \sdash \forall x <^\sigma \ol{n}. \varphi, \Delta$}
+
+      \AXC{$\Pi'_R$}
+      \UIC{$\vdash^{\beta'}_{k_R} \Omega', \varphi_R(\ol{m}) \sdash \Sigma'$}
+      \RSC{$\Aleq$L}
+      \UIC{$\vdash^{\beta' + 1}_{k_R} \Omega', \forall x \leq \ol{m}. \varphi_R \sdash \Sigma'$}
+      \DNC{$\Pi_R$}
+      \UIC{$\vdash^{\beta}_{k} \Omega, \forall x <^\sigma \ol{n}. \varphi \sdash \Sigma$}
+
+      \LSC{$\RCut$}
+      \BIC{$\vdash^{\alpha + \beta}_{k} \Gamma, \Omega \sdash \Delta, \Sigma$}
+      \DNC{$\Pi, \varphi(\ol{m})$}
+      \UIC{$\vdash^{\gamma}_{k} \Xi \sdash \Theta$}
+      \LSC{$\RRaise$}
+      \UIC{$\vdash^{\omega^\gamma}_{k - 1} \Xi \sdash \Theta$}
+      \DOC{}
+    \end{comfproof}
+
+    Replace this with the following derivation. We again write $\Pi_\bullet,
+    \varphi(\ol{m})$ for the derivation $\Pi_\bullet$
+    weakened by $\varphi(\ol{m})$, in which case all substitutions caused by $=$L and
+    shifts caused by $\RShift$ in
+    $\forall x <^\sigma \ol{n}.\varphi$ are `replayed' in this additional $\varphi(\ol{m})$.
+    Further, observe that the $\RCut$ on $\varphi(\ol{m})$ satisfies $s(\varphi(\ol{m})) < k - 1$
+    as $s(\forall x <^\sigma \ol{n}. \varphi) = s(\varphi) + 1 < k$.
+    \begin{scprooftree}{0.5}
+      \AXC{$\Pi^m_L$}
+      \UIC{$\vdash^{\alpha_m}_{k_L} \Gamma' \sdash \varphi_L(\ol{m}), \Delta'$}
+      \LSC{$\RWk$}
+      \UIC{$\vdash^{\alpha_m}_{k_L} \Gamma' \sdash \forall x <^\sigma \ol{n}. \varphi_L, \varphi_L(\ol{m}), \Delta'$}
+      \DNC{$\Pi_L, \varphi(\ol{m})$}
+      \UIC{$\vdash^{\alpha^*}_{k} \Gamma \sdash \forall x <^\sigma \ol{n}. \varphi,\varphi(\ol{m}), \Delta$}
+
+      \AXC{$\Pi'_R$}
+      \UIC{$\vdash^{\beta'}_{k_R} \Omega', \varphi_R(\ol{m}) \sdash \Sigma'$}
+      \RSC{$\Aleq$L}
+      \UIC{$\vdash^{\beta' + 1}_{k_R} \Omega', \forall x \leq \ol{m}. \varphi_R \sdash \Sigma'$}
+      \DNC{$\Pi_R$}
+      \UIC{$\vdash^{\beta}_{k} \Omega, \forall x <^\sigma \ol{n}. \varphi \sdash \Sigma$}
+
+      \LSC{$\RCut$}
+      \BIC{$\vdash^{\alpha^* + \beta}_{k} \Gamma, \Omega \sdash \varphi(\ol{m}), \Delta, \Sigma$}
+      \DNC{$\Pi$}
+      \UIC{$\vdash^{\gamma_L}_{k} \Xi \sdash \varphi(\ol{m}), \Theta$}
+      \LSC{$\RRaise$}
+      \UIC{$\vdash^{\omega^{\gamma_L}}_{k - 1} \Xi \sdash \varphi(\ol{m}), \Theta$}
+
+
+
+      \AXC{$\ldots$}
+      \AXC{$\Pi^m_L$}
+      \UIC{$\vdash^{\alpha_m}_{k_L} \Gamma' \sdash \varphi_L(\ol{m}), \Delta'$}
+      \LSC{$\Asig$R}
+      \AXC{$\ldots$}
+      \TIC{$\vdash^{\sum \alpha_i}_{k_L} \Gamma' \sdash \forall x <^\sigma \ol{n}. \varphi_L, \Delta'$}
+      \DNC{$\Pi_L$}
+      \UIC{$\vdash^{\alpha}_{k} \Gamma \sdash \forall x <^\sigma \ol{n}. \varphi, \Delta$}
+
+      \AXC{$\Pi'_R$}
+      \UIC{$\vdash^{\beta'}_{k_R} \Omega', \varphi_R(\ol{m}) \sdash \Sigma'$}
+      \RSC{$\RWk$}
+      \UIC{$\vdash^{\beta'}_{k_R} \Omega', \varphi_R(\ol{m}), \forall x \leq \ol{m}. \varphi_R \sdash \Sigma'$}
+      \DNC{$\Pi_R, \varphi(\ol{m})$}
+      \UIC{$\vdash^{\beta^*}_{k} \Omega, \varphi(\ol{m}), \forall x <^\sigma \ol{n}. \varphi \sdash \Sigma$}
+
+      \LSC{$\RCut$}
+      \BIC{$\vdash^{\alpha + \beta^*}_{k} \Gamma, \Omega, \varphi(\ol{m}) \sdash \Delta, \Sigma$}
+      \DNC{$\Pi, \varphi(\ol{m})$}
+      \UIC{$\vdash^{\gamma_R}_{k} \Xi, \varphi(\ol{m}) \sdash \Theta$}
+      \LSC{$\RRaise$}
+      \UIC{$\vdash^{\omega^{\gamma_R}}_{k - 1} \Xi, \varphi(\ol{m}) \sdash \Theta, \Theta$}
+
+
+
+
+      \LSC{$\RCut$}
+      \BIC{$\vdash^{\omega^{\gamma_L} + \omega^{\gamma_R}}_{k - 1} \Xi, \Xi \sdash \Theta, \Theta$}
+      \LSC{$\RCtr$}
+      \UIC{$\vdash^{\omega^{\gamma_L} + \omega^{\gamma_R}}_{k - 1} \Xi \sdash \Theta$}
+      \DOC{}
+    \end{scprooftree}
+    The justification of the decrease in the ordinal bound is analogous to the
+    case of $\forall x.\varphi$, noting that $\alpha_m < 1 + \sum \alpha_i$ and
+    $\beta' < \beta' + 1$.
+  \end{description}
+\end{proof}
+
+\begin{theorem}[$\RCut$-elimination]\label{lem:cpa-cons}
+  If $\Pi$ is a proof of $\varepsilon \vdash^\alpha_0 \Gamma \sdash \Delta$ with $\Gamma, \Delta$
+  closed atomic then there are $\Gamma' \subseteq \Gamma, \Delta' \subseteq
+  \Delta$ and a proof $\Pi'$ of $\varepsilon \vdash^\beta_0 \Gamma' \sdash
+  \Delta'$ such that $\Pi'$ is closed and contains no non-atomic $\RCut$s.
+\end{theorem}
+\begin{proof}
+  We shall use the procedure below to arrive at the proof $\Pi'$ starting from
+  the proof $\Pi : \varepsilon \vdash^\alpha_0 \Gamma \sdash \Delta$:
+  \begin{enumerate}
+  \item Apply \Cref{lem:cons-close-end} with $\theta = \emptyset$ to obtain
+    $\Pi_c : \varepsilon \vdash^{\leq \alpha}_0 \Gamma \sdash \Delta$
+    with a closed end-part.
+  \item Apply \Cref{lem:cons-elim-wk} to $\Pi_c$ to obtain $\Pi_w : \varepsilon
+    \vdash^{\leq \alpha}_0 \Gamma' \sdash \Delta'$ with $\Gamma \subseteq
+    \Gamma', \Delta \subseteq \Delta'$ and a closed, $\RWk$-free end-part.
+  \item By \Cref{lem:cons-find-cut} there are two possibilities:
+    \begin{enumerate}[label=(\alph*)]
+    \item $\Pi_w$ is not its own end-part: Then, by \Cref{lem:cons-cut-red}
+      there exists $\Pi_r : \varepsilon \vdash^{< \alpha}_0 \Gamma' \sdash
+      \Delta'$. Continue from step 1.\ using $\Pi \coloneq \Pi_r$.
+    \item $\Pi_w$ is its own closed end-part: First, this means there are now
+      `cyclic rules', such as $\RComp$, $\RBud$ or $\RCase$ in $\Pi_w$.
+      Further, observe that any trace of a non-atomic $\RCut$-formula must end
+      either in $\RWk$ or a boundary rule application. As $\Pi_w$ contains
+      neither, it cannot contain non-atomic $\RCut$s. Thus, we may pick $\Pi'
+      \coloneq \Pi_w$ and are done.
+    \end{enumerate}
+  \end{enumerate}
+  If the procedure above always terminates, we can always obtain the desired
+  $\Pi'$. Termination is ensured by the fact that whenever the procedure `jumps'
+  from step 3a.\ to step 1., the ordinal height of the proof has decreased.
+  Thus, non-termination of the procedure leads an infinitely decreasing sequence
+  in $\varepsilon_0$ which we know cannot exist.
+\end{proof}
+
+\begin{corollary}
+  $\PRA + \TIi(\varepsilon_0) \vdash $ ``$\CPA$ is consistent''
+\end{corollary}
+\begin{proof}
+  If no $\CPA$ derivation of the empty sequent, i.e.\ $~ \sdash ~$, exists then
+  $\CPA$ is consistent. Working within $\PRA$, suppose there was such a
+  derivation $\Pi$. By \Cref{lem:cons-embed-cpa}, this derivation can be
+  transformed, primitive recursively, into $\Pi' : \varepsilon \vdash^\alpha_0 ~
+  \sdash ~$ in \TODO{system name}. By \Cref{lem:cpa-cons} one can obtain a closed
+  derivation $\Pi'' : \varepsilon \vdash^\beta_0 ~ \sdash ~$ with $\beta \leq
+  \alpha$ without non-atomic $\RCut$s. Observe that each `iteration step' of the
+  procedure used to obtain $\Pi''$ from $\Pi'$ is primitive recursive and the
+  termination of the procedure over all follows from $\TIi(\varepsilon_0)$. Now
+  $\PRA$ can prove that a proof of $~ \sdash ~$ involving only closed, atomic
+  formulas, like $\Pi''$, cannot exist.
+\end{proof}
+
+\section{Unravelling Cyclic Gödel's T}
+\label{sec:unrvl-gödel}
+
+% \begin{definition}
+%   The \emph{derivation rules} of Cyclic Gödel's T $\CGT$ are:
+%   \begin{mathpar}
+%     \inference[\RId]{}{x : A \sdash A}
+
+%     \inference[$0$]{}{\sdash N}
+
+%     \inference[S]{}{x : N \sdash N}
+
+%     \inference[L]{\Gamma \sdash \rho \quad \Gamma, x : A \sdash B}{\Gamma, x : \rho \to A \sdash B}
+
+%     \inference[R]{\Gamma, x : A \sdash B \quad x \text{ fresh}}{\Gamma \sdash A \to B}
+
+%     \inference[\RCond]{\Gamma \sdash A \quad \Gamma, x : N \sdash A}{\Gamma, x :
+%       N \sdash A}
+
+%     \inference[\REx]{\Gamma_0, x : A, y : B, \Gamma_1 \sdash C}{\Gamma_0, y : B,
+%       x : A, \Gamma_1 \sdash C}
+
+%     \inference[\RWk]{\Gamma \sdash B}{\Gamma, x : A \sdash B}
+
+%     \inference[\RCtr]{\Gamma, x : A, y : A \sdash B \quad y \text{
+%         fresh}}{\Gamma, x : A \sdash B}
+
+%     \inference[\RCut]{\Gamma \sdash B \quad \Gamma, x : B \sdash A \quad x
+%       \text{ fresh}}{\Gamma \sdash A}
+%   \end{mathpar}
+% \end{definition}
+

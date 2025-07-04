@@ -1,0 +1,30 @@
+\ProvidesPackage{weditorial}[2023/03/07 Editorial Stuff]
+
+\RequirePackage{xcolor}
+
+\definecolor{wpurple}{HTML}{9600d0}
+
+\colorlet{dwnote}{wpurple}
+\colorlet{gelnote}{cyan}
+\colorlet{insertcolour}{cyan}
+\colorlet{deletecolour}{red}
+\newcommand{\replace}[2]{\textcolor{insertcolour}{{#2}}\textcolor{deletecolour}{\textit{#1}}} % #1 = old ; #2 = new
+\newcommand{\adden}[1]{\replace{}{#1}}
+\newcommand{\delete}[1]{\replace{#1}{}}%
+\newcommand{\dreplace}[2]{\textcolor{dwnote}{{#2}}\textcolor{deletecolour}{\textit{#1}}} % #1 = old ; #2 = new
+\newcommand{\dadden}[1]{\dreplace{}{#1}}
+\newcommand{\ddelete}[1]{\dreplace{#1}{}}%
+\newcommand{\obit}[1]{\marginpar{\raggedright\scriptsize\textcolor{gelnote}{#1}}}
+\newcommand{\rebit}[1]{\marginpar{\raggedright\scriptsize\textcolor{dwnote}{#1}}}
+\newcommand{\madden}[1]{\textcolor{insertcolour}{#1}}%
+\newcommand{\mdelete}[1]{\mreplace{#1}{}}% 
+\newcommand{\gelnote}[1]{\obit{#1}}
+\newcommand{\dwnote}[1]{\rebit{#1}}
+\newcommand{\geldiscuss}[1]{\textcolor{gelnote}{#1}}
+\newcommand{\dwdiscuss}[1]{\textcolor{dwnote}{#1}}
+
+\newcommand{\TODO}[1]{{\color{red}[TODO: #1]}}
+\newcommand{\needcite}{{\color{red}[?]}}
+\renewcommand{\emph}[1]{{\textit{#1}}}
+\newcommand{\mahl}[1]{\emph{#1}\marginpar{#1}}
+\newcommand{\mamt}[1]{\marginpar{#1}}

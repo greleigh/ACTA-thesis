@@ -1,0 +1,203 @@
+\ProvidesPackage{wmacros}[2023/03/07 All my custom macros]
+
+
+
+\newcommand{\SC}{\textsc{Pfs}}
+\newcommand{\Pp}{\textsc{Pp}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\FF}{\mathbb{F}}
+\newcommand{\RR}{\mathcal{R}}
+\newcommand{\BB}{\mathbb{B}}
+\newcommand{\PP}{\textbf{P}}
+\newcommand{\DD}{\mathcal{D}}
+\newcommand{\II}{\mathcal{I}}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\Type}{\mathbb{T}}
+\newcommand{\Prop}{\mathbb{P}}
+\newcommand{\Univ}{\mathbb{U}}
+\newcommand{\Aa}{\mathcal{A}}
+\newcommand{\Bb}{\mathcal{B}}
+\newcommand{\WW}{\textbf{W}}
+\newcommand{\LL}{\mathcal{L}}
+\newcommand{\CC}{\mathcal{C}}
+\newcommand{\TS}{\mathcal{S}}
+\newcommand{\TF}{\mathcal{F}}
+\newcommand{\Sb}{\textsc{Sb}}
+\newcommand{\SA}{\mathfrak{A}}
+\newcommand{\SB}{\mathfrak{B}}
+\newcommand{\SSB}{\mathfrak{S}}
+\newcommand{\Rrr}{\mathrm{R}}
+\newcommand{\Sss}{\mathrm{S}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\Bool}{\mathrm{Bool}}
+
+\newcommand{\ol}[1]{\overline{#1}}
+\newcommand{\ul}[1]{\underline{#1}}
+\newcommand{\coding}[1]{\ulcorner #1 \urcorner}
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\uh}{\upharpoonright}
+\newcommand{\addr}{\,@\,}
+\newcommand{\pto}{\dot{\to}}
+\newcommand{\lro}{<_{\text{lr}}}
+\newcommand{\irule}[3]{\inference[\textsc{#1}]{#2}{#3}}
+\newcommand{\sdash}{\Rightarrow}
+\newcommand{\rsep}{\mid}
+\newcommand{\pow}{\mathcal{P}}
+
+\newcommand{\Tr}{\text{Tr}}
+\newcommand{\FV}{\mathrm{FV}}
+\newcommand{\Seq}{\textsc{Seq}}
+\newcommand{\form}{\textsc{Form}}
+\newcommand{\term}{\textsc{Term}}
+\newcommand{\var}{\textsc{Var}}
+\newcommand{\nvar}{\nu\mathrm{Var}}
+\newcommand{\prop}{\mathrm{Prop}}
+\newcommand{\type}{\textsc{Type}}
+\newcommand{\env}{\textsc{Env}}
+\newcommand{\Nds}{\mathrm{Nodes}}
+
+\newcommand{\Leaf}{\mathrm{Leaf}}
+\newcommand{\Empty}{\mathrm{Empty}}
+\newcommand{\Inner}{\mathrm{Inner}}
+\newcommand{\Chld}{\mathrm{Chld}}
+\newcommand{\Node}{\mathrm{Node}}
+\newcommand{\im}{\mathrm{im}}
+\newcommand{\dom}{\mathrm{dom}}
+\newcommand{\cod}{\mathrm{cod}}
+\newcommand{\Ob}{\mathrm{Ob}}
+\newcommand{\strip}{\mathrm{erase}}
+\newcommand{\Inf}{\mathrm{Inf}}
+\newcommand{\Hom}{\textsc{Hom}}
+\newcommand{\Occ}{\mathrm{Occ}}
+\newcommand{\Up}{\mathrm{Up}}
+\newcommand{\Down}{\mathrm{Down}}
+\newcommand{\Path}{\text{Path}}
+
+\newcommand{\CHA}{\mathrm{CHA}}
+\newcommand{\CHAl}{{\mathrm{CHA}_<}}
+\newcommand{\HA}{\mathrm{HA}}
+\newcommand{\CPA}{\mathrm{CPA}}
+\newcommand{\RPA}{\mathrm{RPA}}
+\newcommand{\PA}{\mathrm{PA}}
+\newcommand{\RA}{\mathrm{RA}}
+\newcommand{\CA}{\mathrm{CA}}
+\newcommand{\CGT}{\mathrm{CGT}}
+\newcommand{\RGT}{\mathrm{RGT}}
+\newcommand{\mML}{\mathrm{K}_\mu}
+\newcommand{\BRmML}{\mathrm{RK}_\mu^\BB}
+\newcommand{\FRmML}{\mathrm{RK}_\mu^\FF}
+\newcommand{\JS}{\mathrm{JS}}
+\newcommand{\Id}{\mathrm{Id}}
+\newcommand{\mFOL}{\mu\mathrm{FOL}}
+\newcommand{\AHA}{\mathrm{SHA}}
+\newcommand{\APA}{\mathrm{SPA}}
+\newcommand{\RHA}{\mathrm{RHA}}
+\newcommand{\RCA}{\mathrm{RCA}_0}
+\newcommand{\ACA}{\mathrm{ACA}_0}
+\newcommand{\PRA}{\mathrm{PRA}}
+
+\newcommand{\IS}{\mathrm{I}\Sigma}
+\newcommand{\CS}{\mathrm{C}\Sigma}
+\newcommand{\CD}{\mathrm{C}\Delta}
+\newcommand{\IP}{\mathrm{I}\Pi}
+\newcommand{\CP}{\mathrm{C}\Pi}
+
+\newcommand{\RReset}{\textsc{Reset}}
+\newcommand{\RAx}{\textsc{Ax}}
+\newcommand{\RInd}{\textsc{Ind}}
+\newcommand{\RWk}{\textsc{Wk}}
+\newcommand{\RWeak}{\textsc{Weak}}
+\newcommand{\RCut}{\textsc{Cut}}
+\newcommand{\RClear}{\textsc{Clear}}
+\newcommand{\RCond}{\textsc{Cond}}
+\newcommand{\RCase}{\textsc{Case}}
+\newcommand{\RSubst}{\textsc{Subst}}
+\newcommand{\RSub}{\textsc{Sub}}
+\newcommand{\RCtr}{\textsc{Ctr}}
+\newcommand{\RRCtr}{\textsc{CtrR}}
+\newcommand{\RLCtr}{\textsc{CtrL}}
+\newcommand{\REx}{\textsc{Ex}}
+\newcommand{\RLEx}{\textsc{ExL}}
+\newcommand{\RREx}{\textsc{ExR}}
+\newcommand{\RMono}{\textsc{Mono}}
+\newcommand{\RThin}{\textsc{Thin}}
+\newcommand{\RFocus}{\textsc{Focus}}
+\newcommand{\RPop}{\textsc{Pop}}
+\newcommand{\RRec}{\textsc{Rec}}
+\newcommand{\RId}{\textsc{Id}}
+\newcommand{\RMerge}{\textsc{Merge}}
+\newcommand{\RMod}{\textsc{Mod}}
+\newcommand{\RDrop}{\textsc{Drop}}
+\newcommand{\RComp}{\textsc{Comp}}
+\newcommand{\RBud}{\textsc{Bud}}
+\newcommand{\RBin}{\textsc{Bin}}
+\newcommand{\RUn}{\textsc{Un}}
+\newcommand{\RRaise}{\textsc{Raise}}
+\newcommand{\Ale}{\forall\hspace{-.4em}<}
+\newcommand{\Aleq}{\forall\hspace{-.4em}\leq}
+\newcommand{\Asig}{\forall\hspace{-.4em}<^\sigma}
+\newcommand{\RShift}{\textsc{Shift}}
+
+\newcommand{\TIi}{\mathrm{TI}}
+\newcommand{\Ind}{\mathrm{Ind}}
+\newcommand{\PInd}{P\mathrm{-Ind}}
+\newcommand{\PpInd}{\hat P\mathrm{-Ind}}
+\newcommand{\ArrAc}{\mathrm{ArAcc}}
+
+\newcommand{\elab}{\mathit{expand}}
+\newcommand{\embed}{\mathit{embed}}
+\newcommand{\search}{\mathit{search}}
+\newcommand{\prem}{\mathrm{prem}}
+\newcommand{\merge}{\mathrm{merge}}
+\newcommand{\con}{\mathrm{con}}
+\newcommand{\stacked}{\Lambda}
+\newcommand{\prg}{\mathrm{Prg}}
+
+\newcommand{\step}[1]{\stackrel{#1}{\leadsto}}
+\newcommand{\pstep}[1]{\stackrel{#1}{\leadsto_p}}
+\newcommand{\gstep}[1]{\stackrel{#1}{\leadsto_g}}
+\newcommand{\sfstep}[1]{\stackrel{#1}{\leadsto_{\text{sf}}}}
+\newcommand{\sstep}[1]{\stackrel{#1}{\leadsto_*}}
+\newcommand{\sreset}[2]{#1 \uh #2}
+
+\newcommand{\lcls}{\Theta}
+\newcommand{\pcls}[1]{\Pi(#1 \sdash #1)}
+\newcommand{\fcls}{\pcls{\lcls}}
+\newcommand{\IC}{\mathrm{I}\lcls}
+\newcommand{\rcls}[1]{\pcls{#1} \cup \Delta_0}
+\newcommand{\IPar}[1]{\mathrm{I}(\rcls{#1})}
+\newcommand{\IF}{\IPar{\lcls}}
+\newcommand{\CF}{\mathrm{C}\fcls}
+
+\newcommand{\btrue}{\texttt{true}}
+\newcommand{\bfalse}{\texttt{false}}
+\newcommand{\sleft}{\texttt{left}}
+\newcommand{\sright}{\texttt{right}}
+
+\newcommand*{\langeq}{\mathrel{\vcenter{\baselineskip0.5ex \lineskiplimit0pt
+      \hbox{\scriptsize.}\hbox{\scriptsize.}}}%
+  \mathrel{\vcenter{\baselineskip0.5ex \lineskiplimit0pt
+      \hbox{\scriptsize.}\hbox{\scriptsize.}}}%
+  =}
+
+% Taken from https://tex.stackexchange.com/questions/104554/how-to-scale-prooftree-environment-bussproofs-package
+\newenvironment{scprooftree}[1]%
+{\gdef\scalefactor{#1}\begin{center}\proofSkipAmount \leavevmode\EnableBpAbbreviations}%
+  {\scalebox{\scalefactor}{\DisplayProof}\proofSkipAmount \end{center} }
+
+\newenvironment{comfproof}{
+  \begin{prooftree}
+    \EnableBpAbbreviations
+  }{
+  \end{prooftree}
+}
+\newcommand{\LIC}[1]{\LeftLabel{#1}}
+\newcommand{\RIC}[1]{\RightLabel{#1}}
+\newcommand{\DOC}{\def\extraVskip{-2.5pt} \noLine \UIC{$\vdots$}
+  \def\extraVskip{2pt} \noLine}
+\newcommand{\DPC}[1]{\noLine \UIC{#1} \noLine}
+\newcommand{\DNC}[1]{\def\extraVskip{-2.5pt} \noLine \UIC{$\vdots~$ #1} \noLine \def\extraVskip{2pt}}
+\newcommand{\DBC}[1]{\noLine \BIC{#1} \noLine}
+\newcommand{\DIC}[1]{\noLine \UIC{#1}}
+\newcommand{\LSC}[1]{\LeftLabel{\scriptsize #1}}
+\newcommand{\RSC}[1]{\RightLabel{\scriptsize #1}}

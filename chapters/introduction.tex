@@ -1,0 +1,112 @@
+% Emacs, this is -*-latex-*-
+
+\chapter{Introduction}
+\label{chap:intro}
+
+In cyclic proof systems, derivations are finite graphs annotated with sequents,
+rather than the common annotated finite trees. Cyclic proofs may thus present
+circular arguments.
+This calls to mind the logical fallacy of \emph{circular reasoning}.
+Indeed, unfolding a cyclic proof yields an ill-founded proof tree, corresponding
+to infinite arguments.
+Soundness along infinite branches of such ill-founded proofs,
+and by extension cyclic proofs, cannot be reduced to truth of the system's
+axioms and truth-preservation of its deduction rules.
+The common solutions to this conundrum are to introduce well-foundedness at the
+level of the system's logic, rather than the level of derivation structure, or
+to allow infinite branches to represent coinductive arguments.
+As long as the proof system reasons about (co-)inductive notions, ill-founded
+derivations may thus still represent sound arguments. There are various features
+of logical systems, both logics and theories, on which
+cyclic proof systems may be based:
+\begin{itemize}
+\item \emph{a domain of (co-)inductive objects:} Such systems may, for example,
+  be arithmetical
+  systems~\parencite{berardiEquivalenceIntuitionisticInductive2017}, type systems
+  featuring a natural number type~\parencite{dasCircularVersionGodel2021} or
+  theories considering inductively defined predicates~\parencite{brotherstonSequentCalculusProof2006}.
+\item \emph{fixed-point constructions:} The primary type of such
+  systems are $\mu$-calculi with explicit fixed-point quantifiers for least and
+  greatest fixed points, such as the modal
+  $\mu$-calculus~\parencite{niwinskiGamesMcalculus1996}, first-order
+  $\mu$-calculus~\parencite{sprengerGlobalInductionMechanisms2003}, higher-order
+  fixed point logic~\parencite{koriCyclicProofSystem2021}, linear time
+  $\mu$-calculus~\parencite{daxProofSystemLinear2006} or linear logic with
+  fixed points~\parencite{baeldeInfinitaryProofTheory2016}. The suitability often
+  extends to subsystems of
+  the aforementioned $\mu$-calculi, such as
+  the alternation-free modal
+  $\mu$-calculus~\parencite{martiFocusSystemAlternationFree2021}, propositional
+  dynamic~\parencite{dochertyNonwellfoundedLabelledProof2019} or
+  computational tree logic~\parencite{afshariCyclicProofSystem2023}.
+  A further case are systems reasoning about the inclusion relations on
+  regular~\parencite{dasCutFreeCyclicProof2017} and
+  $\omega$-regular~\parencite{hazardCyclicProofsTransfinite2022} languages,
+  the expressions $e^*$ and $e^\omega$ expressing a least and greatest
+  fixed point, respectively.
+\item \emph{well-founded relations:} The primary examples of
+  such systems take a well-founded relation as a primitive,
+  such as the $<$-ordering on natural
+  numbers~\parencite{simpsonCyclicArithmeticEquivalent2017} or on
+  ordinals~\parencite{sprengerGlobalInductionMechanisms2003}. This category also includes modal
+  logics, such as Gödel-Löb
+  logic~\parencite{shamkanovCircularProofsGodelLob2014} and Grzegorczyk
+  logic~\parencite{savateevNonWellFoundedProofsGrzegorczyk2018}, defined over
+  well-founded frames.
+\end{itemize}
+
+Even in cyclic proof systems for suitable logics or theories, as those described
+above, well-formedness according to the derivation rules is not sufficient to
+guarantee soundness. Instead, soundness is ensured by imposing further
+conditions on cyclic derivations. Such soundness conditions are discussed in
+great detail in \Cref{chap:representation}.
+
+Proof systems for the logics and theories characterised above whose proofs are
+finite trees always feature induction rules or axioms. We shall refer to such
+proof systems as \emph{inductive}. The derivation rules of cyclic proof systems
+are often identical to those of an inductive proof system for the same logic,
+except for the induction rules, which the cyclic proof system either completely
+omits or at least greatly simplifies. There are two applications of proof
+systems which can benefit from such simplifications: \emph{automatic theorem
+proving} and \emph{proof theoretic investigations}.
+
+The field of automatic theorem proving aims to develop algorithms which can
+prove theorems without human interaction. A major difficulty in devising such
+algorithms is determining at which point in a proof an induction rule should be
+applied. Even for human provers, finding suitable induction invariants to prove
+a claim can be difficult. Encoding the required `human creativity' into an
+algorithm naturally poses a difficult problem. This problem can be circumvented
+completely by developing automated theorem provers in terms of a cyclic proof
+system without induction rules. Indeed, multiple experimental theorem provers following
+this approach have already been developed
+\parencite[see][]{brotherstonAutomatedCyclicEntailment2011,brotherstonGenericCyclicTheorem2012,tellezAutomaticallyVerifyingTemporal2017}.
+
+Another application of cyclic proof systems is carrying out proof theoretic investigations
+of logics and theories with features as described above. Induction axioms are
+often non-logical rules, not directly tied to logical connectives, and can thus
+`disturb' the `homogeneity' of a proof system. This, for example, is exhibited
+by the fact that $\RCut$s on induction axioms can not be eliminated in some theories. Cyclic proof systems, which
+forgo induction axioms in favour of cycles, can be better suited to certain kinds
+of proof theoretic applications. So far, cyclic proof systems have proven especially
+useful to deriving interpolation
+results~\parencite[see][]{shamkanovCircularProofsGodelLob2014,savateevNonWellFoundedProofsGrzegorczyk2018,martiFocusSystemAlternationFree2021,afshariUniformInterpolationCyclic2021,afshariLyndonInterpolationModal2022}.
+They have also been used to derive results about non-cyclic proof systems, such
+as the $\RCut$-free completeness of an axiomatisation of the modal
+$\mu$-calculus~\parencite{afshariFinitaryProofSystems2016}.
+
+Lastly, cyclic proof systems are of interest as objects of proof theoretic study
+in their own right. This is the perspective assumed in this thesis. Cyclic proof
+theory is a rather young field, arguably originating in the works of
+\textcite{niwinskiGamesMcalculus1996} and
+\textcite{sprengerGlobalInductionMechanisms2003}. Some of the most basic
+questions, such as general strategies for $\RCut$-elimination in cyclic proofs,
+remain open.
+
+
+% LocalWords:  axiomatisation sequents foundedness coinductive provers Peano
+% LocalWords:  invariants endsequent subtree pre formedness Heyting GTC Gödel
+% LocalWords:  morphisms intuitionistic subproofs infinitary Löb Grzegorczyk
+% LocalWords:  decidability uncountably Ackermann PSPACE coNP derivedness iff
+% LocalWords:  subgraph subgraphs subsequence subsequences combinatorial
+% LocalWords:  interpolants interpolant subproof homomorphism functors subpath
+% LocalWords:  semilattice arithmetics Sprenger formalisations
