@@ -1,11 +1,12 @@
 %%% A template for Acta Philosophica Gothoburgensia.
 %%% For use with XeLaTeX and KOMA-Script.
-\documentclass[fontsize=14pt,
-               paper=297mm:210mm,
-               twoside,
-               pagesize=pdftex,
-               DIV=calc
-]{scrbook}
+\documentclass[
+  fontsize=14pt,
+  paper=297mm:210mm,
+  twoside,
+  pagesize=pdftex,
+  DIV=calc,
+  ]{scrbook}
 
 %%% Available options: draft/final. Switch to final at any point to see the final formatting.
 \usepackage[draft]{ACTA}
@@ -17,18 +18,18 @@
 
 %%% Document constituents
 \includeonly{
-  % chapters/ACTA-titlepages,
-  % chapters/ACTA-frontmatter,
-  % chapters/frontmatter,
-  % chapters/preface,
+  chapters/ACTA-titlepages,
+  chapters/ACTA-frontmatter,
+  % chapters/frontmatter, % USE ACTA-frontmatter
+  chapters/preface,
   chapters/introduction,
   chapters/ca,
-  % chapters/representations,
-  % chapters/acds,
+  chapters/representations,
+  chapters/acds,
   % chapters/reset,
-  % chapters/stacks,
-  % chapters/applications,
-  % chapters/constructive,
+  chapters/stacks,
+  chapters/applications,
+  chapters/constructive,
 }
 
 %%% Only used to generate placeholder text.

@@ -14,11 +14,11 @@ Heyting arithmetic we introduce in \Cref{sec:more-cas}.
 
 Heyting arithmetic employs the language of first-order arithmetic,
 which is given below. We fix a countable set of variables $\var$ and write
-$\FV(\varphi)$ for the set of \emph{free variables} which occur unbound in a
-formula $\varphi$.
+$\FV(\phi)$ for the set of \emph{free variables} which occur unbound in a
+formula $\phi$.
 \begin{align*}
   s,t \in \term \langeq~& x ~|~ 0 ~|~ S s ~|~ s + t ~|~ s \cdot t  & x \in \var \\
-  \varphi, \psi \in \form \langeq~& s = t ~|~ \bot ~|~ \varphi \wedge \psi ~|~ \varphi \vee \psi ~|~ \varphi \to \psi ~|~ \forall x.\varphi ~|~ \exists x. \varphi
+  \phi, \psi \in \form \langeq~& s = t ~|~ \bot ~|~ \phi \wedge \psi ~|~ \phi \vee \psi ~|~ \phi \to \psi ~|~ \forall x.\phi ~|~ \exists x. \phi
 \end{align*}
 Denote by $[t / x]$ the usual \emph{substitution operation}, replacing all free
 occurrences of the variable $x$ by the term $t$. On formulas, this is a partial

@@ -71,8 +71,10 @@ showframe=true
 %%% for math. The greatest upshot is that it actually works, using XeLaTeX.
 %%% Small caps are slightly tracked (ca 4pt).
 %%% Fontspec options:
-\defaultfontfeatures{Ligatures=TeX,Mapping=tex-text}
-\setmainfont{Adobe Garamond Pro}[SmallCapsFeatures={LetterSpace=2.86, Numbers=Lining}, Kerning=Uppercase]
+\defaultfontfeatures{Ligatures=TeX} % ,Mapping=tex-text
+\setmainfont{Garamond Premier Pro}[SmallCapsFeatures={LetterSpace=2.86, Numbers=Lining}, Kerning=Uppercase]
+% If Garamond Premier Pro is not available, use Adobe Garamond Pro
+
                                  
 %%% If Adobe Garamond Pro is not properly installed on your system, you could place the 
 %%% relevant font files in your local directory and replace the previous line with the following line.
